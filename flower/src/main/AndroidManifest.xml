@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="nl.tue.ppeters.flower" >
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+    <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="com.sonyericsson.extras.liveware.aef.EXTENSION_PERMISSION"></uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme" >
+
+        <activity
+            android:name="nl.tue.ppeters.flower.FlowerActivity"
+            android:label="@string/app_name_flower"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
+        <activity android:name="nl.tue.ppeters.flower.DeviceListActivity"
+            android:label="@string/select_device"
+            android:theme="@android:style/Theme.Dialog">
+        </activity>
+
+        <activity
+            android:name="nl.tue.ppeters.flower.AboutActivity"
+            android:label="@string/app_name_flower" >
+            <intent-filter>
+                <action android:name="nl.pp.android.radioclient.ABOUT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="nl.tue.ppeters.flower.PreferencesActivity"
+            android:label="@string/app_name_flower" >
+            <intent-filter>
+                <action android:name="nl.tue.ppeters.flower.PREFERENCES" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ConfigureActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:label="@string/configure_device">
+            <intent-filter>
+                <action android:name="nl.tue.ppeters.flower.CONFIGURE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".SensorViewActivity"
+            android:theme="@android:style/Theme.Dialog"
+            android:label="@string/configure_device">
+        </activity>
+
+
+
+    </application>
+
+</manifest>

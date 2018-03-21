@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="Cry Detector Settings" >
+        <CheckBoxPreference
+            android:title="Upload files automatically"
+            android:defaultValue="true"
+            android:summary="Attempt to upload files to server after creation or at regular intervals"
+            android:key="checkboxAutoUp" />
+        <CheckBoxPreference
+            android:title="Delete uploaded files"
+            android:defaultValue="true"
+            android:summary="Successfully uploaded files will be deleted automatically to free space"
+            android:key="checkboxDeleteUploaded" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

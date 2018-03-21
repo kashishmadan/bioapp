@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="Bio-App Settings" >
+        <EditTextPreference
+            android:defaultValue="@string/default_url"
+            android:key="server_url_main"
+            android:summary="Server URL for uploading data"
+            android:title="Server URL" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

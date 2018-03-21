@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="@string/communicate">
+        <menu>
+            <item
+                android:id="@+id/Connect"
+                android:icon="@android:drawable/ic_menu_gallery"
+                android:title="@string/connect" />
+            <item
+                android:id="@+id/Start"
+                android:icon="@android:drawable/ic_menu_slideshow"
+                android:enabled="true"
+                android:title="@string/startstream" />
+        </menu>
+    </item>
+
+    <item android:title="@string/control">
+        <menu>
+            <item
+                android:id="@+id/ConfigureBT"
+                android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/configureBT" />
+            <item
+                android:id="@+id/Refresh"
+                android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/refresh" />
+            <item
+                android:id="@+id/Exit"
+                android:icon="@android:drawable/ic_menu_share"
+                android:title="@string/exit" />
+        </menu>
+    </item>
+
+
+</menu>

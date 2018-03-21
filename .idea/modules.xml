@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CoRegulation.iml" filepath="$PROJECT_DIR$/CoRegulation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/closeness/closeness.iml" filepath="$PROJECT_DIR$/closeness/closeness.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crydetector/crydetector.iml" filepath="$PROJECT_DIR$/crydetector/crydetector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dima_ruinskiy-coregulation-831646c47d82.iml" filepath="$PROJECT_DIR$/dima_ruinskiy-coregulation-831646c47d82.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flower/flower.iml" filepath="$PROJECT_DIR$/flower/flower.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mediarec/mediarec.iml" filepath="$PROJECT_DIR$/mediarec/mediarec.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shimmerAndroidInstrumentDriver/shimmerAndroidInstrumentDriver.iml" filepath="$PROJECT_DIR$/shimmerAndroidInstrumentDriver/shimmerAndroidInstrumentDriver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/shimmerDriver/shimmerDriver.iml" filepath="$PROJECT_DIR$/shimmerDriver/shimmerDriver.iml" />
+    </modules>
+  </component>
+</project>

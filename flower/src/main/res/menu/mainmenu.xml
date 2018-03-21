@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/About"
+        android:alphabeticShortcut="a"
+        android:icon="@drawable/ic_menu_info_details"
+        android:numericShortcut="2"
+        android:title="About"/>
+    <item
+        android:id="@+id/Preferences"
+        android:alphabeticShortcut="p"
+        android:icon="@drawable/ic_menu_preferences"
+        android:numericShortcut="3"
+        android:title="Preferences">
+    </item>
+
+</menu>

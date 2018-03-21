@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="User Settings" >
+        <EditTextPreference
+            android:defaultValue="00:06:66:46:B8:04"
+            android:key="bluetoothaddress"
+            android:summary="Shimmer module bluetooth address"
+            android:title="Shimmer Bluetooth address" />
+        <EditTextPreference
+            android:defaultValue="10"
+            android:inputType="numberDecimal"
+            android:key="refreshinterval"
+            android:maxLength="4"
+            android:summary="Refresh Interval in seconds"
+            android:title="Refresh Interval (s)" />
+        <CheckBoxPreference
+            android:title="Show flower"
+            android:defaultValue="false"
+            android:summary="Show flower representation of GSR measurement"
+            android:key="checkboxFlower" />
+        <CheckBoxPreference
+            android:title="Show graph"
+            android:defaultValue="false"
+            android:summary="Show graph representation of GSR measurement"
+            android:key="checkboxGraph" />
+        <CheckBoxPreference
+            android:title="Hide outliers"
+            android:defaultValue="false"
+            android:summary="Hide outliers in flower"
+            android:key="checkboxOutliers" />
+        <CheckBoxPreference
+            android:title="Debug"
+            android:defaultValue="false"
+            android:summary="Show debug output"
+            android:key="checkboxDebug" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

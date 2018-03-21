@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="sensor_name"
+        android:title="@string/sensor_name"
+        android:summary="@string/sensor_name_desc" />
+    <EditTextPreference
+        android:key="participant_number"
+        android:title="@string/participant_number"
+        android:summary="@string/participant_number_desc"
+        android:inputType="number"/>
+    <EditTextPreference
+        android:key="study_number"
+        android:title="@string/study_number"
+        android:summary="@string/study_number_desc"
+        android:inputType="number"/>
+</PreferenceScreen>

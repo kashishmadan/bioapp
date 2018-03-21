@@ -1,0 +1,1 @@
+include ':app', ':closeness', ':shimmerDriver', ':flower', ':shimmerAndroidInstrumentDriver', ':crydetector', ':mediarec'

@@ -28,7 +28,7 @@
 
     <uses-sdk
         android:minSdkVersion="18"
-        android:targetSdkVersion="18" />
+        android:targetSdkVersion="26" />
 
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
@@ -69,7 +69,8 @@
         <service
             android:name="com.bluemaestro.utility.sdk.SyncService"
             android:exported="true"
-            android:process=":sync">
+            >
+            <!--android:process=":sync"-->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>

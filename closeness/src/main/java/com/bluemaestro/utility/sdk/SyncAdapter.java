@@ -11,10 +11,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -96,7 +94,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         if (!jsonContent.equals("[]")) {
 
             RequestQueue queue = Volley.newRequestQueue(mContext);
-            String url = sharedPref.getString("server_url_main", "");
+            String url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
             //FIXME API structure hard coded...
             url = url + "/temperature";
 

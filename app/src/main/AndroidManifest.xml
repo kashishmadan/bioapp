@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.telhai.spl.coregulation">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         tools:replace="android:icon,android:theme,android:label"
         android:allowBackup="true"

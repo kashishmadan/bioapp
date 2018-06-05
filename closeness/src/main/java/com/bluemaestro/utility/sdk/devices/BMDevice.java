@@ -29,12 +29,15 @@ import android.widget.TextView;
 
 import com.bluemaestro.utility.sdk.R;
 import com.github.mikephil.charting.charts.Chart;
+
 /**
  * Created by Garrett on 05/08/2016.
  *
  * BMDevice is an abstract class for Blue Maestro BLE devices
  */
 public abstract class BMDevice {
+
+//    protected final String temperature;
 
     /**
      * MAC address of the device
@@ -121,6 +124,11 @@ public abstract class BMDevice {
         final TextView tvname = (TextView) vg.findViewById(R.id.name);
         final TextView tvpair = (TextView) vg.findViewById(R.id.paired);
         final TextView tvrssi = (TextView) vg.findViewById(R.id.rssi);
+
+        // added Anthony
+//        final TextView temperature = (TextView) vg.findViewById(R.id.temperature);
+//        temperature.setText();
+//        temperature.setVisibility(View.VISIBLE);
 
         // Name
         tvname.setText(getName());

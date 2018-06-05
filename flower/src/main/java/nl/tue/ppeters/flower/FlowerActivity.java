@@ -244,7 +244,7 @@ public class FlowerActivity extends AppCompatActivity implements NavigationView.
             shortsnack("Searching for Shimmer device");
         } else if (id == R.id.Start) {
             if (mShimmerDevice.getState() == Shimmer.STATE_CONNECTED) {
-                if (mShimmerDevice.getStreamingStatus() == true) {
+                if (mShimmerDevice.getStreamingStatus()) {
                     mShimmerDevice.stopStreaming();
                     shortsnack("Program was stopped");
                 } else {
@@ -535,12 +535,12 @@ public class FlowerActivity extends AppCompatActivity implements NavigationView.
     public void colorButtonSelected(View view) {
         ImageButton b = (ImageButton) view;
         boolean selected = !b.isSelected();
-        ((ImageButton) findViewById(R.id.colorButton1)).setSelected(false); //deselect all other buttons
-        ((ImageButton) findViewById(R.id.colorButton2)).setSelected(false);
-        ((ImageButton) findViewById(R.id.colorButton3)).setSelected(false);
-        ((ImageButton) findViewById(R.id.colorButton4)).setSelected(false);
-        ((ImageButton) findViewById(R.id.colorButton5)).setSelected(false);
-        ((ImageButton) findViewById(R.id.colorButton6)).setSelected(false);
+        findViewById(R.id.colorButton1).setSelected(false); //deselect all other buttons
+        findViewById(R.id.colorButton2).setSelected(false);
+        findViewById(R.id.colorButton3).setSelected(false);
+        findViewById(R.id.colorButton4).setSelected(false);
+        findViewById(R.id.colorButton5).setSelected(false);
+        findViewById(R.id.colorButton6).setSelected(false);
         b.setSelected(selected);
         if (selected) buttonColor = b.getContentDescription().toString();
         else buttonColor = "-";

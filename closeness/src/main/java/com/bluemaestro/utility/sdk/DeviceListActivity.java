@@ -22,10 +22,6 @@
 
 package com.bluemaestro.utility.sdk;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -42,7 +38,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -56,6 +51,9 @@ import android.widget.Toast;
 import com.bluemaestro.utility.sdk.ble.ScanRecordParser;
 import com.bluemaestro.utility.sdk.devices.BMDevice;
 import com.bluemaestro.utility.sdk.devices.BMDeviceMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DeviceListActivity extends Activity {
 
@@ -82,7 +80,7 @@ public class DeviceListActivity extends Activity {
         StyleOverride.setDefaultFont(rootView, this, "Montserrat-Regular.ttf");
 
         getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title_bar);
-        setContentView(R.layout.device_list);
+        setContentView(R.layout.closeness_device_list);
         android.view.WindowManager.LayoutParams layoutParams = this.getWindow().getAttributes();
         layoutParams.gravity = Gravity.TOP;
         layoutParams.y = 200;
@@ -107,15 +105,15 @@ public class DeviceListActivity extends Activity {
             return;
         }
         populateList();
-        mEmptyList = (TextView) findViewById(R.id.empty);
-        Button cancelButton = (Button) findViewById(R.id.btn_cancel);
-        cancelButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            	if (mScanning == false) scanLeDevice(true);
-            	else finish();
-            }
-        });
+//        mEmptyList = (TextView) findViewById(R.id.empty);
+//        Button cancelButton = (Button) findViewById(R.id.btn_cancel);
+//        cancelButton.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//            	if (mScanning == false) scanLeDevice(true);
+//            	else finish();
+//            }
+//        });
     }
 
     private void populateList() {
@@ -129,11 +127,11 @@ public class DeviceListActivity extends Activity {
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
         newDevicesListView.setOnItemLongClickListener(mDeviceLongClickListener);
 
-        scanLeDevice(true);
+//        scanLeDevice(true);
     }
     
     private void scanLeDevice(final boolean enable) {
-        final Button cancelButton = (Button) findViewById(R.id.btn_cancel);
+        final Button cancelButton = (Button) this.findViewById(R.id.btn_cancel);
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
@@ -220,6 +218,20 @@ public class DeviceListActivity extends Activity {
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        scanLeDevice(true);
+        mEmptyList = (TextView) findViewById(R.id.empty);
+        Button cancelButton = (Button) findViewById(R.id.btn_cancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mScanning) {
+                    scanLeDevice(true);
+                }
+                else {
+                    finish();
+                }
+            }
+        });
     }
 
     @Override
@@ -304,6 +316,7 @@ public class DeviceListActivity extends Activity {
 
             BluetoothDevice device = devices.get(position);
             BMDevice bmDevice = BMDeviceMap.INSTANCE.getBMDevice(device.getAddress());
+//            BMTempHumi bmDevice = new BMTempHumi();
             if(bmDevice == null) return vg;
 
             bmDevice.updateViewGroup(vg);

@@ -3,7 +3,8 @@
     <EditTextPreference
         android:key="sensor_name"
         android:title="@string/sensor_name"
-        android:summary="@string/sensor_name_desc" />
+        android:summary="@string/sensor_name_desc"
+        android:defaultValue="DE:CC:5F:8C:51:5F"/>
     <EditTextPreference
         android:key="participant_number"
         android:title="@string/participant_number"

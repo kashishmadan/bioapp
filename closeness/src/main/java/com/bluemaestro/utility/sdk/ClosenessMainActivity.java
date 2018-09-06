@@ -34,19 +34,22 @@ import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -56,26 +59,35 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bluemaestro.utility.sdk.adapter.MessageAdapter;
+import com.bluemaestro.utility.sdk.databinding.MainBinding;
 import com.bluemaestro.utility.sdk.devices.BMDevice;
 import com.bluemaestro.utility.sdk.devices.BMDeviceMap;
+import com.bluemaestro.utility.sdk.utility.Utils;
 import com.bluemaestro.utility.sdk.views.dialogs.BMAlertDialog;
 import com.bluemaestro.utility.sdk.views.graphs.BMLineChart;
 
-import java.io.UnsupportedEncodingException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DateFormat;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -110,47 +122,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     Account mAccount;
     ContentResolver mResolver;
     private int mState = UART_PROFILE_DISCONNECTED;
-    private UartService mService = null;
+    private BluetoothService mService = null;
     private BluetoothDevice mDevice = null;
     private BMDevice mBMDevice = null;
     private String mPrivateHash = "";
     private BluetoothAdapter mBtAdapter = null;
-    private ListView messageListView;
-    private ArrayAdapter<String> listAdapter;
     private Button
-            btnConnectDisconnect,
             btnSend, btnGraph;
     private EditText edtMessage;
     private BMLineChart lineChart;
-    // Main UART broadcast receiver
-    private final BroadcastReceiver UARTStatusChangeReceiver = new BroadcastReceiver()
-    {
-        public void onReceive(Context context, Intent intent)
-        {
-            String action = intent.getAction();
-            if(action.equals(UartService.ACTION_GATT_CONNECTED))
-            {
-                onGattConnected();
-
-                downloader = new Downloader();
-            } else if(action.equals(UartService.ACTION_GATT_DISCONNECTED))
-            {
-                onGattDisconnected();
-            } else if(action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED))
-            {
-                onGattServicesDiscovered();
-            } else if(action.equals(UartService.ACTION_DATA_AVAILABLE))
-            {
-                onDataAvailable(intent.getByteArrayExtra(UartService.EXTRA_DATA));
-            } else if(action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART))
-            {
-                onDeviceDoesNotSupportUART();
-            } else
-            {
-                Log.d(TAG, "broadcast received not handled");
-            }
-        }
-    };
     /************************** UART STATUS CHANGE **************************/
 
     // UART service connected/disconnected
@@ -158,7 +138,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     {
         public void onServiceConnected(ComponentName className, IBinder rawBinder)
         {
-            mService = ((UartService.LocalBinder) rawBinder).getService();
+            mService = ((BluetoothService.LocalBinder) rawBinder).getService();
             Log.d(TAG, "onServiceConnected mService= " + mService);
             if(!mService.initialize())
             {
@@ -169,18 +149,49 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
         public void onServiceDisconnected(ComponentName classname)
         {
+            Log.d(TAG, "service disconnect: " + classname);
             mService = null;
+        }
+    };
+    private MainBinding activityMainBinding;
+    // Main UART broadcast receiver
+    private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver()
+    {
+        public void onReceive(Context context, Intent intent)
+        {
+            String action = intent.getAction();
+            switch(action)
+            {
+                case BluetoothService.ACTION_GATT_CONNECTED:
+                    onGattConnected();
+                    downloader = new Downloader();
+                    break;
+                case BluetoothService.ACTION_GATT_DISCONNECTED:
+                    onGattDisconnected();
+                    break;
+                case BluetoothService.ACTION_GATT_SERVICES_DISCOVERED:
+                    onGattServicesDiscovered();
+                    break;
+                case BluetoothService.ACTION_DATA_AVAILABLE:
+                    onDataAvailable(intent.getByteArrayExtra(BluetoothService.EXTRA_DATA));
+                    break;
+                case BluetoothService.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH:
+                    onDeviceDoesNotSupportBluetooth();
+                    break;
+                default:
+                    Log.d(TAG, "broadcast received not handled");
+            }
         }
     };
 
     private static IntentFilter makeGattUpdateIntentFilter()
     {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
-        intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
+        intentFilter.addAction(BluetoothService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(BluetoothService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(BluetoothService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(BluetoothService.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
         return intentFilter;
     }
 
@@ -209,23 +220,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        this.activityMainBinding = DataBindingUtil.setContentView(this, R.layout.main);
+        //        setContentView(R.layout.main);
 
         String serverUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("server_url_main", "");
         Log.i(TAG, "Server URL: " + serverUrl);
 
-        mResolver = getContentResolver();
-        mAccount = CreateSyncAccount(this);
-        //        ContentResolver.addPeriodicSync(
-        //                mAccount,
-        //                AUTHORITY,
-        //                Bundle.EMPTY,
-        //                SYNC_INTERVAL);
+        this.mResolver = getContentResolver();
+        this.mAccount = CreateSyncAccount(this);
         ContentResolver.setSyncAutomatically(this.mAccount, "com.bluemaestro.utility.sdk.contentprovider", true);
-        //        ContentResolver.addPeriodicSync(
-        //                mAccount,
-        //                AUTHORITY,
-        //                Bundle.EMPTY,
-        //                SYNC_INTERVAL);
         PreferenceManager.setDefaultValues(this, R.xml.closeness_preferences, false);
 
         // Delete all databases; testing only
@@ -239,27 +242,24 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         StyleOverride.setDefaultTextColor(rootView, Color.BLACK);
         StyleOverride.setDefaultFont(rootView, this, "Montserrat-Regular.ttf");
 
-        setContentView(R.layout.main);
-        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        this.mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBtAdapter == null)
         {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
-        messageListView = (ListView) findViewById(R.id.listMessage);
-        listAdapter = new CustomArrayAdapter<String>(this, R.layout.message_detail);
+        this.activityMainBinding.messageContainer.setLayoutManager(new LinearLayoutManager(this));
+        this.activityMainBinding.messageContainer
+                .setAdapter(new MessageAdapter(this, new ArrayList<String>()));
+        this.activityMainBinding.messageContainer.setHasFixedSize(true);
+        this.activityMainBinding.messageContainer.getAdapter().notifyDataSetChanged();
 
-        messageListView.setAdapter(listAdapter);
-        messageListView.setDivider(null);
-
-        btnConnectDisconnect = (Button) findViewById(R.id.btn_select);
-
-        // Initialise UART service
+        // Initialise Bluetooth service
         service_init();
 
         // Handle Disconnect & Connect button
-        btnConnectDisconnect.setOnClickListener(new View.OnClickListener()
+        this.activityMainBinding.buttonConnectDisconnect.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -269,19 +269,19 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         });
 
 
-        Intent newIntent = new Intent(ClosenessMainActivity.this, DeviceListActivity.class);
-        startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
+        //        Intent newIntent = new Intent(ClosenessMainActivity.this, DeviceListActivity.class);
+        //        startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
 
 
         // test to wake phone
-//        final Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.d(TAG, "Hey there !!!");
-//                onClickConnectDisconnect();
-//            }
-//        }, 20000);
+        //        final Handler handler = new Handler();
+        //        handler.postDelayed(new Runnable() {
+        //            @Override
+        //            public void run() {
+        //                Log.d(TAG, "Hey there !!!");
+        //                onClickConnectDisconnect();
+        //            }
+        //        }, 20000);
     }
 
     @Override
@@ -292,7 +292,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
         try
         {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(UARTStatusChangeReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(bluetoothBroadcastReceiver);
         } catch(Exception ignore)
         {
             Log.e(TAG, ignore.toString());
@@ -354,7 +354,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
                     mBMDevice = BMDeviceMap.INSTANCE.getBMDevice(mDevice.getAddress());
                     Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
-                    ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + " - connecting");
+                    this.activityMainBinding.deviceName.setText(mDevice.getName() + " - connecting");
                     mService.connect(deviceAddress);
                 }
                 break;
@@ -389,10 +389,10 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
     private void service_init()
     {
-        Intent bindIntent = new Intent(this, UartService.class);
+        Intent bindIntent = new Intent(this, BluetoothService.class);
         bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
+        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
     }
 
     private void onGattConnected()
@@ -403,24 +403,21 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             {
                 String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                 Log.d(TAG, "UART_CONNECT_MSG");
-                btnConnectDisconnect.setText("Disconnect");
-                ((TextView) findViewById(R.id.deviceName)).setText(mDevice.getName() + " - ready");
-                listAdapter.add("Connected to: " + mDevice.getName());
-                listAdapter.notifyDataSetChanged();
-                messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                activityMainBinding.buttonConnectDisconnect.setText("Disconnect");
+                activityMainBinding.deviceName.setText(mDevice.getName() + " - ready");
+                logMessage("Connected to: " + mDevice.getName());
+                // TODO scroll ?
+                //                messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
                 mState = UART_PROFILE_CONNECTED;
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable()
-                {
-                    @Override
-                    public void run()
-                    {
-                        startLogging();
-                    }
-                }, 1000);
             }
         });
+    }
+
+    private void logMessage(String message)
+    {
+        ((MessageAdapter) this.activityMainBinding.messageContainer.getAdapter()).addMessage(message);
+        this.activityMainBinding.messageContainer
+                .scrollToPosition(this.activityMainBinding.messageContainer.getAdapter().getItemCount() - 1);
     }
 
     private void onGattDisconnected()
@@ -431,12 +428,12 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             {
                 String currentDateTimeString = DateFormat.getTimeInstance().format(new Date());
                 Log.d(TAG, "UART_DISCONNECT_MSG");
-                btnConnectDisconnect.setText("Connect");
-                ((TextView) findViewById(R.id.deviceName)).setText("Not Connected");
-                listAdapter.add("Disconnected from: " + mDevice.getName());
-                listAdapter.notifyDataSetChanged();
+                activityMainBinding.buttonConnectDisconnect.setText("Connect");
+                activityMainBinding.deviceName.setText("Not Connected");
+                //                logMessage("Disconnected from: " + mDevice.getName());
+                logMessage("Disconnected from: " + mDevice.getAddress());
                 mState = UART_PROFILE_DISCONNECTED;
-                messageListView.setSelection(listAdapter.getCount() - 1);
+                //                messageListView.setSelection(listAdapter.getCount() - 1);
                 mService.close();
             }
         });
@@ -444,10 +441,10 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
     private void onGattServicesDiscovered()
     {
-        mService.enableTXNotification();
+        mService.enableNotification();
     }
 
-    private void onDataAvailable(final byte[] txValue)
+    private void onDataAvailable(final byte[] value)
     {
         runOnUiThread(new Runnable()
         {
@@ -456,46 +453,58 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             {
                 try
                 {
-                    String text = new String(txValue, "UTF-8").trim();
-                    if(!text.equals("OK"))
-                    {
-                        downloader.parseData(txValue);
+                    //                    String text = new String(txValue, "UTF-8").trim();
+                    //                    if(!text.equals("OK"))
+                    //                    {
+                    //                        downloader.parseData(txValue);
+                    //
+                    //
+                    //                        //                        SimpleDateFormat outputFormat = new SimpleDateFormat
+                    // ("yyyy-MM-dd'T'HH:mm:ss.SSS");
+                    //                        //                        String currentDateTimeString = outputFormat.format(new Date());
+                    //                        //                        ContentValues values = new ContentValues();
+                    //                        //                        values.put(TemperatureTable.COLUMN_TEMP, Double.valueOf(text
+                    // .split("H")[0].replace("T",
+                    //                        // "")));
+                    //                        //                        values.put(TemperatureTable.COLUMN_TIMESTAMP,
+                    // currentDateTimeString);
+                    //                        //                        Uri uri = getContentResolver().insert(ClosenessProvider
+                    // .CONTENT_URI, values);
+                    //
+                    //                        //                        ContentValues[] valuesList = new ContentValues[1];
+                    //                        //                        valuesList[0] = values;
+                    //                        //                        mResolver.bulkInsert(Uri.parse
+                    // ("http://192.168.1.50:5000/temperature"), valuesList);
+                    //
+                    //                        //                        mResolver.onPerformSync();
+                    //
+                    //                        //                        // send data to the server
+                    //                        //                        sendDataToServer(values);
+                    //                    }
+                    //        byte[] value = characteristic.getValue();
+                    int mantissa = (value[1] & 0xFF) + ((value[2] & 0xFF) << 8) + ((value[3] & 0xFF) << 16);
+                    int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
+                    double temperature = mantissa * Math.pow(10, exponent);
 
+//                    sendDataToServer(temperature);
+                    saveDataToDB(temperature);
 
-                        //                        SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-                        //                        String currentDateTimeString = outputFormat.format(new Date());
-                        //                        ContentValues values = new ContentValues();
-                        //                        values.put(TemperatureTable.COLUMN_TEMP, Double.valueOf(text.split("H")[0].replace("T",
-                        // "")));
-                        //                        values.put(TemperatureTable.COLUMN_TIMESTAMP, currentDateTimeString);
-                        //                        Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-
-                        //                        ContentValues[] valuesList = new ContentValues[1];
-                        //                        valuesList[0] = values;
-                        //                        mResolver.bulkInsert(Uri.parse("http://192.168.1.50:5000/temperature"), valuesList);
-
-                        //                        mResolver.onPerformSync();
-
-                        //                        // send data to the server
-                        //                        sendDataToServer(values);
-                    }
-                    listAdapter.add(text);
-                    listAdapter.notifyDataSetChanged();
-                    if(messageListView.getVisibility() == View.VISIBLE)
-                    {
-                        messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-                    } else
-                    {
-                        messageListView.setSelection(listAdapter.getCount() - 1);
-                    }
+                    logMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
+                    //                    if(messageListView.getVisibility() == View.VISIBLE)
+                    //                    {
+                    //                        messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
+                    //                    } else
+                    //                    {
+                    //                        messageListView.setSelection(listAdapter.getCount() - 1);
+                    //                    }
 
                     if(mBMDevice == null)
                     {
                         return;
                     }
-                    mBMDevice.updateChart(lineChart, text);
+                    // TODO updateChart ??
+                    //                    mBMDevice.updateChart(lineChart, text);
                     //mBMDatabase.addData(BMDatabase.TIMESTAMP_NOW(), text);
-
 
                 } catch(Exception e)
                 {
@@ -505,64 +514,138 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         });
     }
 
-    //    private void sendDataToServer(ContentValues values) {
-    //        final Context context = getApplicationContext();
-    //        final int duration = Toast.LENGTH_SHORT;
-    //        RequestQueue queue = Volley.newRequestQueue(this);
-    //        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-    //        String url = null;
-    //        url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
-    //        //FIXME API structure hard coded...
-    //        url = url + "/temperature/" + uniqueID;
-    //
-    //        // Request a string response from the provided URL.
-    //        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
-    //                new Response.Listener<String>()
-    //                {
-    //                    @Override
-    //                    public void onResponse(String response)
-    //                    {
-    //                        Log.d(TAG, response);
-    //                        response = response.replaceAll("\\s$", "");
-    //                        response = response.replaceAll("\"", "");
-    //                        Log.d(TAG, response);
-    //                        Log.d(TAG, Integer.toString(response.length()));
-    //                        if(response.length() == 28)
-    //                        {
-    //                            Toast toast = Toast.makeText(context, R.string.registration_impossible, duration);
-    //                            toast.show();
-    //                            Log.d(TAG, "Registration is not possible");
-    //                        } else
-    //                        {
-    //                            if(response.length() == 64)
-    //                            {
-    //                                mPrivateHash = response;
-    //                                SharedPreferences.Editor editor = sharedPref.edit();
-    //                                editor.putString(getString(R.string.private_hash), response);
-    //                                editor.commit();
-    //
-    //                                Log.d(TAG, response);
-    //                            } else
-    //                            {
-    //                                Toast toast = Toast.makeText(context, R.string.server_error_msg, duration);
-    //                                toast.show();
-    //                                Log.d(TAG, "Server error occured");
-    //                            }
-    //                        }
-    //                    }
-    //                }, new Response.ErrorListener()
-    //        {
-    //            @Override
-    //            public void onErrorResponse(VolleyError error)
-    //            {
-    //                Log.d(TAG, "That didn't work!");
-    //            }
-    //        });
-    //        // Add the request to the RequestQueue.
-    //        queue.add(stringRequest);
-    //    }
+    private void saveDataToDB(double temperature)
+    {
+        try
+        {
+            String timestamp = Utils.dateToIsoString(new Date());
+            ContentValues values = new ContentValues();
+            values.put(TemperatureTable.COLUMN_TEMP, temperature);
+            values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
+            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+        } catch(Exception e)
+        {
+            Log.e(TAG, e.toString());
+            e.printStackTrace();
+        }
+    }
 
-    private void onDeviceDoesNotSupportUART()
+    private void sendDataToServer(double temperature)
+    {
+        Log.d(TAG, "sending one data to the server!");
+        //        String[] projection = {TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_TIMESTAMP, TemperatureTable.COLUMN_TEMP};
+        //        String selection = TemperatureTable.COLUMN_ID + ">?";
+        //        String[] selectionArgs = {"0"};
+        //        String sortOrder = "";
+        //        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this.getApplicationContext());
+        String client_hash = sharedPref.getString(this.getApplicationContext().getString(R.string.private_hash), "");
+        String studyNumber = sharedPref.getString("study_number", "0");
+        String participantNumber = sharedPref.getString("participant_number", "0");
+        JSONArray jsonArray = new JSONArray();
+        try
+        {
+            JSONObject item = new JSONObject();
+            item.put("client_hash", client_hash);
+            item.put("participant_number", Integer.valueOf(participantNumber));
+            item.put("study_number", Integer.valueOf(studyNumber));
+            //            Calendar calendar = Calendar.getInstance(Utils.currentTimeZone);
+            //            String timestamp = Utils.formatIso8601DateTime(calendar.getTime(), Utils.currentTimeZone);
+            //            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            //            String currentDateTimeString = outputFormat.format(new Date());
+            String timestamp = Utils.dateToIsoString(new Date());
+            item.put("time_stamp_device", timestamp);
+            item.put("temperature", (float) temperature);
+            jsonArray.put(item);
+        } catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        final String jsonContent = jsonArray.toString();
+        if(!jsonContent.equals("[]"))
+        {
+
+            RequestQueue queue = Volley.newRequestQueue(this.getApplicationContext());
+            String url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
+            //FIXME API structure hard coded...
+            url = url + "/temperature";
+
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
+                    new Response.Listener<String>()
+                    {
+                        @Override
+                        public void onResponse(String response)
+                        {
+                            response = response.replaceAll("\\s$", "");
+                            response = response.replaceAll("\"", "");
+                            Log.d(TAG, response);
+                            //                            if(response.length() == 2)
+                            //                            {
+                            //                                Log.d(TAG, "All fine, proceed with deletion");
+                            //                                int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI,
+                            // dropIdClause2, null);
+                            //                                Log.d(TAG, String.valueOf(rowsDeleted));
+                            //                            } else
+                            //                            {
+                            //                                Log.d(TAG, "Something wrong");
+                            //                            }
+                        }
+                    }, new Response.ErrorListener()
+            {
+                @Override
+                public void onErrorResponse(VolleyError error)
+                {
+                    Log.d(TAG, error.toString());
+                    Log.d(TAG, "That didn't work!");
+                }
+            })
+            {
+                @Override
+                public String getBodyContentType()
+                {
+                    return "application/x-www-form-urlencoded; charset=UTF-8";
+                }
+
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError
+                {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("data", jsonContent);
+                    return params;
+                }
+            };
+            // Add the request to the RequestQueue.
+            stringRequest.setRetryPolicy(new RetryPolicy()
+            {
+                @Override
+                public int getCurrentTimeout()
+                {
+                    // Here goes the new timeout
+                    return 30000;
+                }
+
+                @Override
+                public int getCurrentRetryCount()
+                {
+                    // The max number of attempts
+                    return 1;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError
+                {
+                    // Here you could check if the retry count has gotten
+                    // To the max number, and if so, send a VolleyError msg
+                    // or something
+                }
+            });
+            queue.add(stringRequest);
+        }
+    }
+
+    private void onDeviceDoesNotSupportBluetooth()
     {
         showMessage("Device doesn't support UART. Disconnecting");
         mService.disconnect();
@@ -579,7 +662,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         } else
         {
-            if(btnConnectDisconnect.getText().equals("Connect"))
+            if(this.activityMainBinding.buttonConnectDisconnect.getText().equals("Connect"))
             {
                 //                 Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
                 //                                Intent newIntent = new Intent(ClosenessMainActivity.this, DeviceListActivity.class);
@@ -601,7 +684,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                 try
                 {
                     mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-                    mBMDevice = BMDeviceMap.INSTANCE.getBMDevice(mDevice.getAddress());
+                    //                    mBMDevice = BMDeviceMap.INSTANCE.getBMDevice(mDevice.getAddress());
                     Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
                     mService.connect(deviceAddress);
                     //                    final Handler handler = new Handler();
@@ -624,8 +707,8 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     mService.disconnect();
                 }
                 mBMDevice = null;
-                messageListView.setVisibility(View.VISIBLE);
-                messageListView.setSelection(listAdapter.getCount() - 1);
+                //                messageListView.setVisibility(View.VISIBLE);
+                //                messageListView.setSelection(listAdapter.getCount() - 1);
             }
         }
     }
@@ -688,31 +771,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         });
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-    }
-
-
-    private void startLogging()
-    {
-        Log.d(TAG, "test");
-                String message = "*tell";
-        //        String message = "*bur";
-        //        String message = "*loggert";
-//        String message = "*logall";
-        byte[] value;
-        try
-        {
-            // Send data to service
-            value = message.getBytes("UTF-8");
-            Log.d(TAG, "message: " + Arrays.toString(value));
-            if(mState == UART_PROFILE_CONNECTED)
-            {
-                mService.writeRXCharacteristic(value);
-            }
-        } catch(UnsupportedEncodingException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
     private void showMessage(String msg)

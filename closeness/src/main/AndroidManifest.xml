@@ -56,7 +56,7 @@
             android:name=".SettingsActivity"
             android:label="@string/settings" />
 
-        <service android:enabled="true" android:name=".UartService" />
+        <service android:enabled="true" android:name=".BluetoothService" />
         <service
             android:name="com.bluemaestro.utility.sdk.ClosenessAuthenticatorService">
             <intent-filter>

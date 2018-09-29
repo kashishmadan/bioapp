@@ -48,10 +48,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bluemaestro.utility.sdk.ble.ScanRecordParser;
-import com.bluemaestro.utility.sdk.devices.BMDevice;
-import com.bluemaestro.utility.sdk.devices.BMDeviceMap;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -178,31 +174,6 @@ public class DeviceListActivity extends Activity {
                 break;
             }
         }
-        //Log.d("ScanRecordParser", "Scan Record data: 0x" + Utility.bytesAsHexString(scanRecord));
-        ScanRecordParser parser = new ScanRecordParser(scanRecord);
-
-        // Check if Blue Maestro device
-        if(!BMDevice.isBMDevice(parser.getManufacturerData())) return;
-        // Parse Blue Maestro device (future implementation required)
-        String name = device.getName();
-        if(name == null) return;
-
-        byte id = parser.getManufacturerData()[3];
-
-        // Set the Tempo Disc T's id to 0x01, as this needs implementing
-        if("Tempo Disc T".equals(device.getName())) id = 0x01;
-
-        // Get Blue Maestro device, or create it if new device
-        BMDevice bmDevice = BMDeviceMap.INSTANCE.getBMDevice(device.getAddress());
-        if(bmDevice == null) bmDevice = BMDeviceMap.INSTANCE.createBMDevice(id, device);
-        // Update the device with new values
-        try{
-            bmDevice.updateWithData(rssi, parser.getManufacturerData(), parser.getScanResponseData());
-        } catch (ArrayIndexOutOfBoundsException e){
-            // Debugging, as some devices are still being worked on
-            Log.e("BMDeviceMap", "Exception: Device " + device.getAddress() +
-                    "(" + device.getName() + ") is still in development.");
-        }
 
         if (!deviceFound) {
         	deviceList.add(device);
@@ -315,11 +286,7 @@ public class DeviceListActivity extends Activity {
             }
 
             BluetoothDevice device = devices.get(position);
-            BMDevice bmDevice = BMDeviceMap.INSTANCE.getBMDevice(device.getAddress());
 //            BMTempHumi bmDevice = new BMTempHumi();
-            if(bmDevice == null) return vg;
-
-            bmDevice.updateViewGroup(vg);
 
             return vg;
         }

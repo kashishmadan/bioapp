@@ -65,21 +65,21 @@ public class BluetoothService extends Service
             "com.bluemaestro.utility.sdk.EXTRA_DATA";
     public static final String DEVICE_DOES_NOT_SUPPORT_BLUETOOTH =
             "com.bluemaestro.utility.sdk.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH";
-    public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
-    public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
-    public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-    public static final UUID FIRMWARE_REVISON_UUID = UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
-    public static final UUID DIS_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-    public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-    public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
+//    public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
+//    public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
+//    public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+//    public static final UUID FIRMWARE_REVISON_UUID = UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
+//    public static final UUID DIS_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
+//    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
+//    public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
+//    public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
     private static final String TAG = BluetoothService.class.getSimpleName();
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
     public final UUID TEMPERATURE_SERVICE_UUID = convertFromInteger(0x1809);
     public final UUID TEMPERATURE_MEASURMENT_UUID = convertFromInteger(0x2A1C);
-    public final UUID TEMPERATURE_TYPE_UUID = convertFromInteger(0x2A1D);
+//    public final UUID TEMPERATURE_TYPE_UUID = convertFromInteger(0x2A1D);
     public final UUID CLIENT_CHARACTERISTIC_CONFIG = convertFromInteger(0x2902);
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;
@@ -245,7 +245,7 @@ public class BluetoothService extends Service
         }
 
         // Previously connected device.  Try to reconnect.
-        if(mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
+        if(address.equals(mBluetoothDeviceAddress)
                 && mBluetoothGatt != null)
         {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
@@ -334,7 +334,7 @@ public class BluetoothService extends Service
     {
         if(this.mBluetoothGatt == null)
         {
-            showMessage("mBluetoothGatt null" + this.mBluetoothGatt);
+            Log.e(TAG, "mBluetoothGatt null");
             broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
             return;
         }
@@ -348,33 +348,10 @@ public class BluetoothService extends Service
         this.mBluetoothGatt.writeDescriptor(descriptor);
     }
 
-    //    public void writeRXCharacteristic(byte[] value)
-    //    {
-    //        BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-    //        showMessage("mBluetoothGatt null" + mBluetoothGatt);
-    //        if(RxService == null)
-    //        {
-    //            showMessage("Rx service not found!");
-    //            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
-    //            return;
-    //        }
-    //        BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
-    //        if(RxChar == null)
-    //        {
-    //            showMessage("Rx charateristic not found!");
-    //            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
-    //            return;
-    //        }
-    //        RxChar.setValue(value);
-    //        boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
-    //
-    //        Log.d(TAG, "write TXchar - status=" + status);
-    //    }
-
-    private void showMessage(String msg)
-    {
-        Log.e(TAG, msg);
-    }
+//    private void showMessage(String msg)
+//    {
+//        Log.e(TAG, msg);
+//    }
 
     /**
      * Retrieves a list of supported GATT services on the connected device. This should be

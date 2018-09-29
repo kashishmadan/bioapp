@@ -55,7 +55,6 @@ public final class StyleOverride {
 
     public static void setDefaultTextColor(final View view, int color){
         try{
-            String name = view.toString();
             if(view instanceof ViewGroup){
                 ViewGroup group = (ViewGroup) view;
                 for(int i = 0; i < group.getChildCount(); i++){
@@ -73,7 +72,6 @@ public final class StyleOverride {
 
     public static void setDefaultBackgroundColor(final View view, int color){
         try{
-            String name = view.toString();
             if(view instanceof ViewGroup){
                 ViewGroup group = (ViewGroup) view;
                 for(int i = 0; i < group.getChildCount(); i++){

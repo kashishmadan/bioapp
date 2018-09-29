@@ -57,8 +57,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,11 +71,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bluemaestro.utility.sdk.adapter.MessageAdapter;
 import com.bluemaestro.utility.sdk.databinding.MainBinding;
-import com.bluemaestro.utility.sdk.devices.BMDevice;
-import com.bluemaestro.utility.sdk.devices.BMDeviceMap;
 import com.bluemaestro.utility.sdk.utility.Utils;
 import com.bluemaestro.utility.sdk.views.dialogs.BMAlertDialog;
-import com.bluemaestro.utility.sdk.views.graphs.BMLineChart;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -117,20 +112,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     private static final int UART_PROFILE_CONNECTED = 20;
     private static final int UART_PROFILE_DISCONNECTED = 21;
     private static final int STATE_OFF = 10;
-    public Downloader downloader;
     // Instance fields
     Account mAccount;
     ContentResolver mResolver;
     private int mState = UART_PROFILE_DISCONNECTED;
     private BluetoothService mService = null;
     private BluetoothDevice mDevice = null;
-    private BMDevice mBMDevice = null;
     private String mPrivateHash = "";
     private BluetoothAdapter mBtAdapter = null;
-    private Button
-            btnSend, btnGraph;
-    private EditText edtMessage;
-    private BMLineChart lineChart;
+
     /************************** UART STATUS CHANGE **************************/
 
     // UART service connected/disconnected
@@ -164,7 +154,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             {
                 case BluetoothService.ACTION_GATT_CONNECTED:
                     onGattConnected();
-                    downloader = new Downloader();
                     break;
                 case BluetoothService.ACTION_GATT_DISCONNECTED:
                     onGattDisconnected();
@@ -303,7 +292,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             mService.stopSelf();
             mService = null;
         }
-        BMDeviceMap.INSTANCE.clear();
     }
 
     @Override
@@ -352,7 +340,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
                     String deviceAddress = sharedPref.getString("sensor_name", "");
                     mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-                    mBMDevice = BMDeviceMap.INSTANCE.getBMDevice(mDevice.getAddress());
                     Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
                     this.activityMainBinding.deviceName.setText(mDevice.getName() + " - connecting");
                     mService.connect(deviceAddress);
@@ -369,14 +356,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     Log.d(TAG, "BT not enabled");
                     Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
                     finish();
-                }
-                break;
-            case REQUEST_HISTORY_DEVICE:
-                // When the HistoryListActivity return, with the selected device address
-                if(resultCode == Activity.RESULT_OK && data != null)
-                {
-                    String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-                    btnGraph.setEnabled(true);
                 }
                 break;
             default:
@@ -453,35 +432,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             {
                 try
                 {
-                    //                    String text = new String(txValue, "UTF-8").trim();
-                    //                    if(!text.equals("OK"))
-                    //                    {
-                    //                        downloader.parseData(txValue);
-                    //
-                    //
-                    //                        //                        SimpleDateFormat outputFormat = new SimpleDateFormat
-                    // ("yyyy-MM-dd'T'HH:mm:ss.SSS");
-                    //                        //                        String currentDateTimeString = outputFormat.format(new Date());
-                    //                        //                        ContentValues values = new ContentValues();
-                    //                        //                        values.put(TemperatureTable.COLUMN_TEMP, Double.valueOf(text
-                    // .split("H")[0].replace("T",
-                    //                        // "")));
-                    //                        //                        values.put(TemperatureTable.COLUMN_TIMESTAMP,
-                    // currentDateTimeString);
-                    //                        //                        Uri uri = getContentResolver().insert(ClosenessProvider
-                    // .CONTENT_URI, values);
-                    //
-                    //                        //                        ContentValues[] valuesList = new ContentValues[1];
-                    //                        //                        valuesList[0] = values;
-                    //                        //                        mResolver.bulkInsert(Uri.parse
-                    // ("http://192.168.1.50:5000/temperature"), valuesList);
-                    //
-                    //                        //                        mResolver.onPerformSync();
-                    //
-                    //                        //                        // send data to the server
-                    //                        //                        sendDataToServer(values);
-                    //                    }
-                    //        byte[] value = characteristic.getValue();
                     int mantissa = (value[1] & 0xFF) + ((value[2] & 0xFF) << 8) + ((value[3] & 0xFF) << 16);
                     int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
                     double temperature = mantissa * Math.pow(10, exponent);
@@ -490,18 +440,11 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     saveDataToDB(temperature);
 
                     logMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
-                    //                    if(messageListView.getVisibility() == View.VISIBLE)
-                    //                    {
-                    //                        messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-                    //                    } else
-                    //                    {
-                    //                        messageListView.setSelection(listAdapter.getCount() - 1);
-                    //                    }
 
-                    if(mBMDevice == null)
-                    {
-                        return;
-                    }
+//                    if(mBMDevice == null)
+//                    {
+//                        return;
+//                    }
                     // TODO updateChart ??
                     //                    mBMDevice.updateChart(lineChart, text);
                     //mBMDatabase.addData(BMDatabase.TIMESTAMP_NOW(), text);
@@ -706,7 +649,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                 {
                     mService.disconnect();
                 }
-                mBMDevice = null;
                 //                messageListView.setVisibility(View.VISIBLE);
                 //                messageListView.setSelection(listAdapter.getCount() - 1);
             }
@@ -721,7 +663,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(this);
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String url = null;
+        String url;
         url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
         //FIXME API structure hard coded...
         url = url + "/register/" + uniqueID;

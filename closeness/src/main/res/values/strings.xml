@@ -71,7 +71,9 @@
     <string name="cancel">Cancel</string>
     <string name="settings">Settings</string>
     <string name="sensor_name">Sensor name</string>
+    <string name="partner_sensor_name">Partner sensor name</string>
     <string name="sensor_name_desc">Name of the sensor to use</string>
+    <string name="partner_sensor_name_desc">Name of the sensor of the partner to use</string>
     <string name="participant_number">Participant number</string>
     <string name="participant_number_desc">The participant number within the study</string>
     <string name="study_number">Study number</string>

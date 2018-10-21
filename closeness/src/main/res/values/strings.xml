@@ -81,5 +81,11 @@
     <string name="server_error_msg">Server error occured</string>
     <string name="registration_impossible">Registration is not possible</string>
     <string name="private_hash">private_hash</string>
-    
+    <string name="closeness_button_disconnect">Disconnect</string>
+    <string name="closeness_button_connect">Connect</string>
+    <string name="closeness_user_connect">user initiated connection</string>
+    <string name="closeness_user_disconnect">user stopped the connection</string>
+    <string name="time_auto_reconnect">start auto reconnect</string>
+    <string name="partner_sensor_left_range">partner sensor is not in range anymore</string>
+
 </resources>

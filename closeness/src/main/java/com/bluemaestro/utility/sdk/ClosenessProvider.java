@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -148,11 +147,11 @@ public class ClosenessProvider extends ContentProvider {
     }
     private void checkColumns(String[] projection) {
         String[] available = { TemperatureTable.COLUMN_TIMESTAMP,
-                TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_ID };
+                TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_PARTNER };
         if (projection != null) {
-            HashSet<String> requestedColumns = new HashSet<String>(
+            HashSet<String> requestedColumns = new HashSet<>(
                     Arrays.asList(projection));
-            HashSet<String> availableColumns = new HashSet<String>(
+            HashSet<String> availableColumns = new HashSet<>(
                     Arrays.asList(available));
             // check if all columns which are requested are available
             if (!availableColumns.containsAll(requestedColumns)) {

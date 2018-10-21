@@ -9,7 +9,7 @@
         android:key="partner_sensor_name"
         android:title="@string/partner_sensor_name"
         android:summary="@string/partner_sensor_name_desc"
-        android:defaultValue="DE:CC:5F:8C:51:5F"/>
+        android:defaultValue="DE:CC:5F:8C:51:5G"/>
     <EditTextPreference
         android:key="participant_number"
         android:title="@string/participant_number"

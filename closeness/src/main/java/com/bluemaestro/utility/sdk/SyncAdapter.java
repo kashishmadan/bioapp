@@ -50,7 +50,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public void onPerformSync(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient, SyncResult syncResult) {
 //        Read from ContentProvider
         Log.d(TAG, "syncing!");
-        String[] projection = {TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_TIMESTAMP, TemperatureTable.COLUMN_TEMP};
+        String[] projection = {TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_TIMESTAMP, TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_PARTNER};
         String selection = TemperatureTable.COLUMN_ID + ">?";
         String[] selectionArgs = {"0"};
         String sortOrder = "";
@@ -73,6 +73,8 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
                 item.put("time_stamp_device", timestamp);
                 float temp = mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TEMP));
                 item.put("temperature", temp);
+                boolean isPartnerClose = (mCursor.getInt(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_PARTNER)) > 0);
+                item.put("is_partner_close", isPartnerClose);
                 jsonArray.put(item);
             }
         } catch (JSONException e) {

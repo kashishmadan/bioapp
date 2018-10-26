@@ -113,16 +113,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     private boolean partnerSensorConnected = false;
     private boolean manualConnect = false;
     private Handler handler = new Handler();
-    private Runnable autoReconnectRunnable = new Runnable()
-    {
-        @Override
-        public void run()
-        {
-            logMessage(getString(R.string.time_auto_reconnect));
-            ClosenessMainActivity.this.connectDevices();
-        }
-    };
-
     /************************** UART STATUS CHANGE **************************/
 
     // UART service connected/disconnected
@@ -145,14 +135,16 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             mService = null;
         }
     };
-
-    private String getPartnerSensorName()
-    {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ClosenessMainActivity.this.getApplicationContext());
-        return sharedPref.getString("partner_sensor_name", null);
-    }
-
     private MainBinding activityMainBinding;
+    private Runnable autoReconnectRunnable = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            logMessage(getString(R.string.time_auto_reconnect));
+            ClosenessMainActivity.this.connectDevices();
+        }
+    };
     // Main UART broadcast receiver
     private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver()
     {
@@ -212,6 +204,12 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             Log.d(TAG, "Account issue");
         }
         return (newAccount);
+    }
+
+    private String getPartnerSensorName()
+    {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ClosenessMainActivity.this.getApplicationContext());
+        return sharedPref.getString("partner_sensor_name", null);
     }
 
     @Override
@@ -375,12 +373,14 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             public void run()
             {
                 String partnerDeviceAddress = getPartnerSensorName();
-                if(deviceAddress.equals(partnerDeviceAddress)) {
+                if(deviceAddress.equals(partnerDeviceAddress))
+                {
                     logMessage("partner sensor is in range !!");
                     partnerSensorConnected = true;
-                } else {
+                } else
+                {
                     Log.d(TAG, "UART_CONNECT_MSG");
-//                    activityMainBinding.buttonConnectDisconnect.setText("Disconnect");
+                    //                    activityMainBinding.buttonConnectDisconnect.setText("Disconnect");
                     activityMainBinding.deviceName.setText(mDevice.getName() + " - ready");
                     logMessage("Connected to: " + mDevice.getName());
                     // TODO scroll ?
@@ -406,28 +406,35 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             public void run()
             {
                 String partnerDeviceAddress = getPartnerSensorName();
-                if(deviceAddress.equals(partnerDeviceAddress)) {
+                if(deviceAddress.equals(partnerDeviceAddress))
+                {
                     logMessage(getString(R.string.partner_sensor_left_range));
-                    if(partnerSensorConnected) {
+                    if(partnerSensorConnected)
+                    {
                         partnerSensorConnected = false;
-                    } else {
+                    } else
+                    {
                         logMessage("Couldn't connect to partner's device");
                     }
-                } else {
+                } else
+                {
                     Log.d(TAG, "UART_DISCONNECT_MSG");
-//                    activityMainBinding.buttonConnectDisconnect.setText("Connect");
+                    //                    activityMainBinding.buttonConnectDisconnect.setText("Connect");
                     activityMainBinding.deviceName.setText("Not Connected");
                     //                logMessage("Disconnected from: " + mDevice.getName());
-                    if(mState != UART_PROFILE_DISCONNECTED) {
+                    if(mState != UART_PROFILE_DISCONNECTED)
+                    {
                         logMessage("Disconnected from: " + mDevice.getAddress());
                         mState = UART_PROFILE_DISCONNECTED;
-                    } else {
+                    } else
+                    {
                         logMessage("Couldn't connect to device");
                     }
                     //                messageListView.setSelection(listAdapter.getCount() - 1);
                     mService.close();
                 }
-                if(manualConnect) {
+                if(manualConnect)
+                {
                     // a device has been disconnected, we try to reconnect in RETRY_CONNECTING_TIME
                     handler.postDelayed(autoReconnectRunnable, RETRY_CONNECTING_TIME);
                 }
@@ -453,15 +460,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
                     double temperature = mantissa * Math.pow(10, exponent);
 
-//                    sendDataToServer(temperature);
+                    //                    sendDataToServer(temperature);
                     saveDataToDB(temperature, partnerSensorConnected);
 
                     logMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
 
-//                    if(mBMDevice == null)
-//                    {
-//                        return;
-//                    }
+                    //                    if(mBMDevice == null)
+                    //                    {
+                    //                        return;
+                    //                    }
                     // TODO updateChart ??
                     //                    mBMDevice.updateChart(lineChart, text);
                     //mBMDatabase.addData(BMDatabase.TIMESTAMP_NOW(), text);
@@ -484,7 +491,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
             values.put(TemperatureTable.COLUMN_PARTNER, isPartnerClose);
             getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-//            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+            //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
         } catch(Exception e)
         {
             Log.e(TAG, e.toString());
@@ -557,24 +564,29 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         }
         try
         {
-            if(this.mState == UART_PROFILE_DISCONNECTED) {
+            if(this.mState == UART_PROFILE_DISCONNECTED)
+            {
                 Log.d(TAG, "try connecting to device");
                 this.mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
                 //                    mBMDevice = BMDeviceMap.INSTANCE.getBMDevice(mDevice.getAddress());
                 Log.d(TAG, "... onActivityResultdevice.address==" + this.mDevice + "mserviceValue" + this.mService);
                 this.mService.connect(deviceAddress, true);
-            } else {
+            } else
+            {
                 Log.d(TAG, "device already connected");
             }
 
 
             // try connecting to partner's sensor
-            if(!this.partnerSensorConnected) {
+            if(!this.partnerSensorConnected)
+            {
                 Log.d(TAG, "try connecting to partner");
                 String partnerDeviceAddress = getPartnerSensorName();
-                if(partnerDeviceAddress == null) {
+                if(partnerDeviceAddress == null)
+                {
                     logMessage("no partner sensor entered");
-                } else {
+                } else
+                {
                     try
                     {
                         mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(partnerDeviceAddress);
@@ -583,10 +595,12 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     {
                         e.printStackTrace();
                         logMessage("partner address incorrect");
-                        //                    Toast.makeText(ClosenessMainActivity.this, "Error connecting to the partner", Toast.LENGTH_SHORT).show();
+                        //                    Toast.makeText(ClosenessMainActivity.this, "Error connecting to the partner", Toast
+                        // .LENGTH_SHORT).show();
                     }
                 }
-            } else {
+            } else
+            {
                 Log.d(TAG, "partner already connected");
             }
 
@@ -672,14 +686,17 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     @Override
     public void onBackPressed()
     {
-//        Intent startMain = new Intent(Intent.ACTION_MAIN);
-//        startMain.addCategory(Intent.CATEGORY_HOME);
-//        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(startMain);
-//        showMessage("Blue Maestro Utility App is running in background. Disconnect to exit");
+        //        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        //        startMain.addCategory(Intent.CATEGORY_HOME);
+        //        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //        startActivity(startMain);
+        //        showMessage("Blue Maestro Utility App is running in background. Disconnect to exit");
 
-//        Intent startMain = new Intent(Intent.ACTION_MAIN, CoRegulationMainActivity.class);
-//        startActivity(startMain);
+        //        Intent startMain = new Intent(Intent.ACTION_MAIN, CoRegulationMainActivity.class);
+        //        startActivity(startMain);
+
+        //        if(false)
+        //        {
 
         if(mState == UART_PROFILE_CONNECTED)
         {
@@ -706,6 +723,8 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             dialog.show();
             dialog.applyFont(this, "Montserrat-Regular.ttf");
         }
+        //    }
+
     }
 
     @Override

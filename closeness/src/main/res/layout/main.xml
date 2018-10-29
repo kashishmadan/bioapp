@@ -87,7 +87,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="18dp"
                 android:layout_toEndOf="@+id/device_label"
-                android:text="@string/no_device"
+                android:text="@string/device_not_connected"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 />
 

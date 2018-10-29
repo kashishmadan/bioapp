@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CoRegulation.iml" filepath="$PROJECT_DIR$/CoRegulation.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/closeness/closeness.iml" filepath="$PROJECT_DIR$/closeness/closeness.iml" />
       <module fileurl="file://$PROJECT_DIR$/crydetector/crydetector.iml" filepath="$PROJECT_DIR$/crydetector/crydetector.iml" />

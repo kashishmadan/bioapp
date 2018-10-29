@@ -27,7 +27,7 @@
     <string name="connect_name">Connect to devices</string>
     <string name="history_name">Device databases</string>
     <string name="device">Device:</string>
-    <string name="no_device">&lt;Select a device&gt;</string>
+    <string name="device_not_connected">Not connected</string>
     <string name="select_device">Select a device</string>
     <string name="status">Status</string>
     <string name="llsWrite">LinkLossAlert</string>

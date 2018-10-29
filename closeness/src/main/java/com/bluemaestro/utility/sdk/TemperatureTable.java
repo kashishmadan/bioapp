@@ -11,9 +11,9 @@ public class TemperatureTable {
     // Database table
     static final String TABLE_TEMPERATURE = "temperature";
     static final String COLUMN_ID = "_id";
-    static final String COLUMN_TIMESTAMP = "time_stamp_device";
-    static final String COLUMN_TEMP = "temperature";
-    static final String COLUMN_PARTNER = "is_partner_close";
+    public static final String COLUMN_TIMESTAMP = "time_stamp_device";
+    public static final String COLUMN_TEMP = "temperature";
+    public static final String COLUMN_PARTNER = "is_partner_close";
 
     // Database creation SQL statement
     private static final String DATABASE_CREATE = "create table "

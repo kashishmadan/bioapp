@@ -6,5 +6,6 @@
     <string name="button_crydetector">Audio</string>
     <string name="button_flower">Biophysical</string>
     <string name="button_closeness">Temperature</string>
+    <string name="button_experience_sampler">Experience sampler</string>
 
 </resources>

@@ -53,13 +53,14 @@ var surveyQuestions = [
                        "minResponse": -3,
                        "maxResponse": 3,
                        "labels":[
+//                                {"label": "3 Test"},
                                 {"label": "3 Very positive"},
                                 {"label": "2 Somewhat positive"},
                                 {"label": "1 A little positive"},
                                 {"label": "0 Neutral"},
                                 {"label": "-1 A little negative"},
                                 {"label": "-2 Somewhat negative"},
-                                {"label": "-3 Very negative"},  
+                                {"label": "-3 Very negative"},
                                 ]
                        },
                        /*3*/
@@ -104,7 +105,7 @@ var surveyQuestions = [
                        "labels": [
                                 {"label": "No"},
                                 {"label": "Yes"}
-                                ],                       
+                                ],
                        },
                        /*8*/
                        {
@@ -140,14 +141,14 @@ var surveyQuestions = [
                                 {"label": "Money"},
                                 {"label": "Sex"},
                                 {"label": "Work"},
-                                {"label": "Children"}, 
+                                {"label": "Children"},
                             	{"label": "Chores"},
                             	{"label": "Communication"},
                             	{"label": "Jealousy"},
-                            	{"label": "Lack of Consideration"}, 
-                            	{"label": "Lack of Respect"},  
-                            	{"label": "Differences in Opinions"},                 
-                            	{"label": "Other"},                                       
+                            	{"label": "Lack of Consideration"},
+                            	{"label": "Lack of Respect"},
+                            	{"label": "Differences in Opinions"},
+                            	{"label": "Other"},
                                 ],
                        },
                        /*11*/
@@ -185,8 +186,8 @@ var surveyQuestions = [
                        "type": "text",
                        "variableName": "conflictSupporter",
                        "questionPrompt": "Who did you seek support from following this conflict? Please also indicate your relationship to this person. (e.g., Mike S. - Coach)",
-                       }, 
-                       /*15*/                                             
+                       },
+                       /*15*/
                        {
                        "type": "checklist",
                        "variableName": "typeOfSupport",
@@ -197,9 +198,9 @@ var surveyQuestions = [
                                 {"label": "Emotional support (e.g., listened to you, cheered you up)"},
                                 {"label": "Esteem support (e.g., encouraged you, boosted your confidence)"},
                                 {"label": "Informational support (e.g., gave you advice, offered ideas and suggestions)"},
-                                {"label": "Tangible support (e.g., helped you with tasks)"},                                
+                                {"label": "Tangible support (e.g., helped you with tasks)"},
                                 ],
-                       },	 		                    
+                       },
                        /*16*/
                        {
                        "type": "mult1",
@@ -254,7 +255,7 @@ var participantSetup = [
 
 /*Populate the view with data from surveyQuestion model*/
 // Making mustache templates
-//Here you declare global variables are well 
+//Here you declare global variables are well
 var NUMSETUPQS = participantSetup.length;
 var SNOOZEQ = 0;
 var questionTmpl = "<p>{{{questionText}}}</p><ul>{{{buttons}}}</ul>";
@@ -268,7 +269,7 @@ var datePickerTmpl = '<li><input id="{{id}}" data-format="DD-MM-YYYY" data-templ
 var dateAndTimePickerTmpl = '<li><input id="{{id}}" data-format="DD-MM-YYYY-HH-mm" data-template="D MMM YYYY  HH:mm" name="datetime24"><br /><br /></li><li><button type="submit" value="Enter">Enter</button></li><script>$(function(){$("input").combodate({firstItem: "name",minYear:2015, maxYear:2016});});</script>';
 var timePickerTmpl = "<li><input id ='{{id}}' type='time'></input><br /><br /></li><li><button type='submit' value='Enter'>Enter</button></li>";
 var lastPageTmpl = "<h3>{{message}}</h3>";
-var uniqueKey; 
+var uniqueKey;
 var name;
 
 var app = {
@@ -288,7 +289,7 @@ onDeviceReady: function() {
 onResume: function() {app.sampleParticipant();},
 onPause: function() {app.pauseEvents();},
 //Beginning our app functions
-/* The first function is used to specify how the app should display the various questions. You should note which questions 
+/* The first function is used to specify how the app should display the various questions. You should note which questions
 should be displayed using which formats before customizing this function*/
 renderQuestion: function(question_index) {
     //First load the correct question from the JSON database
@@ -300,7 +301,7 @@ renderQuestion: function(question_index) {
 		questionPrompt = questionPrompt.replace("NAME", function replacer() {return name;});
       	}
     question.questionText = Mustache.render(questionTextTmpl, {questionPrompt: questionPrompt});
-    
+
     //Now populate the view for this question, depending on what the question type is
     switch (question.type) {
     	case 'mult1': // Rating scales (i.e., small numbers at the top of the screen and larger numbers at the bottom of the screen).
@@ -334,7 +335,7 @@ renderQuestion: function(question_index) {
         	$("#question ul li button").click(function(){
         		app.recordResponse(this, question_index, question.type);
         	});
-        	break;		
+        	break;
         case 'checklist':
         	question.buttons = "";
         	var label_count = 0;
@@ -369,7 +370,7 @@ renderQuestion: function(question_index) {
         	question.buttons = Mustache.render(instructionTmpl, {id: question.variableName+"1"});
         	$("#question").html(Mustache.render(questionTmpl, question)).fadeIn(400);
         	var instruction = [];
-        	$("#question ul li button").click(function(){ 
+        	$("#question ul li button").click(function(){
         		instruction.push(question.variableName);
         		instruction.push($(this).val());
         		app.recordResponse(String(instruction), question_index, question.type);
@@ -381,7 +382,7 @@ renderQuestion: function(question_index) {
         	$("#question ul li button").click(function(){
 				if (app.validateResponse($("textarea"))){
         		 	app.recordResponse($("textarea"), question_index, question.type);
-                } 
+                }
                 else {
                     alert("Please enter something.");
                 }
@@ -397,7 +398,7 @@ renderQuestion: function(question_index) {
         		dateArray.push(date);
         		app.recordResponse(String(dateArray), question_index, question.type);
         	});
-        	break;    
+        	break;
         case 'dateAndTimePicker':
         	question.buttons = Mustache.render(dateAndTimePickerTmpl, {id: question.variableName+"1"});
         	$("#question").html(Mustache.render(questionTmpl, question)).fadeIn(400);
@@ -416,12 +417,12 @@ renderQuestion: function(question_index) {
         	$("#question ul li button").click(function(){
 				if (app.validateTime($("input"))){
         		 	app.recordResponse($("input"), question_index, question.type);
-                } 
+                }
                 else {
                     alert("Please enter a time.");
                 }
         	});
-        	break;	        		                 
+        	break;
         }
 },
 
@@ -430,7 +431,7 @@ renderLastPage: function(pageData, question_index) {
     if ( question_index == SNOOZEQ ) {
         app.snoozeNotif();
         localStore.snoozed = 1;
-        app.saveData();        
+        app.saveData();
     }
     else if ( question_index == -1) {
     	app.saveDataLastPage();
@@ -438,7 +439,7 @@ renderLastPage: function(pageData, question_index) {
     else {
     	var datestamp = new Date();
     	var year = datestamp.getFullYear(), month = datestamp.getMonth(), day=datestamp.getDate(), hours=datestamp.getHours(), minutes=datestamp.getMinutes(), seconds=datestamp.getSeconds(), milliseconds=datestamp.getMilliseconds();
-    	localStore[uniqueKey + '.' + "completed" + "_" + "completedSurvey"  + "_" + year + "_" + month + "_" + day + "_" + hours + "_" + minutes + "_" + seconds + "_" + milliseconds] = 1;	
+    	localStore[uniqueKey + '.' + "completed" + "_" + "completedSurvey"  + "_" + year + "_" + month + "_" + day + "_" + hours + "_" + minutes + "_" + seconds + "_" + milliseconds] = 1;
     	app.saveDataLastPage();
     }
 },
@@ -520,7 +521,7 @@ recordResponse: function(button, count, type) {
 pauseEvents: function() {
     localStore.pause_time = new Date().getTime();
     app.saveData();
-}, 
+},
     /* Initialize the whole thing */
 init: function() {
     uniqueKey = new Date().getTime();
@@ -530,12 +531,12 @@ init: function() {
         localStore.uniqueKey = uniqueKey;
 	var startTime = new Date(uniqueKey);
     	var syear = startTime.getFullYear(), smonth = startTime.getMonth(), sday=startTime.getDate(), shours=startTime.getHours(), sminutes=startTime.getMinutes(), sseconds=startTime.getSeconds(), smilliseconds=startTime.getMilliseconds();
-    	localStore[uniqueKey + "_" + "startTime"  + "_" + syear + "_" + smonth + "_" + sday + "_" + shours + "_" + sminutes + "_" + sseconds + "_" + smilliseconds] = 1;	
+    	localStore[uniqueKey + "_" + "startTime"  + "_" + syear + "_" + smonth + "_" + sday + "_" + shours + "_" + sminutes + "_" + sseconds + "_" + smilliseconds] = 1;
         app.renderQuestion(0);
     }
     localStore.snoozed = 0;
 },
-    
+
 sampleParticipant: function() {
     var current_moment = new Date();
     var current_time = current_moment.getTime();
@@ -543,7 +544,7 @@ sampleParticipant: function() {
         uniqueKey = new Date().getTime();
     	var startTime = new Date(uniqueKey);
     	var syear = startTime.getFullYear(), smonth = startTime.getMonth(), sday=startTime.getDate(), shours=startTime.getHours(), sminutes=startTime.getMinutes(), sseconds=startTime.getSeconds(), smilliseconds=startTime.getMilliseconds();
-    	localStore[uniqueKey + "_" + "startTime"  + "_" + syear + "_" + smonth + "_" + sday + "_" + shours + "_" + sminutes + "_" + sseconds + "_" + smilliseconds] = 1;		    
+    	localStore[uniqueKey + "_" + "startTime"  + "_" + syear + "_" + smonth + "_" + sday + "_" + shours + "_" + sminutes + "_" + sseconds + "_" + smilliseconds] = 1;
         localStore.snoozed = 0;
         app.renderQuestion(0);
     }
@@ -551,28 +552,32 @@ sampleParticipant: function() {
         uniqueKey = localStore.uniqueKey;
     }
     app.saveData();
-},  
+},
 saveData:function() {
     $.ajax({
+//           type: 'post',
            type: 'get',
+//           url: 'http://92.222.68.64/cgi-bin/data_collector.cgi',
            url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
            data: localStore,
            crossDomain: true,
            success: function (result) {
-           var pid = localStore.participant_id, snoozed = localStore.snoozed, 
-           		uniqueKey = localStore.uniqueKey, pause_time = localStore.pause_time;
-           localStore.clear();
-           localStore.participant_id = pid;
-           localStore.snoozed = snoozed;
-           localStore.uniqueKey = uniqueKey;
-           localStore.pause_time = pause_time;
+               var pid = localStore.participant_id, snoozed = localStore.snoozed,
+                    uniqueKey = localStore.uniqueKey, pause_time = localStore.pause_time;
+               localStore.clear();
+               localStore.participant_id = pid;
+               localStore.snoozed = snoozed;
+               localStore.uniqueKey = uniqueKey;
+               localStore.pause_time = pause_time;
            },
            error: function (request, error) {console.log(error);},
            });
 },
 saveDataLastPage:function() {
     $.ajax({
+//           type: 'post',
            type: 'get',
+//           url: 'http://92.222.68.64/cgi-bin/data_collector.cgi',
            url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
            data: localStore,
            crossDomain: true,

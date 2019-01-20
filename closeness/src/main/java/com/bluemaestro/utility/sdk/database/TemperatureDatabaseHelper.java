@@ -1,4 +1,4 @@
-package com.bluemaestro.utility.sdk;
+package com.bluemaestro.utility.sdk.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

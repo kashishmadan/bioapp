@@ -554,11 +554,12 @@ sampleParticipant: function() {
     app.saveData();
 },
 saveData:function() {
+    console.log('saveData:', localStore);
     $.ajax({
-//           type: 'post',
-           type: 'get',
-//           url: 'http://92.222.68.64/cgi-bin/data_collector.cgi',
-           url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
+           type: 'post',
+//           type: 'get',
+           url: 'https://anthony-dallagnola.tk/cgi-bin/data_collector.cgi',
+//           url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
            data: localStore,
            crossDomain: true,
            success: function (result) {
@@ -570,16 +571,35 @@ saveData:function() {
                localStore.uniqueKey = uniqueKey;
                localStore.pause_time = pause_time;
            },
-           error: function (request, error) {console.log(error);},
+           processData: false,
+           error: function (request, error) {console.log(error);}
            });
 },
 saveDataLastPage:function() {
+    console.log('saveDataLastPage: ', localStore);
+//    var data = {};
+//    for (var elem in localStore) {
+//        data[elem] = localStore[elem];
+//    }
+    var data = '';
+    var first = true;
+    for (var elem in localStore) {
+        if(first) {
+            first = false;
+        } else {
+            data += '&';
+        }
+        data += elem + '=' + localStore[elem];
+    }
+    console.log('data: ', data);
     $.ajax({
-//           type: 'post',
-           type: 'get',
-//           url: 'http://92.222.68.64/cgi-bin/data_collector.cgi',
-           url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
-           data: localStore,
+           type: 'post',
+//           type: 'get',
+           url: 'https://anthony-dallagnola.tk/cgi-bin/data_collector.cgi',
+//           url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
+           data: data,
+//           data: localStore,
+//           json: true,
            crossDomain: true,
            success: function (result) {	
            		var pid = localStore.participant_id, snoozed = localStore.snoozed, uniqueKey = localStore.uniqueKey;
@@ -589,11 +609,12 @@ saveDataLastPage:function() {
            		localStore.uniqueKey = uniqueKey;
            		$("#question").html("<h3>Your responses have been recorded. Thank you for completing this survey.</h3>");
            },
+//           processData: false,
            error: function (request, error) {
            		console.log(error);
                 $("#question").html("<h3>Please try resending data. If problems persist, please contact the researchers.</h3><br><button>Resend data</button>");
                 $("#question button").click(function () {app.saveDataLastPage();});           		
-           	},
+           	}
            });
 },
 scheduleNotifs:function() {

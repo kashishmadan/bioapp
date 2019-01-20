@@ -55,19 +55,12 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bluemaestro.utility.sdk.adapter.MessageAdapter;
 import com.bluemaestro.utility.sdk.databinding.MainBinding;
 import com.bluemaestro.utility.sdk.service.TemperatureService;
 import com.bluemaestro.utility.sdk.views.dialogs.BMAlertDialog;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 public class ClosenessMainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -212,11 +205,11 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         PreferenceManager.setDefaultValues(this, R.xml.closeness_preferences, false);
 
         // Delete all databases; testing only
-        //        String[] addresses = getApplicationContext().databaseList();
-        //        for(String address : addresses)
-        //        {
-        //            getApplicationContext().deleteDatabase(address);
-        //        }
+        String[] addresses = getApplicationContext().databaseList();
+        for(String address : addresses)
+        {
+            getApplicationContext().deleteDatabase(address);
+        }
 
         View rootView = findViewById(android.R.id.content).getRootView();
         StyleOverride.setDefaultTextColor(rootView, Color.BLACK);
@@ -407,7 +400,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
                 Intent intent = new Intent(this, TemperatureService.class);
                 this.stopService(intent);
-//                this.temperatureService.onDisconnect();
+                //                this.temperatureService.onDisconnect();
                 this.logMessage(getString(R.string.closeness_user_disconnect));
             }
         }
@@ -419,14 +412,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String deviceAddress = sharedPref.getString("sensor_name", "");
         this.mPrivateHash = sharedPref.getString(getString(R.string.private_hash), "");
-        if(mPrivateHash.equals(""))
-        {
-            registerDevice();
-        } else
-        {
-            Log.d(TAG, "using private hash");
-            Log.d(TAG, mPrivateHash);
-        }
+        // TODO skipping private hash
+        //        if(mPrivateHash.equals(""))
+        //        {
+        //            registerDevice();
+        //        } else
+        //        {
+        //            Log.d(TAG, "using private hash");
+        //            Log.d(TAG, mPrivateHash);
+        //        }
         try
         {
             Intent bindIntent = new Intent(this, TemperatureService.class);
@@ -452,65 +446,65 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         }
     }
 
-    private void registerDevice()
-    {
-        final Context context = getApplicationContext();
-        final int duration = Toast.LENGTH_SHORT;
-        String uniqueID = UUID.randomUUID().toString();
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String url;
-        url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
-        //FIXME API structure hard coded...
-        url = url + "/register/" + uniqueID;
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response)
-                    {
-                        Log.d(TAG, response);
-                        response = response.replaceAll("\\s$", "");
-                        response = response.replaceAll("\"", "");
-                        Log.d(TAG, response);
-                        Log.d(TAG, Integer.toString(response.length()));
-                        if(response.length() == 28)
-                        {
-                            Toast toast = Toast.makeText(context, R.string.registration_impossible, duration);
-                            toast.show();
-                            Log.d(TAG, "Registration is not possible");
-                        } else
-                        {
-                            if(response.length() == 64)
-                            {
-                                mPrivateHash = response;
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putString(getString(R.string.private_hash), response);
-                                editor.commit();
-
-                                Log.d(TAG, response);
-                            } else
-                            {
-                                Toast toast = Toast.makeText(context, R.string.server_error_msg, duration);
-                                toast.show();
-                                Log.d(TAG, "Server error occured");
-                            }
-                        }
-                    }
-                }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                Log.d(TAG, "That didn't work!");
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
+//    private void registerDevice()
+//    {
+//        final Context context = getApplicationContext();
+//        final int duration = Toast.LENGTH_SHORT;
+//        String uniqueID = UUID.randomUUID().toString();
+//        // Instantiate the RequestQueue.
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+//        String url;
+//        url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
+//        //FIXME API structure hard coded...
+//        url = url + "/register/" + uniqueID;
+//
+//        // Request a string response from the provided URL.
+//        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
+//                new Response.Listener<String>()
+//                {
+//                    @Override
+//                    public void onResponse(String response)
+//                    {
+//                        Log.d(TAG, response);
+//                        response = response.replaceAll("\\s$", "");
+//                        response = response.replaceAll("\"", "");
+//                        Log.d(TAG, response);
+//                        Log.d(TAG, Integer.toString(response.length()));
+//                        if(response.length() == 28)
+//                        {
+//                            Toast toast = Toast.makeText(context, R.string.registration_impossible, duration);
+//                            toast.show();
+//                            Log.d(TAG, "Registration is not possible");
+//                        } else
+//                        {
+//                            if(response.length() == 64)
+//                            {
+//                                mPrivateHash = response;
+//                                SharedPreferences.Editor editor = sharedPref.edit();
+//                                editor.putString(getString(R.string.private_hash), response);
+//                                editor.commit();
+//
+//                                Log.d(TAG, response);
+//                            } else
+//                            {
+//                                Toast toast = Toast.makeText(context, R.string.server_error_msg, duration);
+//                                toast.show();
+//                                Log.d(TAG, "Server error occured");
+//                            }
+//                        }
+//                    }
+//                }, new Response.ErrorListener()
+//        {
+//            @Override
+//            public void onErrorResponse(VolleyError error)
+//            {
+//                Log.d(TAG, "That didn't work!");
+//            }
+//        });
+//        // Add the request to the RequestQueue.
+//        queue.add(stringRequest);
+//    }
 
     private void showMessage(String msg)
     {

@@ -16,7 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bluemaestro.utility.sdk.ClosenessMainActivity;
-import com.bluemaestro.utility.sdk.TemperatureDatabaseHelper;
+import com.bluemaestro.utility.sdk.database.TemperatureDatabaseHelper;
 import com.telhai.spl.crydetector.AudioRecordActivity;
 import com.telhai.spl.crydetector.UploadManager;
 import com.experiencesampler.experiencesampler.MainActivity;

@@ -1,4 +1,4 @@
-package com.bluemaestro.utility.sdk;
+package com.bluemaestro.utility.sdk.database;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -9,8 +9,8 @@ import android.util.Log;
 
 public class TemperatureTable {
     // Database table
-    static final String TABLE_TEMPERATURE = "temperature";
-    static final String COLUMN_ID = "_id";
+    public static final String TABLE_TEMPERATURE = "temperature";
+    public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TIMESTAMP = "time_stamp_device";
     public static final String COLUMN_TEMP = "temperature";
     public static final String COLUMN_PARTNER = "is_partner_close";

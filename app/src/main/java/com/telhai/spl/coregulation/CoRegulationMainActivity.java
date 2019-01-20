@@ -16,9 +16,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bluemaestro.utility.sdk.ClosenessMainActivity;
-import com.bluemaestro.utility.sdk.TemperatureDatabaseHelper;
+import com.bluemaestro.utility.sdk.database.TemperatureDatabaseHelper;
 import com.telhai.spl.crydetector.AudioRecordActivity;
 import com.telhai.spl.crydetector.UploadManager;
+import com.experiencesampler.experiencesampler.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -152,6 +153,15 @@ public class CoRegulationMainActivity extends AppCompatActivity
     public void openCryDetectorActivity(View view)
     {
         Intent intent = new Intent(this, AudioRecordActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the user taps the Open experience sampler Activity button
+     */
+    public void openExperienceSamplerActivity(View view)
+    {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 

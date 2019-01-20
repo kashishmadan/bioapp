@@ -10,6 +10,9 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.bluemaestro.utility.sdk.database.TemperatureDatabaseHelper;
+import com.bluemaestro.utility.sdk.database.TemperatureTable;
+
 import java.util.Arrays;
 import java.util.HashSet;
 

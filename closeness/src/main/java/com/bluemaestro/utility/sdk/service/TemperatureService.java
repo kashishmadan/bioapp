@@ -19,7 +19,7 @@ import android.util.Log;
 
 import com.bluemaestro.utility.sdk.ClosenessProvider;
 import com.bluemaestro.utility.sdk.R;
-import com.bluemaestro.utility.sdk.TemperatureTable;
+import com.bluemaestro.utility.sdk.database.TemperatureTable;
 import com.bluemaestro.utility.sdk.utility.Utils;
 
 import java.util.Date;

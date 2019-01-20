@@ -40,6 +40,21 @@
             android:layout_centerHorizontal="true"
             />
 
+
+        <Button
+            android:id="@+id/btnFlower"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_marginRight="@dimen/fab_margin"
+            android:onClick="openFlowerActivity"
+            android:text="@string/button_flower"
+            app:layout_anchorGravity="bottom|center_horizontal"
+            app:srcCompat="@drawable/flower_icon"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
         <Button
             android:id="@+id/btnCloseness"
             android:layout_width="match_parent"
@@ -56,20 +71,25 @@
             app:srcCompat="@drawable/blue_maestro_icon"
             />
 
+
         <Button
-            android:id="@+id/btnFlower"
+            android:id="@+id/btnExperienceSampler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
-            android:layout_marginLeft="@dimen/fab_margin"
-            android:layout_marginRight="@dimen/fab_margin"
-            android:onClick="openFlowerActivity"
-            android:text="@string/button_flower"
-            app:layout_anchorGravity="bottom|center_horizontal"
-            app:srcCompat="@drawable/flower_icon"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_below="@+id/btnCloseness"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="26dp"
+            android:onClick="openExperienceSamplerActivity"
+            android:text="@string/button_experience_sampler"
+            app:layout_anchorGravity="center_vertical|center_horizontal"
+            app:srcCompat="@drawable/blue_maestro_icon"
+            />
 
     </RelativeLayout>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

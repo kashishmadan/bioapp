@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.telhai.spl.coregulation">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         tools:replace="android:icon,android:theme,android:label"
         android:allowBackup="true"
@@ -28,6 +30,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="d32a2f3135afec4d6ea4c7c9b5e25f8ebca2febc" />
     </application>
 
 </manifest>

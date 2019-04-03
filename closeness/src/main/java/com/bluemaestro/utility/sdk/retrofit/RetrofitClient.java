@@ -5,18 +5,13 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
-import com.readystatesoftware.chuck.ChuckInterceptor;
 
 import java.io.IOException;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import okio.Buffer;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient
@@ -74,8 +69,8 @@ public class RetrofitClient
     }
 
     private static OkHttpClient.Builder getOkHttpClientBuilder(Context context){
-        return new OkHttpClient.Builder()
-                .addInterceptor(new ChuckInterceptor(context));
+        return new OkHttpClient.Builder();
+//                .addInterceptor(new ChuckInterceptor(context));
 //                .addInterceptor(chain -> {
 //                    Request request = chain.request();
 //                    if(request.body().getClass() == FormBody.class)
@@ -124,39 +119,6 @@ public class RetrofitClient
                     .build();
         }
         return retrofit;
-    }
-
-    public static Retrofit getClientWithToken(Context context, String baseUrl, final String token){
-        if(retrofitWithToken == null)
-        {
-
-            OkHttpClient.Builder builder = getOkHttpClientBuilder(context);
-
-            //Adding token in header
-            //builder.addInterceptor(new AuthenticationInterceptor(token));
-            builder.addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request original = chain.request();
-
-                    Request request = original.newBuilder()
-                            .addHeader("access-token", token)
-                            .build();
-
-                    return chain.proceed(request);
-                }
-            });
-            OkHttpClient okHttpClient = builder.build();
-
-            retrofitWithToken = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .client(okHttpClient)
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(createFullGson()))
-                    .build();
-        }
-        return retrofitWithToken;
-
     }
 
     public static String fieldToString(String name, String value)

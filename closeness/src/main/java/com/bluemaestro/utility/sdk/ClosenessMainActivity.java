@@ -33,6 +33,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,11 +57,17 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bluemaestro.utility.sdk.adapter.MessageAdapter;
+import com.bluemaestro.utility.sdk.database.TemperatureTable;
 import com.bluemaestro.utility.sdk.databinding.MainBinding;
 import com.bluemaestro.utility.sdk.service.TemperatureService;
+import com.bluemaestro.utility.sdk.utility.Utils;
 import com.bluemaestro.utility.sdk.views.dialogs.BMAlertDialog;
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import io.fabric.sdk.android.Fabric;
 
 public class ClosenessMainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener
 {
@@ -131,6 +138,13 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                 case TemperatureService.ACTION_DEVICE_READY:
                     activityMainBinding.deviceName.setText(intent.getExtras().getString("value"));
                     break;
+                case TemperatureService.ACTION_NOTIFY_SYNC_ADAPTER:
+//                    ContentResolver.
+//                    Bundle bundle = new Bundle();
+//                    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+//                    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+//                    ContentResolver.requestSync(mAccount, "com.bluemaestro.utility.sdk.contentprovider", bundle);
+                    break;
                 default:
                     Log.d(TAG, "temperature service, case not handled: " + intent.getAction());
                     //                case BluetoothService.ACTION_GATT_CONNECTED:
@@ -159,6 +173,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(TemperatureService.ACTION_LOG);
         intentFilter.addAction(TemperatureService.ACTION_DEVICE_READY);
+        intentFilter.addAction(TemperatureService.ACTION_NOTIFY_SYNC_ADAPTER);
         return intentFilter;
     }
 
@@ -193,23 +208,31 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+//        String temp = null;
+//        temp.length();
         this.activityMainBinding = DataBindingUtil.setContentView(this, R.layout.main);
         //        setContentView(R.layout.main);
 
         String serverUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("server_url_main", "");
         Log.i(TAG, "Server URL: " + serverUrl);
 
+//        ApiUtils.create(this);
+
+
         this.mResolver = getContentResolver();
         this.mAccount = CreateSyncAccount(this);
+        //        ContentResolver.addPeriodicSync(this.mAccount, "com.bluemaestro.utility.sdk.contentprovider", null, 10);
         ContentResolver.setSyncAutomatically(this.mAccount, "com.bluemaestro.utility.sdk.contentprovider", true);
+//        mResolver.
         PreferenceManager.setDefaultValues(this, R.xml.closeness_preferences, false);
 
         // Delete all databases; testing only
-        String[] addresses = getApplicationContext().databaseList();
-        for(String address : addresses)
-        {
-            getApplicationContext().deleteDatabase(address);
-        }
+//        String[] addresses = getApplicationContext().databaseList();
+//        for(String address : addresses)
+//        {
+//            getApplicationContext().deleteDatabase(address);
+//        }
 
         View rootView = findViewById(android.R.id.content).getRootView();
         StyleOverride.setDefaultTextColor(rootView, Color.BLACK);
@@ -251,6 +274,26 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             }
         });
 
+
+        // create dummy data
+        for(int i = 0; i < 30; i++)
+        {
+
+            try
+            {
+                String timestamp = Utils.dateToIsoString(new Date());
+                ContentValues values = new ContentValues();
+                values.put(TemperatureTable.COLUMN_TEMP, i);
+                values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
+                values.put(TemperatureTable.COLUMN_PARTNER, false);
+                getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+                //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+            } catch(Exception e)
+            {
+                Log.e(TAG, e.toString());
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

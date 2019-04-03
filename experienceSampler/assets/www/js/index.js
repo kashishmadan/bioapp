@@ -558,7 +558,7 @@ saveData:function() {
     $.ajax({
            type: 'post',
 //           type: 'get',
-           url: 'https://anthony-dallagnola.tk/cgi-bin/data_collector.cgi',
+           url: 'https://cgi.socialthermo.ovh/cgi-bin/data_collector.cgi',
 //           url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
            data: localStore,
            crossDomain: true,
@@ -595,7 +595,9 @@ saveDataLastPage:function() {
     $.ajax({
            type: 'post',
 //           type: 'get',
-           url: 'https://anthony-dallagnola.tk/cgi-bin/data_collector.cgi',
+//           url: 'https://anthony-dallagnola.tk/cgi-bin/data_collector.cgi',
+           url: 'https://cgi.socialthermo.ovh/cgi-bin/data_collector.cgi',
+//           url: 'https://www.cgi.socialthermo.ovh/cgi-bin/data_collector.cgi',
 //           url: 'https://script.google.com/macros/s/AKfycbzzbp0437BkTqx95W9THF9JhWcydzn-K-FJTbwIHF23-S0JbDXG/exec',
            data: data,
 //           data: localStore,

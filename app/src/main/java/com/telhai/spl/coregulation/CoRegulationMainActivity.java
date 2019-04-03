@@ -17,14 +17,17 @@ import android.widget.Toast;
 
 import com.bluemaestro.utility.sdk.ClosenessMainActivity;
 import com.bluemaestro.utility.sdk.database.TemperatureDatabaseHelper;
+import com.crashlytics.android.Crashlytics;
+import com.experiencesampler.experiencesampler.MainActivity;
+//import com.em
 import com.telhai.spl.crydetector.AudioRecordActivity;
 import com.telhai.spl.crydetector.UploadManager;
-import com.experiencesampler.experiencesampler.MainActivity;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.fabric.sdk.android.Fabric;
 import nl.tue.ppeters.flower.FlowerActivity;
 
 public class CoRegulationMainActivity extends AppCompatActivity
@@ -36,6 +39,7 @@ public class CoRegulationMainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_co_regulation_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -98,6 +102,7 @@ public class CoRegulationMainActivity extends AppCompatActivity
                     AlertDialog alertDialog = new AlertDialog.Builder(CoRegulationMainActivity.this).create();
                     alertDialog.setTitle("Upload and Delete");
                     alertDialog.setMessage("Upload to " + serverUrl + " and delete files?");
+                    final String serverUrlWS = serverUrl + "/uploadAll";
                     alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "OK", new DialogInterface.OnClickListener()
                     {
                         public void onClick(DialogInterface dialog, int which)
@@ -107,7 +112,8 @@ public class CoRegulationMainActivity extends AppCompatActivity
                                 @Override
                                 public void run()
                                 {
-                                    UploadManager.uploadAllFiles(getApplicationContext(), serverUrl, fileArray, true, false);
+                                    UploadManager.uploadAllFiles(getApplicationContext(), serverUrlWS, fileArray, false, false);
+//                                    UploadManager.uploadAllFiles(getApplicationContext(), serverUrlWS, fileArray, true, false);
                                 }
                             };
                             new Thread(r).start();
@@ -160,6 +166,15 @@ public class CoRegulationMainActivity extends AppCompatActivity
      * Called when the user taps the Open experience sampler Activity button
      */
     public void openExperienceSamplerActivity(View view)
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Called when the user taps the Open experience sampler Activity button
+     */
+    public void openEmbrWave(View view)
     {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);

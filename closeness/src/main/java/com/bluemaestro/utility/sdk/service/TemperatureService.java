@@ -29,6 +29,7 @@ public class TemperatureService extends Service
     public static final String TAG = "TemperatureService";
     public static final String ACTION_LOG = "log";
     public static final String ACTION_DEVICE_READY = "device_ready";
+    public static final String ACTION_NOTIFY_SYNC_ADAPTER = "sync_adapter";
     public static final String MESSAGE_KEY = "message";
     public static final long RETRY_CONNECTING_TIME = 60 * 1000;
     public static boolean isRunning = false;
@@ -50,6 +51,7 @@ public class TemperatureService extends Service
     private Handler handler = new Handler();
     private String deviceAddress;
     private String partnerDeviceAddress;
+    private int nbTemperatures = 0;
     // UART service connected/disconnected
     private ServiceConnection mServiceConnection = new ServiceConnection()
     {
@@ -184,23 +186,42 @@ public class TemperatureService extends Service
 
     private void onGattServicesDiscovered()
     {
-        this.mService.enableNotification();
+        this.mService.enableNotificationTemperature();
     }
 
     private void onDataAvailable(final byte[] value)
     {
         try
         {
-            int mantissa = (value[1] & 0xFF) + ((value[2] & 0xFF) << 8) + ((value[3] & 0xFF) << 16);
-            int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
-            double temperature = mantissa * Math.pow(10, exponent);
+            if(nbTemperatures == 10) {
 
-            //                    sendDataToServer(temperature);
-            saveDataToDB(temperature, this.partnerSensorConnected);
+                int tempOut = ((value[0] & 0xFF) + ((value[1] & 0xFF) << 8));
+                if(tempOut > 0x8000)
+                {
+                    // 2's complement
+                    tempOut = -(0x10000 - tempOut);
+                }
+                double temperature = 42.5 + ((double) tempOut / 480);
+                // myTemp
+                //            int mantissa = (value[1] & 0xFF) + ((value[2] & 0xFF) << 8) + ((value[3] & 0xFF) << 16);
+                //            int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
+                //            double temperature = mantissa * Math.pow(10, exponent);
 
-            Log.d(TAG, "new temperature: " + String.format("%.2f", temperature) + "°C");
-            broadcastMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
+                //                    sendDataToServer(temperature);
+                saveDataToDB(temperature, this.partnerSensorConnected);
 
+                Log.d(TAG, "new temperature: " + String.format("%.2f", temperature) + "°C");
+                broadcastMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
+
+                nbTemperatures = 0;
+            }
+            this.nbTemperatures++;
+
+            //            if(nbTemperatures > 20)
+//            {
+//                //                ContentResolver.
+//                broadcastUpdate(ACTION_NOTIFY_SYNC_ADAPTER);
+//            }
         } catch(Exception e)
         {
             Log.e(TAG, e.toString());
@@ -245,7 +266,7 @@ public class TemperatureService extends Service
         Log.d(TAG, "onConnect");
         this.manualConnect = true;
 
-//        this.broadcastMessage("Hello there");
+        //        this.broadcastMessage("Hello there");
         if(this.mState == UART_PROFILE_DISCONNECTED)
         {
             Log.d(TAG, "try connecting to device");
@@ -323,11 +344,12 @@ public class TemperatureService extends Service
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, int flags, int startId)
+    {
         //TODO do something useful
         this.deviceAddress = intent.getExtras().getString("sensor_address");
         this.partnerDeviceAddress = intent.getExtras().getString("partner_sensor_address");
-//        this.connect();
+        //        this.connect();
 
         Intent bindIntent = new Intent(this, BluetoothService.class);
         bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
@@ -336,7 +358,6 @@ public class TemperatureService extends Service
         TemperatureService.isRunning = true;
         return Service.START_STICKY;
     }
-
 
 
     @Override

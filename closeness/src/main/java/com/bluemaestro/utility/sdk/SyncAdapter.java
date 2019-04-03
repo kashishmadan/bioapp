@@ -54,6 +54,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     public static final String TAG = "BlueMaestro";
     ContentResolver mContentResolver;
     Context mContext;
+    private static final int MAXIMUM_SENSOR_VALUES = 100;
 
     public SyncAdapter(
             Context context,
@@ -63,11 +64,15 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
         super(context, autoInitialize, allowParallelSyncs);
         mContentResolver = context.getContentResolver();
         mContext = context;
+//        ApiUtils.create(context);
     }
 
     @Override
     public void onPerformSync(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient, SyncResult syncResult)
     {
+        //        if(false)
+        //        {
+
         Log.d(TAG, "syncing!");
         String[] projection = {TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_TIMESTAMP, TemperatureTable.COLUMN_TEMP,
                 TemperatureTable.COLUMN_PARTNER};
@@ -114,21 +119,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
         final String dropIdClause2 = dropIdClause;
         if(!sensors.isEmpty())
         {
-            ApiUtils.create(mContext)
-                    .addSensor(studyNumber, participantNumber, (new Gson()).toJsonTree(sensors))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(mContext)
-                    {
-                        @Override
-                        protected void onSuccess(retrofit2.Response<Void> voidResponse)
-                        {
-                            Log.d(TAG, "successfully updated");
-
-                            int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause2, null);
-                            Log.d(TAG, String.valueOf(rowsDeleted));
-                        }
-                    });
+            sendDataToServer(studyNumber, participantNumber, sensors, dropIdClause2);
         }
         //        } catch(JSONException e)
         //        {
@@ -137,9 +128,35 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
         //        {
         //            mCursor.close();
         //        }
+        //        }
     }
 
-    //    @Override
+    private void sendDataToServer(final String studyNumber, final String participantNumber, final List<Sensor> sensors, final String dropIdClause2)
+    {
+        ApiUtils.create(mContext)
+                .addSensor(studyNumber, participantNumber, (new Gson()).toJsonTree(sensors.subList(0, Math.min(sensors.size(), MAXIMUM_SENSOR_VALUES))))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(mContext)
+                {
+                    @Override
+                    protected void onSuccess(retrofit2.Response<Void> voidResponse)
+                    {
+                        Log.d(TAG, "successfully updated");
+
+                        if(sensors.size() > MAXIMUM_SENSOR_VALUES) {
+                            List<Sensor> sensorsTemp = sensors.subList(MAXIMUM_SENSOR_VALUES, sensors.size());
+                            sendDataToServer(studyNumber, participantNumber, sensorsTemp, dropIdClause2);
+                        } else {
+                            int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause2, null);
+                            Log.d(TAG, String.valueOf(rowsDeleted));
+                        }
+                    }
+                })
+                .onComplete();
+    }
+
+    //        @Override
     public void onPerformSync2(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient, SyncResult syncResult)
     {
         //        Read from ContentProvider

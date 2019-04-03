@@ -88,6 +88,22 @@
             app:srcCompat="@drawable/blue_maestro_icon"
             />
 
+        <Button
+            android:id="@+id/btnEmbrWave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/btnExperienceSampler"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_marginTop="26dp"
+            android:onClick="openEmbrWave"
+            android:text="@string/button_embr_wave"
+            app:layout_anchorGravity="center_vertical|center_horizontal"
+            app:srcCompat="@drawable/blue_maestro_icon"
+            />
+
     </RelativeLayout>
 
 

@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">EmbrWave</string>
+    <string name="button_disconnect">DISCONNECT</string>
+    <string name="button_connect">CONNECT</string>
+    <string name="button_cool">Refroidir</string>
+    <string name="button_warm">Réchauffer</string>
+    <string name="button_stop">Arrêter</string>
+</resources>

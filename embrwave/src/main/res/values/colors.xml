@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_blue">#0000FF</color>
+    <color name="color_green">#228B22</color>
+    <color name="color_gray">#CCCCCC</color>
+    <color name="color_button_warm">#FF4D33</color>
+    <color name="color_button_cool">#6CFFF1</color>
+</resources>

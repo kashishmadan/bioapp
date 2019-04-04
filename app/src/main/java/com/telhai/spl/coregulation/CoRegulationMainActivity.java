@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.bluemaestro.utility.sdk.ClosenessMainActivity;
 import com.bluemaestro.utility.sdk.database.TemperatureDatabaseHelper;
 import com.crashlytics.android.Crashlytics;
+import com.embrwave.embrwave.EmbrWaveActivity;
 import com.experiencesampler.experiencesampler.MainActivity;
-//import com.em
 import com.telhai.spl.crydetector.AudioRecordActivity;
 import com.telhai.spl.crydetector.UploadManager;
 
@@ -176,7 +176,7 @@ public class CoRegulationMainActivity extends AppCompatActivity
      */
     public void openEmbrWave(View view)
     {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, EmbrWaveActivity.class);
         startActivity(intent);
     }
 

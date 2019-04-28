@@ -33,7 +33,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,15 +56,12 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bluemaestro.utility.sdk.adapter.MessageAdapter;
-import com.bluemaestro.utility.sdk.database.TemperatureTable;
 import com.bluemaestro.utility.sdk.databinding.MainBinding;
 import com.bluemaestro.utility.sdk.service.TemperatureService;
-import com.bluemaestro.utility.sdk.utility.Utils;
 import com.bluemaestro.utility.sdk.views.dialogs.BMAlertDialog;
 import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -276,24 +272,23 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
 
         // create dummy data
-        for(int i = 0; i < 30; i++)
-        {
-
-            try
-            {
-                String timestamp = Utils.dateToIsoString(new Date());
-                ContentValues values = new ContentValues();
-                values.put(TemperatureTable.COLUMN_TEMP, i);
-                values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
-                values.put(TemperatureTable.COLUMN_PARTNER, false);
-                getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-                //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-            } catch(Exception e)
-            {
-                Log.e(TAG, e.toString());
-                e.printStackTrace();
-            }
-        }
+//        for(int i = 0; i < 30; i++)
+//        {
+//            try
+//            {
+//                String timestamp = Utils.dateToIsoString(new Date());
+//                ContentValues values = new ContentValues();
+//                values.put(TemperatureTable.COLUMN_TEMP, i);
+//                values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
+//                values.put(TemperatureTable.COLUMN_PARTNER, false);
+//                getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+//                //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+//            } catch(Exception e)
+//            {
+//                Log.e(TAG, e.toString());
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override

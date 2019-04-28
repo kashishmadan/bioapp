@@ -46,6 +46,8 @@
             app:rsb_indicator_height="20dp"
             app:rsb_indicator_show_mode="alwaysShow"
             app:rsb_thumb_scale_ratio="1.2"
+
+            android:visibility="gone"
             />
 
 
@@ -57,7 +59,7 @@
             android:layout_marginTop="20dp"
             android:layout_width="160dp"
             android:layout_height="wrap_content"
-            tools:text="Refroidit"
+            tools:text="@string/button_start"
             />
             <!--app:rsb_indicator_padding_bottom="10dp"-->
         <!-- margin between slider and text-->

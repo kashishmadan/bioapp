@@ -215,7 +215,7 @@ public class TemperatureService extends Service
 
                 nbTemperatures = 0;
             }
-            this.nbTemperatures++;
+            nbTemperatures++;
 
             //            if(nbTemperatures > 20)
 //            {
@@ -346,7 +346,6 @@ public class TemperatureService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        //TODO do something useful
         this.deviceAddress = intent.getExtras().getString("sensor_address");
         this.partnerDeviceAddress = intent.getExtras().getString("partner_sensor_address");
         //        this.connect();

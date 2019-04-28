@@ -2,7 +2,13 @@
     <string name="app_name">EmbrWave</string>
     <string name="button_disconnect">DISCONNECT</string>
     <string name="button_connect">CONNECT</string>
-    <string name="button_cool">Refroidir</string>
-    <string name="button_warm">Réchauffer</string>
-    <string name="button_stop">Arrêter</string>
+    <string name="button_cool">Cool</string>
+    <string name="button_warm">Warm</string>
+    <string name="button_start">Activate</string>
+    <string name="button_stop">Deactivate</string>
+    <string name="embr_wave_name">Embr wave name</string>
+    <string name="embr_wave_temperature">Embr Wave temperature (between -9 and 9)</string>
+    <string name="embr_wave_name_desc">Name of the Embr Wave to use</string>
+    <string name="embr_wave_temperature_desc">Change of temperature when activating the Embr Wave</string>
+    <string name="error_bluetooth">Unable to initialize bluetooth</string>
 </resources>

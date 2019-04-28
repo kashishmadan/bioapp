@@ -28,191 +28,509 @@ var localStore = window.localStorage;
 /* surveyQuestion Model (This time, written in "JSON" format to interface more cleanly with Mustache) */
 var surveyQuestions = [
 						/*0*/
-                       {
-                       "type": "mult1",
-                       "variableName": "snooze",
-                       "questionPrompt": "Are you able to take the survey now?",
-                       "minResponse": 0,
-                       "maxResponse": 1,
-                       "labels": [
+                        {
+                            "type": "mult1",
+                            "variableName": "snooze",
+                            "questionPrompt": "Are you able to take the survey now?",
+                            "minResponse": 0,
+                            "maxResponse": 1,
+                            "labels": [
                                 {"label": "No"},
                                 {"label": "Yes"}
-                                ],
-                       },
-                    	/*1*/
-                       {
-                       "type": "instructions",
-                       "variableName": "generalInstructions",
-                       "questionPrompt": "On the following screens, we will be asking you questions about your experiences since we last beeped you.",
-                       },
-                       /*2*/
-                       {
-                       "type": "mult2",                       
-                       "variableName": "mood",
-                       "questionPrompt": "Please indicate how you feel right now.",
-                       "minResponse": -3,
-                       "maxResponse": 3,
-                       "labels":[
-//                                {"label": "3 Test"},
-                                {"label": "3 Very positive"},
-                                {"label": "2 Somewhat positive"},
-                                {"label": "1 A little positive"},
-                                {"label": "0 Neutral"},
-                                {"label": "-1 A little negative"},
-                                {"label": "-2 Somewhat negative"},
-                                {"label": "-3 Very negative"},
-                                ]
-                       },
-                       /*3*/
-                       {
-                       "type": "text",
-                       "variableName": "mostStressfulEvent",
-                       "questionPrompt": "What the most stressful thing you experienced today?",
-                       },
-                       /*4*/
-                       {
-                       "type": "slider",
-                       "variableName": "stressThermometer",
-                       "questionPrompt": "Please indicate the amount of stress you are experiencing at the moment by moving the slider up or down. 0 means you are experiencing no stress and 100 means you are experiencing the highest amount of stress. You can see the value to the right of the slider.",
-                       "minResponse": 0,
-                       "maxResponse": 100,
-                       },
-                       /*5*/
-                       {
-                       "type": "mult1",
-                       "variableName": "experienceConflict",
-                       "questionPrompt": "Did you experience any conflicts since the last time you completed the survey?",
-                       "minResponse": 0,
-                       "maxResponse": 1,
-                       "labels": [
-                                {"label": "No"},
-                                {"label": "Yes"}
-                                ],
-                       },
-                       /*6*/
-                       {
-                       "type": "text",
-                       "variableName": "conflictParticipant",
-                       "questionPrompt": "Who was the primary person involved in this conflict?",
-                       },
-                       /*7*/
-                       {
-                       "type": "mult1",
-                       "variableName": "otherConflictParticipant",
-                       "questionPrompt": "Was anyone else involved?",
-                       "minResponse": 0,
-                       "maxResponse": 1,
-                       "labels": [
-                                {"label": "No"},
-                                {"label": "Yes"}
-                                ],
-                       },
-                       /*8*/
-                       {
-                       "type": "text",
-                       "variableName": "otherConflictParticipantNames",
-                       "questionPrompt": "Who else was involved in this conflict? Please list the names of the other people involved in the conflict.",
-                       },
-                       /*9*/
-                       {
-                       "type": "mult1",
-                       "variableName": "closeness",
-                       "questionPrompt": "How close do you feel to NAME right now?",
-                       "minResponse": 0,
-                       "maxResponse": 6,
-                       "labels": [
-                                {"label": "0 Not at all close"},
-                                {"label": "1"},
+                            ],
+                        },
+                        /*1*/
+                        {
+                            "type": "instructions",
+                            "variableName": "generalInstructions",
+                            "questionPrompt": "Dans la section ci-dessous, veuillez indiquer comment vous vous sentez en ce moment.Veuillez choisir le chiffre le plus approprié sur l'échelle de six points, où 1 = pas du tout à 6 = tout à fait.",
+                        },
+                        /*2*/
+                        {
+                            "type": "mult1",
+                            "variableName": "happy",
+                            "questionPrompt": "Heureux",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
                                 {"label": "2"},
                                 {"label": "3"},
                                 {"label": "4"},
                                 {"label": "5"},
-                                {"label": "6 Extremely close"}
-                                ],
-                       },
-                       /*10*/
-                       {
-                       "type": "mult1",
-                       "variableName": "conflictTopic",
-                       "questionPrompt": "What was the conflict about? Please select from the list of options below.",
-                       "minResponse": 1,
-                       "maxResponse": 11,
-                       "labels":[
-                                {"label": "Money"},
-                                {"label": "Sex"},
-                                {"label": "Work"},
-                                {"label": "Children"},
-                            	{"label": "Chores"},
-                            	{"label": "Communication"},
-                            	{"label": "Jealousy"},
-                            	{"label": "Lack of Consideration"},
-                            	{"label": "Lack of Respect"},
-                            	{"label": "Differences in Opinions"},
-                            	{"label": "Other"},
-                                ],
-                       },
-                       /*11*/
-                       {
-                       "type": "text",
-                       "variableName": "conflictTopicOther",
-                       "questionPrompt": "Please specify what you mean by 'other.'",
-                       },
-                       /*12*/
-                       {
-                       "type": "mult1",
-                       "variableName": "conflictResolution",
-                       "questionPrompt": "Was the conflict resolved?",
-                       "minResponse": 0,
-                       "maxResponse": 1,
-                       "labels": [
-                                {"label": "No"},
-                                {"label": "Yes"},
-                                ],
-                       },
-                       /*13*/
-                       {
-                       "type": "mult1",
-                       "variableName": "conflictSupport",
-                       "questionPrompt": "Did you seek support or talk to anyone after the conflict?",
-                       "minResponse": 0,
-                       "maxResponse": 1,
-                       "labels": [
-                                {"label": "No"},
-                                {"label": "Yes"},
-                                ],
-                       },
-                       /*14*/
-                       {
-                       "type": "text",
-                       "variableName": "conflictSupporter",
-                       "questionPrompt": "Who did you seek support from following this conflict? Please also indicate your relationship to this person. (e.g., Mike S. - Coach)",
-                       },
-                       /*15*/
-                       {
-                       "type": "checklist",
-                       "variableName": "typeOfSupport",
-                       "questionPrompt": "Please tell us what kind of support this person provided. Please select as many as applicable.",
-                       "minResponse": 1,
-                       "maxResponse": 4,
-                       "labels": [
-                                {"label": "Emotional support (e.g., listened to you, cheered you up)"},
-                                {"label": "Esteem support (e.g., encouraged you, boosted your confidence)"},
-                                {"label": "Informational support (e.g., gave you advice, offered ideas and suggestions)"},
-                                {"label": "Tangible support (e.g., helped you with tasks)"},
-                                ],
-                       },
-                       /*16*/
-                       {
-                       "type": "mult1",
-                       "variableName": "otherConflictSupporters",
-                       "questionPrompt": "Did you seek support from anyone else following this conflict?",
-                       "minResponse": 0,
-                       "maxResponse": 1,
-                       "labels": [
-                                {"label": "No"},
-                                {"label": "Yes"},
-                                ],
-                       }
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*3*/
+                        {
+                            "type": "mult1",
+                            "variableName": "atEase",
+                            "questionPrompt": "A l'aise",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*4*/
+                        {
+                            "type": "mult1",
+                            "variableName": "anxious",
+                            "questionPrompt": "Anxieux",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*5*/
+                        {
+                            "type": "mult1",
+                            "variableName": "annoyed",
+                            "questionPrompt": "Contrarié",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*6*/
+                        {
+                            "type": "mult1",
+                            "variableName": "motivated",
+                            "questionPrompt": "Motivé",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*7*/
+                        {
+                            "type": "mult1",
+                            "variableName": "calm",
+                            "questionPrompt": "Calme",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*8*/
+                        {
+                            "type": "mult1",
+                            "variableName": "tired",
+                            "questionPrompt": "Fatigué",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*9*/
+                        {
+                            "type": "mult1",
+                            "variableName": "bored",
+                            "questionPrompt": "Ennuyé",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*10*/
+                        {
+                            "type": "mult1",
+                            "variableName": "gloomy",
+                            "questionPrompt": "Sombre",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*11*/
+                        {
+                            "type": "mult1",
+                            "variableName": "active",
+                            "questionPrompt": "Actif",
+                            "minResponse": 1,
+                            "maxResponse": 6,
+                            "labels": [
+                                {"label": "1 Pas du tout"},
+                                {"label": "2"},
+                                {"label": "3"},
+                                {"label": "4"},
+                                {"label": "5"},
+                                {"label": "6 Tout à fait"}
+                            ]
+                        },
+                        /*12*/
+                        {
+                            "type": "slider",
+                            "variableName": "temperature",
+                            "questionPrompt": "À l'heure actuelle, à quel point il fait chaud ou froid là où vous êtes, selon vous ?",
+                            "minResponse": 0,
+                            "maxResponse": 40,
+                        },
+                        /*13*/
+                        {
+                            "type": "instructions",
+                            "variableName": "generalInstructions2",
+                            "questionPrompt": "Veuillez répondre aux questions suivantes au sujet de votre partenaire romantique actuel.",
+                        },
+                        /*14*/
+                        {
+                            "type": "mult1",
+                            "variableName": "partnerListened",
+                            "questionPrompt": "Aujourd'hui mon partenaire m'a vraiment écouté",
+                            "minResponse": 1,
+                            "maxResponse": 9,
+                            "labels": [
+                                {"label": "1 pas du tout vrai"},
+                                {"label": "2"},
+                                {"label": "3 pas trop vrai"},
+                                {"label": "4"},
+                                {"label": "5 moyennement vrai"},
+                                {"label": "6"},
+                                {"label": "7 vrai"},
+                                {"label": "8"},
+                                {"label": "9 tout à fait vrai"},
+                            ]
+                        },
+                        /*15*/
+                        {
+                            "type": "mult1",
+                            "variableName": "partnerJudged",
+                            "questionPrompt": "Aujourd'hui mon partenaire a très bien jugé mon caractère",
+                            "minResponse": 1,
+                            "maxResponse": 9,
+                            "labels": [
+                                {"label": "1 pas du tout vrai"},
+                                {"label": "2"},
+                                {"label": "3 pas trop vrai"},
+                                {"label": "4"},
+                                {"label": "5 moyennement vrai"},
+                                {"label": "6"},
+                                {"label": "7 vrai"},
+                                {"label": "8"},
+                                {"label": "9 tout à fait vrai"},
+                            ]
+                        },
+                        /*16*/
+                        {
+                            "type": "mult1",
+                            "variableName": "partnerResponsive",
+                            "questionPrompt": "Aujourd'hui mon partenaire était réactif à mes besoins",
+                            "minResponse": 1,
+                            "maxResponse": 9,
+                            "labels": [
+                                {"label": "1 pas du tout vrai"},
+                                {"label": "2"},
+                                {"label": "3 pas trop vrai"},
+                                {"label": "4"},
+                                {"label": "5 moyennement vrai"},
+                                {"label": "6"},
+                                {"label": "7 vrai"},
+                                {"label": "8"},
+                                {"label": "9 tout à fait vrai"},
+                            ]
+                        },
+                        /*17*/
+                        {
+                            "type": "instructions",
+                            "variableName": "generalInstructions3",
+                            "questionPrompt": "Veuillez répondre aux questions suivantes à votre sujet.",
+                        },
+                        /*18*/
+                        {
+                            "type": "mult1",
+                            "variableName": "meListened",
+                            "questionPrompt": "Aujourd'hui j'ai vraiment écouté mon partenaire",
+                            "minResponse": 1,
+                            "maxResponse": 9,
+                            "labels": [
+                                {"label": "1 pas du tout vrai"},
+                                {"label": "2"},
+                                {"label": "3 pas trop vrai"},
+                                {"label": "4"},
+                                {"label": "5 moyennement vrai"},
+                                {"label": "6"},
+                                {"label": "7 vrai"},
+                                {"label": "8"},
+                                {"label": "9 tout à fait vrai"},
+                            ]
+                        },
+                        /*19*/
+                        {
+                            "type": "mult1",
+                            "variableName": "meJudged",
+                            "questionPrompt": "Aujourd'hui j'étais un excellent juge du caractère de mon partenaire.",
+                            "minResponse": 1,
+                            "maxResponse": 9,
+                            "labels": [
+                                {"label": "1 pas du tout vrai"},
+                                {"label": "2"},
+                                {"label": "3 pas trop vrai"},
+                                {"label": "4"},
+                                {"label": "5 moyennement vrai"},
+                                {"label": "6"},
+                                {"label": "7 vrai"},
+                                {"label": "8"},
+                                {"label": "9 tout à fait vrai"},
+                            ]
+                        },
+                        /*20*/
+                        {
+                            "type": "mult1",
+                            "variableName": "meResponsive",
+                            "questionPrompt": "Aujourd'hui j'étais réactif aux besoins de mon partenaire.",
+                            "minResponse": 1,
+                            "maxResponse": 9,
+                            "labels": [
+                                {"label": "1 pas du tout vrai"},
+                                {"label": "2"},
+                                {"label": "3 pas trop vrai"},
+                                {"label": "4"},
+                                {"label": "5 moyennement vrai"},
+                                {"label": "6"},
+                                {"label": "7 vrai"},
+                                {"label": "8"},
+                                {"label": "9 tout à fait vrai"},
+                            ]
+                        },
+                        /*21*/
+                        {
+                            "type": "text",
+                            "variableName": "day",
+                            "questionPrompt": "Parlez-nous très brièvement de votre journée en général et de vos interactions avec votre partenaire.",
+                        },
+						/*0*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "snooze",
+//                       "questionPrompt": "Are you able to take the survey now?",
+//                       "minResponse": 0,
+//                       "maxResponse": 1,
+//                       "labels": [
+//                                {"label": "No"},
+//                                {"label": "Yes"}
+//                                ],
+//                       },
+//                    	/*1*/
+//                       {
+//                       "type": "instructions",
+//                       "variableName": "generalInstructions",
+//                       "questionPrompt": "On the following screens, we will be asking you questions about your experiences since we last beeped you.",
+//                       },
+//                       /*2*/
+//                       {
+//                       "type": "mult2",
+//                       "variableName": "mood",
+//                       "questionPrompt": "Please indicate how you feel right now.",
+//                       "minResponse": -3,
+//                       "maxResponse": 3,
+//                       "labels":[
+////                                {"label": "3 Test"},
+//                                {"label": "3 Very positive"},
+//                                {"label": "2 Somewhat positive"},
+//                                {"label": "1 A little positive"},
+//                                {"label": "0 Neutral"},
+//                                {"label": "-1 A little negative"},
+//                                {"label": "-2 Somewhat negative"},
+//                                {"label": "-3 Very negative"},
+//                                ]
+//                       },
+//                       /*3*/
+//                       {
+//                       "type": "text",
+//                       "variableName": "mostStressfulEvent",
+//                       "questionPrompt": "What the most stressful thing you experienced today?",
+//                       },
+//                       /*4*/
+//                       {
+//                       "type": "slider",
+//                       "variableName": "stressThermometer",
+//                       "questionPrompt": "Please indicate the amount of stress you are experiencing at the moment by moving the slider up or down. 0 means you are experiencing no stress and 100 means you are experiencing the highest amount of stress. You can see the value to the right of the slider.",
+//                       "minResponse": 0,
+//                       "maxResponse": 100,
+//                       },
+//                       /*5*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "experienceConflict",
+//                       "questionPrompt": "Did you experience any conflicts since the last time you completed the survey?",
+//                       "minResponse": 0,
+//                       "maxResponse": 1,
+//                       "labels": [
+//                                {"label": "No"},
+//                                {"label": "Yes"}
+//                                ],
+//                       },
+//                       /*6*/
+//                       {
+//                       "type": "text",
+//                       "variableName": "conflictParticipant",
+//                       "questionPrompt": "Who was the primary person involved in this conflict?",
+//                       },
+//                       /*7*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "otherConflictParticipant",
+//                       "questionPrompt": "Was anyone else involved?",
+//                       "minResponse": 0,
+//                       "maxResponse": 1,
+//                       "labels": [
+//                                {"label": "No"},
+//                                {"label": "Yes"}
+//                                ],
+//                       },
+//                       /*8*/
+//                       {
+//                       "type": "text",
+//                       "variableName": "otherConflictParticipantNames",
+//                       "questionPrompt": "Who else was involved in this conflict? Please list the names of the other people involved in the conflict.",
+//                       },
+//                       /*9*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "closeness",
+//                       "questionPrompt": "How close do you feel to NAME right now?",
+//                       "minResponse": 0,
+//                       "maxResponse": 6,
+//                       "labels": [
+//                                {"label": "0 Not at all close"},
+//                                {"label": "1"},
+//                                {"label": "2"},
+//                                {"label": "3"},
+//                                {"label": "4"},
+//                                {"label": "5"},
+//                                {"label": "6 Extremely close"}
+//                                ],
+//                       },
+//                       /*10*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "conflictTopic",
+//                       "questionPrompt": "What was the conflict about? Please select from the list of options below.",
+//                       "minResponse": 1,
+//                       "maxResponse": 11,
+//                       "labels":[
+//                                {"label": "Money"},
+//                                {"label": "Sex"},
+//                                {"label": "Work"},
+//                                {"label": "Children"},
+//                            	{"label": "Chores"},
+//                            	{"label": "Communication"},
+//                            	{"label": "Jealousy"},
+//                            	{"label": "Lack of Consideration"},
+//                            	{"label": "Lack of Respect"},
+//                            	{"label": "Differences in Opinions"},
+//                            	{"label": "Other"},
+//                                ],
+//                       },
+//                       /*11*/
+//                       {
+//                       "type": "text",
+//                       "variableName": "conflictTopicOther",
+//                       "questionPrompt": "Please specify what you mean by 'other.'",
+//                       },
+//                       /*12*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "conflictResolution",
+//                       "questionPrompt": "Was the conflict resolved?",
+//                       "minResponse": 0,
+//                       "maxResponse": 1,
+//                       "labels": [
+//                                {"label": "No"},
+//                                {"label": "Yes"},
+//                                ],
+//                       },
+//                       /*13*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "conflictSupport",
+//                       "questionPrompt": "Did you seek support or talk to anyone after the conflict?",
+//                       "minResponse": 0,
+//                       "maxResponse": 1,
+//                       "labels": [
+//                                {"label": "No"},
+//                                {"label": "Yes"},
+//                                ],
+//                       },
+//                       /*14*/
+//                       {
+//                       "type": "text",
+//                       "variableName": "conflictSupporter",
+//                       "questionPrompt": "Who did you seek support from following this conflict? Please also indicate your relationship to this person. (e.g., Mike S. - Coach)",
+//                       },
+//                       /*15*/
+//                       {
+//                       "type": "checklist",
+//                       "variableName": "typeOfSupport",
+//                       "questionPrompt": "Please tell us what kind of support this person provided. Please select as many as applicable.",
+//                       "minResponse": 1,
+//                       "maxResponse": 4,
+//                       "labels": [
+//                                {"label": "Emotional support (e.g., listened to you, cheered you up)"},
+//                                {"label": "Esteem support (e.g., encouraged you, boosted your confidence)"},
+//                                {"label": "Informational support (e.g., gave you advice, offered ideas and suggestions)"},
+//                                {"label": "Tangible support (e.g., helped you with tasks)"},
+//                                ],
+//                       },
+//                       /*16*/
+//                       {
+//                       "type": "mult1",
+//                       "variableName": "otherConflictSupporters",
+//                       "questionPrompt": "Did you seek support from anyone else following this conflict?",
+//                       "minResponse": 0,
+//                       "maxResponse": 1,
+//                       "labels": [
+//                                {"label": "No"},
+//                                {"label": "Yes"},
+//                                ],
+//                       }
 ];
 var lastPage = [
                 {
@@ -231,26 +549,26 @@ var participantSetup = [
                         "variableName": "participant_id",
                         "questionPrompt": "Please enter your participant ID:"
                         },
-                        {
-                    	"type": "timePicker",
-                        "variableName": "weekdayWakeTime",
-                        "questionPrompt": "Please select the time that you usually wake up on WEEKDAYS:"
-                        },
-                        {
-                    	"type": "timePicker",
-                        "variableName": "weekdayDinnerTime",
-                        "questionPrompt": "Please select the time that you usually have dinner on WEEKDAYS:"
-                        },
-                        {
-                        "type": "timePicker",
-                        "variableName": "weekendWakeTime",
-                        "questionPrompt": "Please select the time that you usually wake up on WEEKENDS:"
-                        },
-                        {
-                        "type": "timePicker",
-                        "variableName": "weekendDinnerTime",
-                        "questionPrompt": "Please select the time that you usually have dinner on WEEKENDS:"
-                        },
+//                        {
+//                    	"type": "timePicker",
+//                        "variableName": "weekdayWakeTime",
+//                        "questionPrompt": "Please select the time that you usually wake up on WEEKDAYS:"
+//                        },
+//                        {
+//                    	"type": "timePicker",
+//                        "variableName": "weekdayDinnerTime",
+//                        "questionPrompt": "Please select the time that you usually have dinner on WEEKDAYS:"
+//                        },
+//                        {
+//                        "type": "timePicker",
+//                        "variableName": "weekendWakeTime",
+//                        "questionPrompt": "Please select the time that you usually wake up on WEEKENDS:"
+//                        },
+//                        {
+//                        "type": "timePicker",
+//                        "variableName": "weekendDinnerTime",
+//                        "questionPrompt": "Please select the time that you usually have dinner on WEEKENDS:"
+//                        },
                         ];
 
 /*Populate the view with data from surveyQuestion model*/
@@ -493,26 +811,28 @@ recordResponse: function(button, count, type) {
     	response = button.val();
         currentQuestion = button.attr('id').slice(0,-1);
     }
+    console.log('record response: ', count);
     if (count == 6) {name = response;}
     if (count <= -1) {uniqueRecord = currentQuestion;}
     else {uniqueRecord = uniqueKey + "_" + currentQuestion + "_" + year + "_" + month + "_" + day + "_" + hours + "_" + minutes + "_" + seconds + "_" + milliseconds;}
 //     //Save this to local storage
     localStore[uniqueRecord] = response;
+    console.log('record response');
     //Identify the next question to populate the view
     //This is where you do the Question Logic
     if (count <= -1) {console.log(uniqueRecord);}
    	if (count == -1) {app.scheduleNotifs(); app.renderLastPage(lastPage[2], count);}
     else if (count == SNOOZEQ && response == 0) {app.renderLastPage(lastPage[1], count);}
-    else if (count == 5 && response == 0) {app.renderLastPage(lastPage[0], count);}
-    else if (count == 5 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(6);});}
-    else if (count == 7 && response == 0) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(9);});}
-    else if (count == 7 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(8);});}
-    else if (count == 10 && response < 11) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(12);});}
-    else if (count == 10 && response == 11) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(11);});}
-    else if (count == 13 && response == 0) {app.renderLastPage(lastPage[0], count);}
-    else if (count == 13 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(14);});}
-    else if (count == 16 && response == 0) {app.renderLastPage(lastPage[0], count);}
-    else if (count == 16 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(14);});}
+//    else if (count == 5 && response == 0) {app.renderLastPage(lastPage[0], count);}
+//    else if (count == 5 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(6);});}
+//    else if (count == 7 && response == 0) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(9);});}
+//    else if (count == 7 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(8);});}
+//    else if (count == 10 && response < 11) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(12);});}
+//    else if (count == 10 && response == 11) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(11);});}
+//    else if (count == 13 && response == 0) {app.renderLastPage(lastPage[0], count);}
+//    else if (count == 13 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(14);});}
+//    else if (count == 16 && response == 0) {app.renderLastPage(lastPage[0], count);}
+//    else if (count == 16 && response == 1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(14);});}
     else if (count < surveyQuestions.length-1) {$("#question").fadeOut(400, function () {$("#question").html("");app.renderQuestion(count+1);});}
     else {app.renderLastPage(lastPage[0], count);}
 },
@@ -620,107 +940,67 @@ saveDataLastPage:function() {
            });
 },
 scheduleNotifs:function() {
+//    return;
 	//cordova.plugins.backgroundMode.enable();
    	var interval1, interval2, interval3, interval4, interval5, interval6, interval7
    	var a, b, c, d, e, f, g;
    	var date1, date2, date3, date4, date5, date6, date7;
    	var currentMaxHour, currentMaxMinutes, currentMinHour, currenMinMinutes, nextMinHour, nextMinMinutes;
    	var currentLag, dinnerLag, maxInterval;
-   	var day = 86400000;
-   	var minDiaryLag = 5400000;
-   	var randomDiaryLag = 1800000;
-	var weekendDinnerTime = localStore.weekendDinnerTime.split(":");
-	var weekendWakeTime = localStore.weekendWakeTime.split(":");
-	var weekdayDinnerTime = localStore.weekdayDinnerTime.split(":");
-	var weekdayWakeTime = localStore.weekdayWakeTime.split(":");
-	var dateObject = new Date();
-    var now = dateObject.getTime(); 
-    var dayOfWeek = dateObject.getDay(), currentHour = dateObject.getHours(), currentMinute = dateObject.getMinutes();
-   	for (i = 0; i < 7; i ++) {
-   		var alarmDay = dayOfWeek + 1 + i; 
-   			if (alarmDay > 6) {alarmDay = alarmDay - 7;}
-   			if (alarmDay == 0 || alarmDay == 6) {
-   				currentMaxHour = weekendDinnerTime[0];
-   				currentMaxMinutes = weekendDinnerTime[1];
-   				currentMinHour = weekendWakeTime[0];
-   				currenMinMinutes = weekendWakeTime[1];
-   				if (alarmDay == 0) {
-   					nextMinHour = weekdayWakeTime[0];
-   					nextMinMinutes = weekdayWakeTime[1];
-   				}
-   				else {
-   					nextMinHour = weekendWakeTime[0];
-   					nextMinMinutes = weekendWakeTime[1];
-   				}
-   				currentLag = (((((24 - parseInt(currentHour) + parseInt(weekendWakeTime[0]))*60) - parseInt(currentMinute) + parseInt(weekendWakeTime[1]))*60)*1000);
-				
-   			}
-   			else {
-   				currentMaxHour = weekdayDinnerTime[0];
-   				currentMaxMinutes = weekdayDinnerTime[1];
-   				currentMinHour = weekdayWakeTime[0];
-   				currenMinMinutes = weekdayWakeTime[1];   				
-   				if (alarmDay == 5) {
-   					nextMinHour = weekendWakeTime[0];
-   					nextMinMinutes = weekendWakeTime[1];
-   				}
-   				else {
-   					nextMinHour = weekdayWakeTime[0];
-   					nextMinMinutes = weekdayWakeTime[1];   				
-   				}
-                currentLag = (((((24 - parseInt(currentHour) + parseInt(weekdayWakeTime[0]))*60) - parseInt(currentMinute) + parseInt(weekdayWakeTime[1]))*60)*1000);
-   			}
-   			if (alarmDay == 5 || alarmDay == 0) {nightlyLag = currentLag;}
-   			else {
-            	nightlyLag= (((((24 - parseInt(currentHour) + parseInt(nextMinHour))*60) - parseInt(currentMinute) + parseInt(nextMinMinutes))*60)*1000);
-   			}
-   			maxInterval = (((((parseInt(currentMaxHour) - parseInt(currentMinHour))*60) + parseInt(currentMaxMinutes) - parseInt(currenMinMinutes))*60)*1000);
-   			interval1 = parseInt(currentLag) + (parseInt(Math.round(Math.random()*randomDiaryLag)+minDiaryLag)) + day*i;
-   			interval2 = interval1 + (parseInt(Math.round(Math.random()*randomDiaryLag)+minDiaryLag));
-   			interval3 = interval2 + (parseInt(Math.round(Math.random()*randomDiaryLag)+minDiaryLag));
-   			interval4 = interval3 + (parseInt(Math.round(Math.random()*randomDiaryLag)+minDiaryLag));
-   			interval5 = interval4 + (parseInt(Math.round(Math.random()*randomDiaryLag)+minDiaryLag));
-   			interval6 = interval5 + (parseInt(Math.round(Math.random()*randomDiaryLag)+minDiaryLag));
-   			dinnerInterval = parseInt(currentLag) + parseInt(maxInterval) + day*i;
-   			
-   			a = 101+(parseInt(i)*100);
-            b = 102+(parseInt(i)*100);
-            c = 103+(parseInt(i)*100);
-            d = 104+(parseInt(i)*100);
-            e = 105+(parseInt(i)*100);
-            f = 106+(parseInt(i)*100);
-            
-        	date1 = new Date(now + interval1);
-        	date2 = new Date(now + interval2);
-        	date3 = new Date(now + interval3);
-        	date4 = new Date(now + interval4);
-        	date5 = new Date(now + interval5);
-        	date6 = new Date(now + interval6);
-        	
-        	cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, at: date1, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        	cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        	cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, at: date3, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        	cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: d, at: date4, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        	cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: e, at: date5, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        	cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: f, at: date6, text: 'Time for your next Diary Survey!', title: 'Diary Survey'}); 
+   	// added
+   	var nightlyLag;
+   	var day = 86400000; // 1 day
+   	var minDiaryLag = 5400000; // 1h30
+   	var randomDiaryLag = 1800000; // 30min
+	var today = new Date();
+	today.setHours(0,0,0,0);
+	var now = new Date();
+//    var today = dateObject.getTime();
+//    var dayOfWeek = dateObject.getDay(), currentHour = dateObject.getHours(), currentMinute = dateObject.getMinutes();
+   	for (i = 0; i < 14; i ++) {
 
-        	localStore['notification_' + i + '_1'] = localStore.participant_id + "_" + a + "_" + date1;
-        	localStore['notification_' + i + '_2'] = localStore.participant_id + "_" + b + "_" + date2;
-        	localStore['notification_' + i + '_3'] = localStore.participant_id + "_" + c + "_" + date3;
-        	localStore['notification_' + i + '_4'] = localStore.participant_id + "_" + d + "_" + date4;
-        	localStore['notification_' + i + '_5'] = localStore.participant_id + "_" + e + "_" + date5;
-        	localStore['notification_' + i + '_6'] = localStore.participant_id + "_" + f + "_" + date6;
-        	}
+   		interval1 = (i * day + 9 * 3600 + parseInt(Math.round(Math.random() * 2 * 3600)))*1000;
+        interval2 = (i * day + 12 * 3600 + parseInt(Math.round(Math.random() * 4 * 3600)))*1000;
+        interval3 = (i * day + 19 * 3600 + parseInt(Math.round(Math.random() * 2 * 3600)))*1000;
+
+        date1 = new Date(today.getTime() + interval1);
+        date2 = new Date(today.getTime() + interval2);
+        date3 = new Date(today.getTime() + interval3);
+
+        a = 101+(parseInt(i)*100);
+        b = 102+(parseInt(i)*100);
+        c = 103+(parseInt(i)*100);
+        d = 104+(parseInt(i)*100);
+        e = 105+(parseInt(i)*100);
+        f = 106+(parseInt(i)*100);
+
+        cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, at: date1, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+        cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+        cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, at: date3, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+
+        // the timer starts from today at midnight so we need to be sure we won't set a timer before now, a solution would be start only the day after
+        if(now < date1) {
+            localStore['notification_' + i + '_1'] = localStore.participant_id + "_" + a + "_" + date1;
+        }
+        if(now < date1) {
+            localStore['notification_' + i + '_2'] = localStore.participant_id + "_" + b + "_" + date2;
+        }
+        if(now < date1) {
+            localStore['notification_' + i + '_3'] = localStore.participant_id + "_" + c + "_" + date3;
+        }
+    }
 },
 snoozeNotif:function() {
-    var now = new Date().getTime(), snoozeDate = new Date(now + 600*1000);
+//    var now = new Date().getTime(), snoozeDate = new Date(now + 600*1000);
+    var now = new Date().getTime(), snoozeDate = new Date(now + 5*1000);
     var id = '99';
     cordova.plugins.notification.local.schedule({
-                                         icon: 'ic_launcher',
+//                                         icon: 'ic_launcher',
                                          id: id,
                                          title: 'Diary Survey',
                                          text: 'Please complete survey now!',
                                          at: snoozeDate,
+                                         foreground: true,
                                          });
   //console.log(snoozeDate);                                       
 },     

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="bracelet_name"
+        android:title="@string/embr_wave_name"
+        android:summary="@string/embr_wave_name_desc"
+        android:defaultValue="ED:A9:79:FD:7D:1B"/>
+    <EditTextPreference
+        android:key="bracelet_temperature"
+        android:title="@string/embr_wave_temperature"
+        android:summary="@string/embr_wave_temperature_desc"
+        android:defaultValue="0"/>
+</PreferenceScreen>

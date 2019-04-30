@@ -1,0 +1,254 @@
+-- Merging decision tree log ---
+provider#de.appplant.cordova.plugin.notification.util.AssetProvider
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:12:9-14:20
+	android:grantUriPermissions
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:12:92-126
+	android:authorities
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:12:19-66
+	android:exported
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:12:67-91
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:12:127-200
+manifest
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+MERGED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:2:1-52:12
+MERGED from [:CordovaLib] /home/anthony/workspace/cordova/experienceSampler/platforms/android/CordovaLib/build/intermediates/library_manifest/debug/AndroidManifest.xml:20:1-27:12
+MERGED from [com.android.support:support-v4:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/dd02a7502add90ef1aa8590a546870b7/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-media-compat:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/aeb95fb538a4ae273eaeaa56f410f7fe/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-fragment:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/490dccc913ecb5b42a4dbffb992a1e19/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-ui:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/f49e98db5093ff68f7f1c6e093017aa8/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-core-utils:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/e97e95ae1ddfdd3bed9066c0cdae6d1b/AndroidManifest.xml:17:1-22:12
+MERGED from [com.android.support:support-compat:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/969c615a5dad8ccbf7739a4f2056f610/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/78b43c97f0ff01dd5c939330d06d95e3/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/044d9522f4a170a622493e47e42cac5e/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/a412621c10cc3ca30ec1057acd720c69/AndroidManifest.xml:17:1-22:12
+MERGED from [android.arch.core:runtime:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/82718b7c04f51a163baeda0bcf70a383/AndroidManifest.xml:17:1-22:12
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:1-29:12
+	package
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:102-138
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+	android:versionName
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:74-101
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+	android:hardwareAccelerated
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:11-45
+	xmlns:android
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:139-197
+	android:versionCode
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:2:46-73
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+supports-screens
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:5-191
+	android:largeScreens
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:49-76
+	android:smallScreens
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:132-159
+	android:normalScreens
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:77-105
+	android:xlargeScreens
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:160-188
+	android:resizeable
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:106-131
+	android:anyDensity
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:3:23-48
+uses-permission#android.permission.INTERNET
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:4:5-67
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:4:22-64
+application
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:5:5-24:19
+	android:supportsRtl
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:5:121-147
+	android:label
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:5:88-120
+	android:hardwareAccelerated
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:5:18-52
+	android:icon
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:5:53-87
+activity#com.test.experienceSampler.MainActivity
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:9-11:20
+	android:label
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:97-134
+	android:launchMode
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:135-165
+	android:windowSoftInputMode
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:257-299
+	android:configChanges
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:19-96
+	android:theme
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:194-256
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:6:166-193
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:7:13-10:29
+	android:label
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:7:28-65
+action#android.intent.action.MAIN
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:8:17-69
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:8:25-66
+category#android.intent.category.LAUNCHER
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:9:17-77
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:9:27-74
+receiver#de.appplant.cordova.plugin.localnotification.TriggerReceiver
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:15:9-122
+	android:exported
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:15:19-43
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:15:44-119
+receiver#de.appplant.cordova.plugin.localnotification.ClearReceiver
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:16:9-120
+	android:exported
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:16:19-43
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:16:44-117
+service#de.appplant.cordova.plugin.localnotification.ClickReceiver
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:17:9-119
+	android:exported
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:17:18-42
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:17:43-116
+receiver#de.appplant.cordova.plugin.localnotification.RestoreReceiver
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:18:9-23:20
+	android:exported
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:18:50-74
+	android:directBootAware
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:18:19-49
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:18:75-150
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.LOCKED_BOOT_COMPLETED
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:19:13-22:29
+action#android.intent.action.LOCKED_BOOT_COMPLETED
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:20:17-86
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:20:25-83
+action#android.intent.action.BOOT_COMPLETED
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:21:17-79
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:21:25-76
+uses-sdk
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:25:5-74
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:25:5-74
+MERGED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:7:5-9:41
+MERGED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:7:5-9:41
+MERGED from [:CordovaLib] /home/anthony/workspace/cordova/experienceSampler/platforms/android/CordovaLib/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:5-44
+MERGED from [:CordovaLib] /home/anthony/workspace/cordova/experienceSampler/platforms/android/CordovaLib/build/intermediates/library_manifest/debug/AndroidManifest.xml:25:5-44
+MERGED from [com.android.support:support-v4:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/dd02a7502add90ef1aa8590a546870b7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-v4:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-v4-27.1.1.aar/dd02a7502add90ef1aa8590a546870b7/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/aeb95fb538a4ae273eaeaa56f410f7fe/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-media-compat:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-media-compat-27.1.1.aar/aeb95fb538a4ae273eaeaa56f410f7fe/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/490dccc913ecb5b42a4dbffb992a1e19/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-fragment:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-fragment-27.1.1.aar/490dccc913ecb5b42a4dbffb992a1e19/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/f49e98db5093ff68f7f1c6e093017aa8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-ui:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-core-ui-27.1.1.aar/f49e98db5093ff68f7f1c6e093017aa8/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/e97e95ae1ddfdd3bed9066c0cdae6d1b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-core-utils:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-core-utils-27.1.1.aar/e97e95ae1ddfdd3bed9066c0cdae6d1b/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/969c615a5dad8ccbf7739a4f2056f610/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-compat:27.1.1] /home/anthony/.gradle/caches/transforms-1/files-1.1/support-compat-27.1.1.aar/969c615a5dad8ccbf7739a4f2056f610/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/78b43c97f0ff01dd5c939330d06d95e3/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:runtime:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/78b43c97f0ff01dd5c939330d06d95e3/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/044d9522f4a170a622493e47e42cac5e/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:livedata-core:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/livedata-core-1.1.0.aar/044d9522f4a170a622493e47e42cac5e/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/a412621c10cc3ca30ec1057acd720c69/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.lifecycle:viewmodel:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/viewmodel-1.1.0.aar/a412621c10cc3ca30ec1057acd720c69/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/82718b7c04f51a163baeda0bcf70a383/AndroidManifest.xml:20:5-44
+MERGED from [android.arch.core:runtime:1.1.0] /home/anthony/.gradle/caches/transforms-1/files-1.1/runtime-1.1.0.aar/82718b7c04f51a163baeda0bcf70a383/AndroidManifest.xml:20:5-44
+INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:25:5-74
+	android:targetSdkVersion
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:25:42-71
+	android:minSdkVersion
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:25:15-41
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+		INJECTED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml
+uses-permission#android.permission.VIBRATE
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:26:5-66
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:26:22-63
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:27:5-81
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:27:22-78
+uses-permission#android.permission.WAKE_LOCK
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:28:5-68
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:28:22-65
+meta-data#android.support.FILE_PROVIDER_PATHS
+ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:13:13-134
+	android:resource
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:13:75-131
+	android:name
+		ADDED from /home/anthony/workspace/cordova/experienceSampler/platforms/android/app/src/main/AndroidManifest.xml:13:24-74
+uses-permission#com.sec.android.provider.badge.permission.READ
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:19:5-86
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:19:22-83
+uses-permission#com.sec.android.provider.badge.permission.WRITE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:20:5-87
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:20:22-84
+uses-permission#com.htc.launcher.permission.READ_SETTINGS
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:23:5-81
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:23:22-78
+uses-permission#com.htc.launcher.permission.UPDATE_SHORTCUT
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:24:5-83
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:24:22-80
+uses-permission#com.sonyericsson.home.permission.BROADCAST_BADGE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:27:5-88
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:27:22-85
+uses-permission#com.sonymobile.home.permission.PROVIDER_INSERT_BADGE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:28:5-92
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:28:22-89
+uses-permission#com.anddoes.launcher.permission.UPDATE_COUNT
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:31:5-84
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:31:22-81
+uses-permission#com.majeur.launcher.permission.UPDATE_BADGE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:34:5-83
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:34:22-80
+uses-permission#com.huawei.android.launcher.permission.CHANGE_BADGE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:37:5-91
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:37:22-88
+uses-permission#com.huawei.android.launcher.permission.READ_SETTINGS
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:38:5-92
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:38:22-89
+uses-permission#com.huawei.android.launcher.permission.WRITE_SETTINGS
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:39:5-93
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:39:22-90
+uses-permission#android.permission.READ_APP_BADGE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:42:5-73
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:42:22-70
+uses-permission#com.oppo.launcher.permission.READ_SETTINGS
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:45:5-82
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:45:22-79
+uses-permission#com.oppo.launcher.permission.WRITE_SETTINGS
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:46:5-83
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:46:22-80
+uses-permission#me.everything.badger.permission.BADGE_COUNT_READ
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:49:5-88
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:49:22-85
+uses-permission#me.everything.badger.permission.BADGE_COUNT_WRITE
+ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:50:5-89
+	android:name
+		ADDED from [me.leolin:ShortcutBadger:1.1.22] /home/anthony/.gradle/caches/transforms-1/files-1.1/ShortcutBadger-1.1.22.aar/70487d3cb1239e6a1941ac66ecce576f/AndroidManifest.xml:50:22-86

@@ -23,6 +23,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+//console.log = function() {
+//    if (logger.useConsole()) return;
+//    logger.log.apply(logger, [].slice.call(arguments));
+//};
 /* activate localStorage */
 var localStore = window.localStorage;
 /* surveyQuestion Model (This time, written in "JSON" format to interface more cleanly with Mustache) */
@@ -970,9 +974,6 @@ scheduleNotifs:function() {
         a = 101+(parseInt(i)*100);
         b = 102+(parseInt(i)*100);
         c = 103+(parseInt(i)*100);
-        d = 104+(parseInt(i)*100);
-        e = 105+(parseInt(i)*100);
-        f = 106+(parseInt(i)*100);
 
         cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, at: date1, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
         cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
@@ -992,15 +993,19 @@ scheduleNotifs:function() {
 },
 snoozeNotif:function() {
 //    var now = new Date().getTime(), snoozeDate = new Date(now + 600*1000);
-    var now = new Date().getTime(), snoozeDate = new Date(now + 5*1000);
-    var id = '99';
+    var now = new Date().getTime(), snoozeDate = new Date(now + 3*1000);
+    var id = 99;
+    console.log(snoozeDate);
+    console.log('id: ' + id.toString());
+    console.log(Object.keys(cordova.plugins.notification.local));
+//    console.log(cordova.plugins.notification.local);
     cordova.plugins.notification.local.schedule({
-//                                         icon: 'ic_launcher',
-                                         id: id,
+                                         icon: 'ic_launcher',
+                                         id: 99,
                                          title: 'Diary Survey',
                                          text: 'Please complete survey now!',
                                          at: snoozeDate,
-                                         foreground: true,
+//                                         foreground: true,
                                          });
   //console.log(snoozeDate);                                       
 },     
@@ -1023,3 +1028,25 @@ validateTime: function(data){
 	}
 }       
 };
+
+
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+*/

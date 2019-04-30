@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/CordovaLib/CordovaLib.iml" filepath="$PROJECT_DIR$/CordovaLib/CordovaLib.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/android.iml" filepath="$PROJECT_DIR$/android/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/closeness/closeness.iml" filepath="$PROJECT_DIR$/closeness/closeness.iml" />
       <module fileurl="file://$PROJECT_DIR$/crydetector/crydetector.iml" filepath="$PROJECT_DIR$/crydetector/crydetector.iml" />

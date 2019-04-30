@@ -1004,7 +1004,7 @@ snoozeNotif:function() {
                                          id: 99,
                                          title: 'Diary Survey',
                                          text: 'Please complete survey now!',
-                                         at: snoozeDate,
+//                                         at: snoozeDate,
 //                                         foreground: true,
                                          });
   //console.log(snoozeDate);                                       

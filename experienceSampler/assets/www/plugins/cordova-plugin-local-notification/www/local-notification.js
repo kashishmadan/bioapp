@@ -97,9 +97,7 @@ exports.requestPermission = function (callback, scope) {
  * @return [ Void ]
  */
 exports.schedule = function (msgs, callback, scope, args) {
-    console.log('local notification');
     var fn = function (granted) {
-        console.log('local notification ' + granted);
         var toasts = this._toArray(msgs);
 
         if (!granted && callback) {
@@ -116,11 +114,11 @@ exports.schedule = function (msgs, callback, scope, args) {
         this._exec('schedule', toasts, callback, scope);
     };
 
-//    if (args && args.skipPermission) {
+    if (args && args.skipPermission) {
         fn.call(this, true);
-//    } else {
-//        this.requestPermission(fn, this);
-//    }
+    } else {
+        this.requestPermission(fn, this);
+    }
 };
 
 /**
@@ -565,8 +563,6 @@ exports._mergeWithDefaults = function (options) {
     Object.assign(values, options);
 
     for (var key in values) {
-        console.log('key: ' + key);
-        console.log('value :' + values[key]);
         if (values[key] !== null) {
             options[key] = values[key];
         } else {

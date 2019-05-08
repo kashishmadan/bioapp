@@ -24,6 +24,7 @@ package de.appplant.cordova.plugin.localnotification;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.util.Log;
 
 import java.util.Calendar;
 
@@ -71,6 +72,8 @@ public class TriggerReceiver extends AbstractTriggerReceiver {
         if (options.shallWakeUp()) {
             wakeUp(context);
         }
+
+        Log.d("Trigger", "notification triggered");
 
         notification.show();
 

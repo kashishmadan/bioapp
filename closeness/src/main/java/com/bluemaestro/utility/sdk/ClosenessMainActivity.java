@@ -304,13 +304,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         {
             Log.e(TAG, ignore.toString());
         }
-        //        unbindService(temperatureServiceConnection);
-
-        //        if(mService != null)
-        //        {
-        //            mService.stopSelf();
-        //            mService = null;
-        //        }
     }
 
     @Override
@@ -351,18 +344,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     {
         switch(requestCode)
         {
-            //            case REQUEST_SELECT_DEVICE:
-            //                // When the DeviceListActivity return, with the selected device address
-            //                if(resultCode == Activity.RESULT_OK && data != null)
-            //                {
-            //                    //                    String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-            //                    String deviceAddress = getPartnerSensorName();
-            //                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-            //                    Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
-            //                    this.activityMainBinding.deviceName.setText(mDevice.getName() + " - connecting");
-            //                    mService.connect(deviceAddress, true);
-            //                }
-            //                break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if(resultCode == Activity.RESULT_OK)
@@ -386,19 +367,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
     private void service_init()
     {
-        //        Intent bindIntent = new Intent(this, BluetoothService.class);
-        //        bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        //
-        //        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, temperatureServiceIntentFilter());
-
-
         Intent bindIntent = new Intent(this, TemperatureService.class);
-        //        bindService(bindIntent, this.temperatureServiceConnection, Context.BIND_AUTO_CREATE);
-
-        //        bindIntent.putExtra("sensor_address", PreferenceManager.getDefaultSharedPreferences(this).getString("sensor_name", ""));
-        //        bindIntent.putExtra("partner_sensor_address", this.getPartnerSensorName());
-        //
-        //        this.startService(bindIntent);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(this.temperatureBroadcastReceiver, temperatureServiceIntentFilter());
     }
@@ -424,22 +393,22 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         } else
         {
-            if(this.activityMainBinding.buttonConnectDisconnect.getText().equals(getString(R.string.closeness_button_connect)))
+            if(activityMainBinding.buttonConnectDisconnect.getText().equals(getString(R.string.closeness_button_connect)))
             {
                 // user clicked on connect
                 //                this.manualConnect = true;
-                this.logMessage(getString(R.string.closeness_user_connect));
+                logMessage(getString(R.string.closeness_user_connect));
                 activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_disconnect);
-                this.connectDevices();
+                connectDevices();
             } else
             {
                 // Disconnect button pressed
-                this.activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_connect);
+                activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_connect);
 
                 Intent intent = new Intent(this, TemperatureService.class);
-                this.stopService(intent);
+                stopService(intent);
                 //                this.temperatureService.onDisconnect();
-                this.logMessage(getString(R.string.closeness_user_disconnect));
+                logMessage(getString(R.string.closeness_user_disconnect));
             }
         }
     }
@@ -448,17 +417,8 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     {
         Log.d(TAG, "start connection to device and partner");
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String deviceAddress = sharedPref.getString("sensor_name", "");
-        this.mPrivateHash = sharedPref.getString(getString(R.string.private_hash), "");
-        // TODO skipping private hash
-        //        if(mPrivateHash.equals(""))
-        //        {
-        //            registerDevice();
-        //        } else
-        //        {
-        //            Log.d(TAG, "using private hash");
-        //            Log.d(TAG, mPrivateHash);
-        //        }
+//        String deviceAddress = sharedPref.getString("sensor_name", "");
+//        this.mPrivateHash = sharedPref.getString(getString(R.string.private_hash), "");
         try
         {
             Intent bindIntent = new Intent(this, TemperatureService.class);
@@ -467,16 +427,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             bindIntent.putExtra("sensor_address", PreferenceManager.getDefaultSharedPreferences(this).getString("sensor_name", ""));
             bindIntent.putExtra("partner_sensor_address", this.getPartnerSensorName());
 
-            this.startService(bindIntent);
-            //            this.temperatureService.onConnect(deviceAddress, this.getPartnerSensorName());
-
-            //                    final Handler handler = new Handler();
-            //                    handler.postDelayed(new Runnable() {
-            //                        @Override
-            //                        public void run() {
-            //                            startLogging();
-            //                        }
-            //                    }, 1000);
+            startService(bindIntent);
         } catch(IllegalArgumentException e)
         {
             e.printStackTrace();
@@ -484,65 +435,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         }
     }
 
-//    private void registerDevice()
-//    {
-//        final Context context = getApplicationContext();
-//        final int duration = Toast.LENGTH_SHORT;
-//        String uniqueID = UUID.randomUUID().toString();
-//        // Instantiate the RequestQueue.
-//        RequestQueue queue = Volley.newRequestQueue(this);
-//        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-//        String url;
-//        url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
-//        //FIXME API structure hard coded...
-//        url = url + "/register/" + uniqueID;
-//
-//        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
-//                new Response.Listener<String>()
-//                {
-//                    @Override
-//                    public void onResponse(String response)
-//                    {
-//                        Log.d(TAG, response);
-//                        response = response.replaceAll("\\s$", "");
-//                        response = response.replaceAll("\"", "");
-//                        Log.d(TAG, response);
-//                        Log.d(TAG, Integer.toString(response.length()));
-//                        if(response.length() == 28)
-//                        {
-//                            Toast toast = Toast.makeText(context, R.string.registration_impossible, duration);
-//                            toast.show();
-//                            Log.d(TAG, "Registration is not possible");
-//                        } else
-//                        {
-//                            if(response.length() == 64)
-//                            {
-//                                mPrivateHash = response;
-//                                SharedPreferences.Editor editor = sharedPref.edit();
-//                                editor.putString(getString(R.string.private_hash), response);
-//                                editor.commit();
-//
-//                                Log.d(TAG, response);
-//                            } else
-//                            {
-//                                Toast toast = Toast.makeText(context, R.string.server_error_msg, duration);
-//                                toast.show();
-//                                Log.d(TAG, "Server error occured");
-//                            }
-//                        }
-//                    }
-//                }, new Response.ErrorListener()
-//        {
-//            @Override
-//            public void onErrorResponse(VolleyError error)
-//            {
-//                Log.d(TAG, "That didn't work!");
-//            }
-//        });
-//        // Add the request to the RequestQueue.
-//        queue.add(stringRequest);
-//    }
 
     private void showMessage(String msg)
     {
@@ -552,17 +444,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     @Override
     public void onBackPressed()
     {
-        //        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        //        startMain.addCategory(Intent.CATEGORY_HOME);
-        //        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //        startActivity(startMain);
-        //        showMessage("Blue Maestro Utility App is running in background. Disconnect to exit");
-
-        //        Intent startMain = new Intent(Intent.ACTION_MAIN, CoRegulationMainActivity.class);
-        //        startActivity(startMain);
-
-        //        if(false)
-        //        {
 
         finish();
         if(false)

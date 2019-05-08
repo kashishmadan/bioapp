@@ -979,6 +979,11 @@ scheduleNotifs:function() {
         cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
         cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, at: date3, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
 
+//        console.log('date2');
+        console.log(date1);
+        console.log(date2);
+        console.log(date3);
+
         // the timer starts from today at midnight so we need to be sure we won't set a timer before now, a solution would be start only the day after
         if(now < date1) {
             localStore['notification_' + i + '_1'] = localStore.participant_id + "_" + a + "_" + date1;
@@ -993,20 +998,32 @@ scheduleNotifs:function() {
 },
 snoozeNotif:function() {
 //    var now = new Date().getTime(), snoozeDate = new Date(now + 600*1000);
-    var now = new Date().getTime(), snoozeDate = new Date(now + 3*1000);
-    var id = 99;
+    var now = new Date().getTime(), snoozeDate = new Date(now + 600*1000);
+//    var now2 = new Date();
+//    now2.setHours(0,0,0,0);
+//    var notifDate = new Date(now2.getTime() + (12 + 2) * 3600 * 1000 + 9 * 60 * 1000 + 30 * 1000);
+//    console.log(notifDate);
+//    var now = new Date().getTime(), snoozeDate = new Date(now + 3*1000);
+    var id = '99';
     console.log(snoozeDate);
     console.log('id: ' + id.toString());
-    console.log(Object.keys(cordova.plugins.notification.local));
+//    console.log(Object.keys(cordova.plugins.notification.local));
 //    console.log(cordova.plugins.notification.local);
-    cordova.plugins.notification.local.schedule({
+
+    cordova.plugins.notification.local.schedule([{
                                          icon: 'ic_launcher',
-                                         id: 99,
+//                                         channel: 'experience sampler',
+                                         id: 2,
                                          title: 'Diary Survey',
                                          text: 'Please complete survey now!',
-//                                         at: snoozeDate,
-//                                         foreground: true,
-                                         });
+                                         trigger: {
+                                         at: snoozeDate,
+                                         },
+                                         },
+                                         ]);
+
+//                                             cordova.plugins.notification.local.schedule(
+//                                             );
   //console.log(snoozeDate);                                       
 },     
 validateResponse: function(data){

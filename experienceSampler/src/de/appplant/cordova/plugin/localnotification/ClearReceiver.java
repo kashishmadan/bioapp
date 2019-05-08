@@ -35,7 +35,7 @@ import static de.appplant.cordova.plugin.notification.Request.EXTRA_LAST;
  * notification manually. It un-persists the cleared notification from the
  * shared preferences.
  */
-public add notificclass ClearReceiver extends AbstractClearReceiver {
+public class ClearReceiver extends AbstractClearReceiver {
 
     /**
      * Called when a local notification was cleared from outside of the app.

@@ -37,23 +37,23 @@
         <provider android:authorities="${applicationId}.provider" android:exported="false" android:grantUriPermissions="true" android:name="de.appplant.cordova.plugin.notification.util.AssetProvider">
         <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/localnotification_provider_paths" />
         </provider>
-        <!--<receiver-->
-            <!--android:name="de.appplant.cordova.plugin.localnotification.TriggerReceiver"-->
-            <!--android:exported="false"/>-->
-        <!--<receiver-->
-            <!--android:name="de.appplant.cordova.plugin.localnotification.ClearReceiver"-->
-            <!--android:exported="false"/>-->
+        <receiver
+            android:name="de.appplant.cordova.plugin.localnotification.TriggerReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name="de.appplant.cordova.plugin.localnotification.ClearReceiver"
+            android:exported="false"/>
         <!--<activity-->
             <!--android:name="de.appplant.cordova.plugin.localnotification.ClickActivity"-->
             <!--android:exported="false"-->
             <!--android:launchMode="singleInstance"-->
             <!--android:theme="@android:style/Theme.NoDisplay"/>-->
-        <receiver
-            android:name="de.appplant.cordova.plugin.notification.TriggerReceiver"
-            android:exported="false"/>
-        <receiver
-            android:name="de.appplant.cordova.plugin.notification.ClearReceiver"
-            android:exported="false"/>
+        <!--<receiver-->
+            <!--android:name="de.appplant.cordova.plugin.notification.TriggerReceiver"-->
+            <!--android:exported="false"/>-->
+        <!--<receiver-->
+            <!--android:name="de.appplant.cordova.plugin.notification.ClearReceiver"-->
+            <!--android:exported="false"/>-->
         <receiver
             android:directBootAware="true"
             android:name="de.appplant.cordova.plugin.localnotification.RestoreReceiver"

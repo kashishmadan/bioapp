@@ -18,6 +18,7 @@
             <option value="$PROJECT_DIR$/mediarec" />
             <option value="$PROJECT_DIR$/shimmerAndroidInstrumentDriver" />
             <option value="$PROJECT_DIR$/shimmerDriver" />
+            <option value="$PROJECT_DIR$/stress" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

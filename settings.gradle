@@ -1,1 +1,1 @@
-include ':app', ':closeness', ':shimmerDriver', ':flower', ':shimmerAndroidInstrumentDriver', ':crydetector', ':mediarec', ':embrwave', 'experienceSampler', ':CordovaLib'
+include ':app', ':closeness', ':shimmerDriver', ':flower', ':shimmerAndroidInstrumentDriver', ':crydetector', ':mediarec', ':embrwave', ':stress', 'experienceSampler', ':CordovaLib'

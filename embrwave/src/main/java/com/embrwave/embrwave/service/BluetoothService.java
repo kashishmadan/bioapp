@@ -65,24 +65,24 @@ public class BluetoothService extends Service
             "com.bluemaestro.utility.sdk.EXTRA_DATA";
     public static final String DEVICE_DOES_NOT_SUPPORT_BLUETOOTH =
             "com.bluemaestro.utility.sdk.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH";
-    //    public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID FIRMWARE_REVISON_UUID = UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID DIS_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-    //    public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-    //    public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
     private static final String TAG = BluetoothService.class.getSimpleName();
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
     // insightSIP
-    public final UUID TEMPERATURE_SERVICE_UUID = convertFromInteger(0x1889);
-    public final UUID TEMPERATURE_MEASURMENT_UUID = convertFromInteger(0x2AAB);
-    public final UUID CLIENT_CHARACTERISTIC_CONFIG = convertFromInteger(0x2902);
-    public final UUID SESSION_START_TIME_SERVICE_UUID = convertFromInteger(0x1888);
-    public final UUID SESSION_START_TIME_SESSION_UUID = convertFromInteger(0x2AAA);
+    //    public final UUID TEMPERATURE_SERVICE_UUID = convertFromInteger(0x1889);
+    //    public final UUID TEMPERATURE_MEASURMENT_UUID = convertFromInteger(0x2AAB);
+    //    public final UUID CLIENT_CHARACTERISTIC_CONFIG = convertFromInteger(0x2902);
+    //    public final UUID SESSION_START_TIME_SERVICE_UUID = convertFromInteger(0x1888);
+    //    public final UUID SESSION_START_TIME_SESSION_UUID = convertFromInteger(0x2AAA);
+    // Embr Wave
+//    public final UUID EMBR_WAVE_SERVICE_UUID = convertFromInteger(0x8001);
+    public final UUID EMBR_WAVE_SERVICE_UUID = UUID.fromString("00008001-1112-efde-1523-725a2aab0123");
+//    public final UUID EMBR_WAVE_LED_BLINK_UUID = convertFromInteger(0x4003);
+    public final UUID EMBR_WAVE_LED_BLINK_UUID = UUID.fromString("00004003-1112-efde-1523-725a2aab0123");
+    public final UUID EMBR_WAVE_LED_START_STOP_UUID = UUID.fromString("00004009-1112-efde-1523-725a2aab0123");
+    public final UUID EMBR_WAVE_START_COOL_WARM_UUID = UUID.fromString("00004005-1112-efde-1523-725a2aab0123");
+    public final UUID EMBR_WAVE_STOP_COOL_WARM_UUID = UUID.fromString("00004008-1112-efde-1523-725a2aab0123");
 
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;
@@ -178,10 +178,10 @@ public class BluetoothService extends Service
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic)
         {
-            if(characteristic.getUuid().equals(TEMPERATURE_MEASURMENT_UUID))
-            {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            }
+            //            if(characteristic.getUuid().equals(TEMPERATURE_MEASURMENT_UUID))
+            //            {
+            //                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            //            }
         }
     };
 
@@ -204,13 +204,46 @@ public class BluetoothService extends Service
         final Intent intent = new Intent(action);
 
         // This is handling for the notification on TX Character of NUS service
-        if(TEMPERATURE_MEASURMENT_UUID.equals(characteristic.getUuid()))
-        {
-
-            // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
-            intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        }
+        //        if(TEMPERATURE_MEASURMENT_UUID.equals(characteristic.getUuid()))
+        //        {
+        //
+        //            // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
+        //            intent.putExtra(EXTRA_DATA, characteristic.getValue());
+        //        }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    public void blinkLeds() {
+        BluetoothGattCharacteristic characteristic =
+                mBluetoothGatt.getService(EMBR_WAVE_SERVICE_UUID)
+                        .getCharacteristic(EMBR_WAVE_LED_BLINK_UUID);
+        characteristic.setValue(new byte[]{1});
+        mBluetoothGatt.writeCharacteristic(characteristic);
+    }
+
+    public void startCoolingWarming(int value)
+    {
+        BluetoothGattCharacteristic characteristic =
+                mBluetoothGatt.getService(EMBR_WAVE_SERVICE_UUID)
+                        .getCharacteristic(EMBR_WAVE_START_COOL_WARM_UUID);
+//        if(value < 0) {
+//            Log.d(TAG, "value: " + (byte) (0xFF + (value+1)));
+//            characteristic.setValue(new byte[]{(byte) (0xFF + value)});
+//        } else {
+//            Log.d(TAG, "value: " + (byte) value);
+//            characteristic.setValue(new byte[]{(byte) value});
+//        }
+        Log.d(TAG, "value: " + (byte) value);
+        characteristic.setValue(new byte[]{(byte) value});
+        mBluetoothGatt.writeCharacteristic(characteristic);
+    }
+
+    public void stopCoolingWarming() {
+        BluetoothGattCharacteristic characteristic =
+                mBluetoothGatt.getService(EMBR_WAVE_SERVICE_UUID)
+                        .getCharacteristic(EMBR_WAVE_STOP_COOL_WARM_UUID);
+        characteristic.setValue(new byte[]{0,0,0,0x20});
+        mBluetoothGatt.writeCharacteristic(characteristic);
     }
 
     @Override
@@ -365,35 +398,35 @@ public class BluetoothService extends Service
      */
     public void enableNotificationTemperature()
     {
-        if(this.mBluetoothGatt == null)
-        {
-            Log.e(TAG, "mBluetoothGatt null");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
-            return;
-        }
-
-        BluetoothGattCharacteristic characteristic;
-        boolean worked;
-        BluetoothGattDescriptor descriptor;
-        //        BluetoothGattCharacteristic characteristic =
+        //        if(this.mBluetoothGatt == null)
+        //        {
+        //            Log.e(TAG, "mBluetoothGatt null");
+        //            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
+        //            return;
+        //        }
+        //
+        //        BluetoothGattCharacteristic characteristic;
+        //        boolean worked;
+        //        BluetoothGattDescriptor descriptor;
+        //        //        BluetoothGattCharacteristic characteristic =
+        //        //                this.mBluetoothGatt.getService(TEMPERATURE_SERVICE_UUID)
+        //        //                        .getCharacteristic(TEMPERATURE_MEASURMENT_UUID);
+        //
+        //
+        //        characteristic =
         //                this.mBluetoothGatt.getService(TEMPERATURE_SERVICE_UUID)
         //                        .getCharacteristic(TEMPERATURE_MEASURMENT_UUID);
-
-
-        characteristic =
-                this.mBluetoothGatt.getService(TEMPERATURE_SERVICE_UUID)
-                        .getCharacteristic(TEMPERATURE_MEASURMENT_UUID);
-
-        worked = this.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
-        descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-        if(descriptor == null)
-        {
-            Log.e(TAG, "descriptor is null, probably wrong UUID");
-        } else
-        {
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            this.mBluetoothGatt.writeDescriptor(descriptor);
-        }
+        //
+        //        worked = this.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        //        descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+        //        if(descriptor == null)
+        //        {
+        //            Log.e(TAG, "descriptor is null, probably wrong UUID");
+        //        } else
+        //        {
+        //            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        //            this.mBluetoothGatt.writeDescriptor(descriptor);
+        //        }
 
     }
 
@@ -404,31 +437,31 @@ public class BluetoothService extends Service
      */
     public void enableNotificationSession()
     {
-        if(this.mBluetoothGatt == null)
-        {
-            Log.e(TAG, "mBluetoothGatt null");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
-            return;
-        }
-
-        BluetoothGattCharacteristic characteristic;
-        boolean worked;
-        BluetoothGattDescriptor descriptor;
-
-        characteristic =
-                this.mBluetoothGatt.getService(SESSION_START_TIME_SERVICE_UUID)
-                        .getCharacteristic(SESSION_START_TIME_SESSION_UUID);
-
-        worked = this.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
-        descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
-        if(descriptor == null)
-        {
-            Log.e(TAG, "descriptor is null, probably wrong UUID");
-        } else
-        {
-            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-            this.mBluetoothGatt.writeDescriptor(descriptor);
-        }
+        //        if(this.mBluetoothGatt == null)
+        //        {
+        //            Log.e(TAG, "mBluetoothGatt null");
+        //            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
+        //            return;
+        //        }
+        //
+        //        BluetoothGattCharacteristic characteristic;
+        //        boolean worked;
+        //        BluetoothGattDescriptor descriptor;
+        //
+        //        characteristic =
+        //                this.mBluetoothGatt.getService(SESSION_START_TIME_SERVICE_UUID)
+        //                        .getCharacteristic(SESSION_START_TIME_SESSION_UUID);
+        //
+        //        worked = this.mBluetoothGatt.setCharacteristicNotification(characteristic, true);
+        //        descriptor = characteristic.getDescriptor(CLIENT_CHARACTERISTIC_CONFIG);
+        //        if(descriptor == null)
+        //        {
+        //            Log.e(TAG, "descriptor is null, probably wrong UUID");
+        //        } else
+        //        {
+        //            descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        //            this.mBluetoothGatt.writeDescriptor(descriptor);
+        //        }
 
     }
 

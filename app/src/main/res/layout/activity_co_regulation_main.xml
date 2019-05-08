@@ -20,91 +20,112 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
+        android:layout_marginTop="100dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintVertical_chainStyle="spread"
+        >
+
 
         <Button
             android:id="@+id/btnCry"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="67dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btnFlower"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
             android:onClick="openCryDetectorActivity"
             android:text="@string/button_crydetector"
-            app:layout_anchorGravity="top|center_horizontal"
             app:srcCompat="@android:drawable/presence_audio_online"
-            android:layout_alignBottom="@+id/btnFlower"
-            android:layout_centerHorizontal="true"
             />
+            <!--android:layout_marginTop="200dp"-->
+            <!--android:layout_alignBottom="@+id/btnFlower"-->
+            <!--android:layout_marginBottom="67dp"-->
+            <!--app:layout_anchorGravity="top|center_horizontal"-->
 
 
         <Button
             android:id="@+id/btnFlower"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/btnCry"
+            app:layout_constraintBottom_toTopOf="@id/btnCloseness"
             android:layout_marginLeft="@dimen/fab_margin"
             android:layout_marginRight="@dimen/fab_margin"
             android:onClick="openFlowerActivity"
             android:text="@string/button_flower"
-            app:layout_anchorGravity="bottom|center_horizontal"
             app:srcCompat="@drawable/flower_icon"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            />
+            <!--android:layout_marginTop="26dp"-->
+            <!--app:layout_anchorGravity="bottom|center_horizontal"-->
 
         <Button
             android:id="@+id/btnCloseness"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnFlower"
+            app:layout_constraintTop_toBottomOf="@id/btnFlower"
+            app:layout_constraintBottom_toTopOf="@id/btnExperienceSampler"
             android:layout_centerHorizontal="true"
-            android:layout_gravity="bottom|center_horizontal"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:layout_marginTop="26dp"
             android:onClick="openClosenessActivity"
             android:text="@string/button_closeness"
-            app:layout_anchorGravity="center_vertical|center_horizontal"
             app:srcCompat="@drawable/blue_maestro_icon"
             />
+            <!--android:layout_marginTop="26dp"-->
+            <!--app:layout_anchorGravity="center_vertical|center_horizontal"-->
 
 
         <Button
             android:id="@+id/btnExperienceSampler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnCloseness"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="bottom|center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/btnCloseness"
+            app:layout_constraintBottom_toTopOf="@id/btnEmbrWave"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:layout_marginTop="26dp"
             android:onClick="openExperienceSamplerActivity"
             android:text="@string/button_experience_sampler"
-            app:layout_anchorGravity="center_vertical|center_horizontal"
             app:srcCompat="@drawable/blue_maestro_icon"
             />
+            <!--android:layout_marginTop="26dp"-->
+            <!--app:layout_anchorGravity="center_vertical|center_horizontal"-->
 
         <Button
             android:id="@+id/btnEmbrWave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/btnExperienceSampler"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="bottom|center_horizontal"
+            app:layout_constraintTop_toBottomOf="@id/btnExperienceSampler"
+            app:layout_constraintBottom_toTopOf="@id/btnStress"
             android:layout_marginLeft="@dimen/activity_vertical_margin"
             android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:layout_marginTop="26dp"
             android:onClick="openEmbrWave"
             android:text="@string/button_embr_wave"
-            app:layout_anchorGravity="center_vertical|center_horizontal"
             app:srcCompat="@drawable/blue_maestro_icon"
             />
+            <!--android:layout_marginTop="26dp"-->
+            <!--app:layout_anchorGravity="center_vertical|center_horizontal"-->
 
-    </RelativeLayout>
+        <Button
+            android:id="@+id/btnStress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/btnEmbrWave"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:onClick="openStress"
+            android:text="@string/button_stress"
+            app:srcCompat="@drawable/blue_maestro_icon"
+            />
+            <!--android:layout_marginTop="26dp"-->
+            <!--app:layout_anchorGravity="center_vertical|center_horizontal"-->
+
+    </android.support.constraint.ConstraintLayout>
 
 
 

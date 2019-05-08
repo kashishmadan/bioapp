@@ -13,6 +13,7 @@
       <module fileurl="file://$PROJECT_DIR$/mediarec/mediarec.iml" filepath="$PROJECT_DIR$/mediarec/mediarec.iml" />
       <module fileurl="file://$PROJECT_DIR$/shimmerAndroidInstrumentDriver/shimmerAndroidInstrumentDriver.iml" filepath="$PROJECT_DIR$/shimmerAndroidInstrumentDriver/shimmerAndroidInstrumentDriver.iml" />
       <module fileurl="file://$PROJECT_DIR$/shimmerDriver/shimmerDriver.iml" filepath="$PROJECT_DIR$/shimmerDriver/shimmerDriver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stress/stress.iml" filepath="$PROJECT_DIR$/stress/stress.iml" />
     </modules>
   </component>
 </project>

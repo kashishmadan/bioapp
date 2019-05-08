@@ -4,8 +4,8 @@
     tools:context="com.telhai.spl.coregulation.CoRegulationMainActivity">
     <item android:id="@+id/preferences"
         android:title="Preferences" />
-    <item android:id="@+id/upload_all"
-        android:title="Upload all data" />
+    <!--<item android:id="@+id/upload_all"-->
+        <!--android:title="Upload all data" />-->
     <item android:id="@+id/about"
         android:title="About" />
 </menu>

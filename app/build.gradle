@@ -61,5 +61,6 @@ dependencies {
     implementation project(path: ':closeness')
     implementation project(path: ':experienceSampler')
     implementation project(path: ':embrwave')
+    implementation project(path: ':stress')
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 }

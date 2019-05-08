@@ -11,5 +11,6 @@
     <string name="button_closeness">Temperature</string>
     <string name="button_experience_sampler">Experience sampler</string>
     <string name="button_embr_wave">Embr Wave</string>
+    <string name="button_stress">Affect</string>
 
 </resources>

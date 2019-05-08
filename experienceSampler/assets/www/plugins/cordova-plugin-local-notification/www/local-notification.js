@@ -98,6 +98,7 @@ exports.requestPermission = function (callback, scope) {
  */
 exports.schedule = function (msgs, callback, scope, args) {
     var fn = function (granted) {
+        console.log('schedule notif');
         var toasts = this._toArray(msgs);
 
         if (!granted && callback) {

@@ -23,6 +23,7 @@ apply plugin: 'com.android.library'
 buildscript {
     repositories {
         jcenter()
+        google()
         maven {
             url "https://maven.google.com"
         }
@@ -47,9 +48,9 @@ allprojects {
     }
 }
 //
-//task wrapper(type: Wrapper) {
-//    gradleVersion = '2.14.1'
-//}
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.10.3'
+}
 
 // Configuration properties. Set these via environment variables, build-extras.gradle, or gradle.properties.
 // Refer to: http://www.gradle.org/docs/current/userguide/tutorial_this_and_that.html
@@ -182,14 +183,14 @@ android {
     compileSdkVersion 28 // 28
     buildToolsVersion '28.0.3' // 28.0.2
     defaultConfig {
-//        versionCode cdvVersionCode ?: new BigInteger("" + privateHelpers.extractIntFromManifest("versionCode"))
+        versionCode cdvVersionCode ?: new BigInteger("" + privateHelpers.extractIntFromManifest("versionCode"))
 //        applicationId privateHelpers.extractStringFromManifest("package")
 
-        minSdkVersion 16
+        minSdkVersion 19
         targetSdkVersion 28
-//        if (cdvMinSdkVersion != null) {
-//            minSdkVersion cdvMinSdkVersion
-//        }
+        if (cdvMinSdkVersion != null) {
+            minSdkVersion cdvMinSdkVersion
+        }
     }
 
     lintOptions {

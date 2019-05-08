@@ -193,5 +193,6 @@
     <orderEntry type="module" module-name="crydetector" />
     <orderEntry type="module" module-name="flower" />
     <orderEntry type="module" module-name="closeness" />
+    <orderEntry type="module" module-name="stress" />
   </component>
 </module>

@@ -50,10 +50,22 @@
             android:visibility="gone"
             />
 
+        <TextView
+            android:id="@+id/embr_wave_value"
+            app:layout_constraintTop_toBottomOf="@id/embr_wave_slider"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="-9°C"
+            android:textAlignment="center"
+            />
+
 
         <Button
             android:id="@+id/embr_wave_activate"
-            app:layout_constraintTop_toBottomOf="@id/embr_wave_slider"
+            app:layout_constraintTop_toBottomOf="@id/embr_wave_value"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginTop="20dp"

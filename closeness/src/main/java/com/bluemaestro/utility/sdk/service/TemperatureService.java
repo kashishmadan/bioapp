@@ -193,7 +193,7 @@ public class TemperatureService extends Service
     {
         try
         {
-            if(nbTemperatures == 10) {
+//            if(nbTemperatures == 10) {
 
                 int tempOut = ((value[0] & 0xFF) + ((value[1] & 0xFF) << 8));
                 if(tempOut > 0x8000)
@@ -213,9 +213,9 @@ public class TemperatureService extends Service
                 Log.d(TAG, "new temperature: " + String.format("%.2f", temperature) + "°C");
                 broadcastMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
 
-                nbTemperatures = 0;
-            }
-            nbTemperatures++;
+//                nbTemperatures = 0;
+//            }
+//            nbTemperatures++;
 
             //            if(nbTemperatures > 20)
 //            {

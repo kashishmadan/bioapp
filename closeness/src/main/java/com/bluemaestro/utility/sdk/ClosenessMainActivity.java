@@ -30,11 +30,9 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -44,7 +42,6 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -58,25 +55,20 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.bluemaestro.utility.sdk.adapter.MessageAdapter;
 import com.bluemaestro.utility.sdk.databinding.MainBinding;
-import com.bluemaestro.utility.sdk.utility.Utils;
+import com.bluemaestro.utility.sdk.service.TemperatureService;
 import com.bluemaestro.utility.sdk.views.dialogs.BMAlertDialog;
+import com.crashlytics.android.Crashlytics;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
+
+import io.fabric.sdk.android.Fabric;
 
 public class ClosenessMainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener
 {
 
-    public static final String TAG = "BlueMaestro";
+    public static final String TAG = "ClosenessMainActivity";
     // The authority for the sync adapter's content provider
     public static final String AUTHORITY = "com.bluemaestro.utility.sdk.contentprovider";
     // An account type, in the form of a domain name
@@ -87,7 +79,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     public static final String ACCOUNT = "dummyaccount";
     public static final String PASSWORD = null;
 
-    public static final long RETRY_CONNECTING_TIME = 60 * 1000;
 
     public static final long SECONDS_PER_MINUTE = 60L;
     public static final long SYNC_INTERVAL_IN_MINUTES = 1L;
@@ -106,82 +97,79 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     Account mAccount;
     ContentResolver mResolver;
     private int mState = UART_PROFILE_DISCONNECTED;
-    private BluetoothService mService = null;
-    private BluetoothDevice mDevice = null;
     private String mPrivateHash = "";
     private BluetoothAdapter mBtAdapter = null;
-    private boolean partnerSensorConnected = false;
-    private boolean manualConnect = false;
-    private Handler handler = new Handler();
+    private TemperatureService temperatureService;
     /************************** UART STATUS CHANGE **************************/
 
-    // UART service connected/disconnected
-    private ServiceConnection mServiceConnection = new ServiceConnection()
-    {
-        public void onServiceConnected(ComponentName className, IBinder rawBinder)
-        {
-            mService = ((BluetoothService.LocalBinder) rawBinder).getService();
-            Log.d(TAG, "onServiceConnected mService= " + mService);
-            if(!mService.initialize())
-            {
-                Log.e(TAG, "Unable to initialize Bluetooth");
-                finish();
-            }
-        }
-
-        public void onServiceDisconnected(ComponentName classname)
-        {
-            Log.d(TAG, "service disconnect: " + classname);
-            mService = null;
-        }
-    };
-    private MainBinding activityMainBinding;
-    private Runnable autoReconnectRunnable = new Runnable()
+    private ServiceConnection temperatureServiceConnection = new ServiceConnection()
     {
         @Override
-        public void run()
+        public void onServiceConnected(ComponentName name, IBinder service)
         {
-            logMessage(getString(R.string.time_auto_reconnect));
-            ClosenessMainActivity.this.connectDevices();
+            temperatureService = ((TemperatureService.LocalBinder) service).getService();
+            Log.d(TAG, "on temperature service connected: " + temperatureService);
+            temperatureService.connected();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name)
+        {
+            temperatureService = null;
         }
     };
-    // Main UART broadcast receiver
-    private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver()
+
+
+    private MainBinding activityMainBinding;
+    private final BroadcastReceiver temperatureBroadcastReceiver = new BroadcastReceiver()
     {
         public void onReceive(Context context, Intent intent)
         {
             String action = intent.getAction();
             switch(action)
             {
-                case BluetoothService.ACTION_GATT_CONNECTED:
-                    onGattConnected(intent.getExtras().getString("device_address"));
+                case TemperatureService.ACTION_LOG:
+                    logMessage(intent.getExtras().getString(TemperatureService.MESSAGE_KEY));
                     break;
-                case BluetoothService.ACTION_GATT_DISCONNECTED:
-                    onGattDisconnected(intent.getExtras().getString("device_address"));
+                case TemperatureService.ACTION_DEVICE_READY:
+                    activityMainBinding.deviceName.setText(intent.getExtras().getString("value"));
                     break;
-                case BluetoothService.ACTION_GATT_SERVICES_DISCOVERED:
-                    onGattServicesDiscovered();
-                    break;
-                case BluetoothService.ACTION_DATA_AVAILABLE:
-                    onDataAvailable(intent.getByteArrayExtra(BluetoothService.EXTRA_DATA));
-                    break;
-                case BluetoothService.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH:
-                    onDeviceDoesNotSupportBluetooth();
+                case TemperatureService.ACTION_NOTIFY_SYNC_ADAPTER:
+//                    ContentResolver.
+//                    Bundle bundle = new Bundle();
+//                    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+//                    bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+//                    ContentResolver.requestSync(mAccount, "com.bluemaestro.utility.sdk.contentprovider", bundle);
                     break;
                 default:
-                    Log.d(TAG, "broadcast received not handled");
+                    Log.d(TAG, "temperature service, case not handled: " + intent.getAction());
+                    //                case BluetoothService.ACTION_GATT_CONNECTED:
+                    //                    onGattConnected(intent.getExtras().getString("device_address"));
+                    //                    break;
+                    //                case BluetoothService.ACTION_GATT_DISCONNECTED:
+                    //                    onGattDisconnected(intent.getExtras().getString("device_address"));
+                    //                    break;
+                    //                case BluetoothService.ACTION_GATT_SERVICES_DISCOVERED:
+                    //                    onGattServicesDiscovered();
+                    //                    break;
+                    //                case BluetoothService.ACTION_DATA_AVAILABLE:
+                    //                    onDataAvailable(intent.getByteArrayExtra(BluetoothService.EXTRA_DATA));
+                    //                    break;
+                    //                case BluetoothService.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH:
+                    //                    onDeviceDoesNotSupportBluetooth();
+                    //                    break;
+                    //                default:
+                    //                    Log.d(TAG, "broadcast received not handled");
             }
         }
     };
 
-    private static IntentFilter makeGattUpdateIntentFilter()
+    private static IntentFilter temperatureServiceIntentFilter()
     {
         final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BluetoothService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(BluetoothService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(BluetoothService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(BluetoothService.ACTION_DATA_AVAILABLE);
-        intentFilter.addAction(BluetoothService.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH);
+        intentFilter.addAction(TemperatureService.ACTION_LOG);
+        intentFilter.addAction(TemperatureService.ACTION_DEVICE_READY);
+        intentFilter.addAction(TemperatureService.ACTION_NOTIFY_SYNC_ADAPTER);
         return intentFilter;
     }
 
@@ -216,23 +204,31 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+//        String temp = null;
+//        temp.length();
         this.activityMainBinding = DataBindingUtil.setContentView(this, R.layout.main);
         //        setContentView(R.layout.main);
 
         String serverUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("server_url_main", "");
         Log.i(TAG, "Server URL: " + serverUrl);
 
+//        ApiUtils.create(this);
+
+
         this.mResolver = getContentResolver();
         this.mAccount = CreateSyncAccount(this);
+        //        ContentResolver.addPeriodicSync(this.mAccount, "com.bluemaestro.utility.sdk.contentprovider", null, 10);
         ContentResolver.setSyncAutomatically(this.mAccount, "com.bluemaestro.utility.sdk.contentprovider", true);
+//        mResolver.
         PreferenceManager.setDefaultValues(this, R.xml.closeness_preferences, false);
 
         // Delete all databases; testing only
-        String[] addresses = getApplicationContext().databaseList();
-        for(String address : addresses)
-        {
-            getApplicationContext().deleteDatabase(address);
-        }
+//        String[] addresses = getApplicationContext().databaseList();
+//        for(String address : addresses)
+//        {
+//            getApplicationContext().deleteDatabase(address);
+//        }
 
         View rootView = findViewById(android.R.id.content).getRootView();
         StyleOverride.setDefaultTextColor(rootView, Color.BLACK);
@@ -254,6 +250,16 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         // Initialise Bluetooth service
         service_init();
 
+        if(TemperatureService.isRunning)
+        {
+            this.activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_disconnect);
+            if(TemperatureService.connectedDevice != null)
+            {
+                this.activityMainBinding.deviceName.setText(TemperatureService.connectedDevice + " - ready");
+            }
+            //            this.getSystemService(TemperatureService.class);
+        }
+
         // Handle Disconnect & Connect button
         this.activityMainBinding.buttonConnectDisconnect.setOnClickListener(new View.OnClickListener()
         {
@@ -264,6 +270,25 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             }
         });
 
+
+        // create dummy data
+//        for(int i = 0; i < 30; i++)
+//        {
+//            try
+//            {
+//                String timestamp = Utils.dateToIsoString(new Date());
+//                ContentValues values = new ContentValues();
+//                values.put(TemperatureTable.COLUMN_TEMP, i);
+//                values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
+//                values.put(TemperatureTable.COLUMN_PARTNER, false);
+//                getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+//                //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
+//            } catch(Exception e)
+//            {
+//                Log.e(TAG, e.toString());
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
@@ -274,16 +299,10 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
         try
         {
-            LocalBroadcastManager.getInstance(this).unregisterReceiver(bluetoothBroadcastReceiver);
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(temperatureBroadcastReceiver);
         } catch(Exception ignore)
         {
             Log.e(TAG, ignore.toString());
-        }
-        unbindService(mServiceConnection);
-        if(mService != null)
-        {
-            mService.stopSelf();
-            mService = null;
         }
     }
 
@@ -325,18 +344,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     {
         switch(requestCode)
         {
-            case REQUEST_SELECT_DEVICE:
-                // When the DeviceListActivity return, with the selected device address
-                if(resultCode == Activity.RESULT_OK && data != null)
-                {
-                    //                    String deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-                    String deviceAddress = getPartnerSensorName();
-                    mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-                    Log.d(TAG, "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mService);
-                    this.activityMainBinding.deviceName.setText(mDevice.getName() + " - connecting");
-                    mService.connect(deviceAddress, true);
-                }
-                break;
             case REQUEST_ENABLE_BT:
                 // When the request to enable Bluetooth returns
                 if(resultCode == Activity.RESULT_OK)
@@ -360,36 +367,11 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
     private void service_init()
     {
-        Intent bindIntent = new Intent(this, BluetoothService.class);
-        bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        Intent bindIntent = new Intent(this, TemperatureService.class);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.temperatureBroadcastReceiver, temperatureServiceIntentFilter());
     }
 
-    private void onGattConnected(final String deviceAddress)
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
-                String partnerDeviceAddress = getPartnerSensorName();
-                if(deviceAddress.equals(partnerDeviceAddress))
-                {
-                    logMessage("partner sensor is in range !!");
-                    partnerSensorConnected = true;
-                } else
-                {
-                    Log.d(TAG, "UART_CONNECT_MSG");
-                    //                    activityMainBinding.buttonConnectDisconnect.setText("Disconnect");
-                    activityMainBinding.deviceName.setText(mDevice.getName() + " - ready");
-                    logMessage("Connected to: " + mDevice.getName());
-                    // TODO scroll ?
-                    //                messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-                    mState = UART_PROFILE_CONNECTED;
-                }
-            }
-        });
-    }
 
     private void logMessage(String message)
     {
@@ -399,111 +381,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         Log.d(TAG, "logMessage: " + message);
     }
 
-    private void onGattDisconnected(final String deviceAddress)
-    {
-        runOnUiThread(new Runnable()
-        {
-            public void run()
-            {
-                String partnerDeviceAddress = getPartnerSensorName();
-                if(deviceAddress.equals(partnerDeviceAddress))
-                {
-                    logMessage(getString(R.string.partner_sensor_left_range));
-                    if(partnerSensorConnected)
-                    {
-                        partnerSensorConnected = false;
-                    } else
-                    {
-                        logMessage("Couldn't connect to partner's device");
-                    }
-                } else
-                {
-                    Log.d(TAG, "UART_DISCONNECT_MSG");
-                    //                    activityMainBinding.buttonConnectDisconnect.setText("Connect");
-                    activityMainBinding.deviceName.setText("Not Connected");
-                    //                logMessage("Disconnected from: " + mDevice.getName());
-                    if(mState != UART_PROFILE_DISCONNECTED)
-                    {
-                        logMessage("Disconnected from: " + mDevice.getAddress());
-                        mState = UART_PROFILE_DISCONNECTED;
-                    } else
-                    {
-                        logMessage("Couldn't connect to device");
-                    }
-                    //                messageListView.setSelection(listAdapter.getCount() - 1);
-                    mService.close();
-                }
-                if(manualConnect)
-                {
-                    // a device has been disconnected, we try to reconnect in RETRY_CONNECTING_TIME
-                    handler.postDelayed(autoReconnectRunnable, RETRY_CONNECTING_TIME);
-                }
-            }
-        });
-    }
-
-    private void onGattServicesDiscovered()
-    {
-        mService.enableNotification();
-    }
-
-    private void onDataAvailable(final byte[] value)
-    {
-        runOnUiThread(new Runnable()
-        {
-
-            public void run()
-            {
-                try
-                {
-                    int mantissa = (value[1] & 0xFF) + ((value[2] & 0xFF) << 8) + ((value[3] & 0xFF) << 16);
-                    int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
-                    double temperature = mantissa * Math.pow(10, exponent);
-
-                    //                    sendDataToServer(temperature);
-                    saveDataToDB(temperature, partnerSensorConnected);
-
-                    logMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
-
-                    //                    if(mBMDevice == null)
-                    //                    {
-                    //                        return;
-                    //                    }
-                    // TODO updateChart ??
-                    //                    mBMDevice.updateChart(lineChart, text);
-                    //mBMDatabase.addData(BMDatabase.TIMESTAMP_NOW(), text);
-
-                } catch(Exception e)
-                {
-                    Log.e(TAG, e.toString());
-                }
-            }
-        });
-    }
-
-    private void saveDataToDB(double temperature, boolean isPartnerClose)
-    {
-        try
-        {
-            String timestamp = Utils.dateToIsoString(new Date());
-            ContentValues values = new ContentValues();
-            values.put(TemperatureTable.COLUMN_TEMP, temperature);
-            values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
-            values.put(TemperatureTable.COLUMN_PARTNER, isPartnerClose);
-            getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-            //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-        } catch(Exception e)
-        {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    private void onDeviceDoesNotSupportBluetooth()
-    {
-        showMessage("Device doesn't support UART. Disconnecting");
-        mService.disconnect();
-    }
 
     /************************** BUTTON CLICK HANDLERS **************************/
 
@@ -516,34 +393,22 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
         } else
         {
-            if(this.activityMainBinding.buttonConnectDisconnect.getText().equals(getString(R.string.closeness_button_connect)))
+            if(activityMainBinding.buttonConnectDisconnect.getText().equals(getString(R.string.closeness_button_connect)))
             {
                 // user clicked on connect
-                this.manualConnect = true;
-                this.logMessage(getString(R.string.closeness_user_connect));
-
+                //                this.manualConnect = true;
+                logMessage(getString(R.string.closeness_user_connect));
                 activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_disconnect);
-                //                 Connect button pressed, open DeviceListActivity class, with popup windows that scan for devices
-                //                                Intent newIntent = new Intent(ClosenessMainActivity.this, DeviceListActivity.class);
-                //                                startActivityForResult(newIntent, REQUEST_SELECT_DEVICE);
-                //                edtMessage.setText("");
-                //                edtMessage.setVisibility(View.VISIBLE);
-                //                messageListView.smoothScrollToPosition(listAdapter.getCount() - 1);
-                this.connectDevices();
+                connectDevices();
             } else
             {
                 // Disconnect button pressed
-                this.activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_connect);
-                this.manualConnect = false;
-                if(mDevice != null)
-                {
-                    mService.disconnect();
-                }
+                activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_connect);
 
-                handler.removeCallbacks(autoReconnectRunnable);
-                this.logMessage(getString(R.string.closeness_user_disconnect));
-                //                messageListView.setVisibility(View.VISIBLE);
-                //                messageListView.setSelection(listAdapter.getCount() - 1);
+                Intent intent = new Intent(this, TemperatureService.class);
+                stopService(intent);
+                //                this.temperatureService.onDisconnect();
+                logMessage(getString(R.string.closeness_user_disconnect));
             }
         }
     }
@@ -552,65 +417,17 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     {
         Log.d(TAG, "start connection to device and partner");
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String deviceAddress = sharedPref.getString("sensor_name", "");
-        this.mPrivateHash = sharedPref.getString(getString(R.string.private_hash), "");
-        if(mPrivateHash.equals(""))
-        {
-            registerDevice();
-        } else
-        {
-            Log.d(TAG, "using private hash");
-            Log.d(TAG, mPrivateHash);
-        }
+//        String deviceAddress = sharedPref.getString("sensor_name", "");
+//        this.mPrivateHash = sharedPref.getString(getString(R.string.private_hash), "");
         try
         {
-            if(this.mState == UART_PROFILE_DISCONNECTED)
-            {
-                Log.d(TAG, "try connecting to device");
-                this.mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-                //                    mBMDevice = BMDeviceMap.INSTANCE.getBMDevice(mDevice.getAddress());
-                Log.d(TAG, "... onActivityResultdevice.address==" + this.mDevice + "mserviceValue" + this.mService);
-                this.mService.connect(deviceAddress, true);
-            } else
-            {
-                Log.d(TAG, "device already connected");
-            }
+            Intent bindIntent = new Intent(this, TemperatureService.class);
+            //        bindService(bindIntent, this.temperatureServiceConnection, Context.BIND_AUTO_CREATE);
 
+            bindIntent.putExtra("sensor_address", PreferenceManager.getDefaultSharedPreferences(this).getString("sensor_name", ""));
+            bindIntent.putExtra("partner_sensor_address", this.getPartnerSensorName());
 
-            // try connecting to partner's sensor
-            if(!this.partnerSensorConnected)
-            {
-                Log.d(TAG, "try connecting to partner");
-                String partnerDeviceAddress = getPartnerSensorName();
-                if(partnerDeviceAddress == null)
-                {
-                    logMessage("no partner sensor entered");
-                } else
-                {
-                    try
-                    {
-                        mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(partnerDeviceAddress);
-                        mService.connect(partnerDeviceAddress, false);
-                    } catch(IllegalArgumentException e)
-                    {
-                        e.printStackTrace();
-                        logMessage("partner address incorrect");
-                        //                    Toast.makeText(ClosenessMainActivity.this, "Error connecting to the partner", Toast
-                        // .LENGTH_SHORT).show();
-                    }
-                }
-            } else
-            {
-                Log.d(TAG, "partner already connected");
-            }
-
-            //                    final Handler handler = new Handler();
-            //                    handler.postDelayed(new Runnable() {
-            //                        @Override
-            //                        public void run() {
-            //                            startLogging();
-            //                        }
-            //                    }, 1000);
+            startService(bindIntent);
         } catch(IllegalArgumentException e)
         {
             e.printStackTrace();
@@ -618,65 +435,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         }
     }
 
-    private void registerDevice()
-    {
-        final Context context = getApplicationContext();
-        final int duration = Toast.LENGTH_SHORT;
-        String uniqueID = UUID.randomUUID().toString();
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        String url;
-        url = sharedPref.getString("server_url_main", "http://192.168.1.50:5000");
-        //FIXME API structure hard coded...
-        url = url + "/register/" + uniqueID;
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, url,
-                new Response.Listener<String>()
-                {
-                    @Override
-                    public void onResponse(String response)
-                    {
-                        Log.d(TAG, response);
-                        response = response.replaceAll("\\s$", "");
-                        response = response.replaceAll("\"", "");
-                        Log.d(TAG, response);
-                        Log.d(TAG, Integer.toString(response.length()));
-                        if(response.length() == 28)
-                        {
-                            Toast toast = Toast.makeText(context, R.string.registration_impossible, duration);
-                            toast.show();
-                            Log.d(TAG, "Registration is not possible");
-                        } else
-                        {
-                            if(response.length() == 64)
-                            {
-                                mPrivateHash = response;
-                                SharedPreferences.Editor editor = sharedPref.edit();
-                                editor.putString(getString(R.string.private_hash), response);
-                                editor.commit();
-
-                                Log.d(TAG, response);
-                            } else
-                            {
-                                Toast toast = Toast.makeText(context, R.string.server_error_msg, duration);
-                                toast.show();
-                                Log.d(TAG, "Server error occured");
-                            }
-                        }
-                    }
-                }, new Response.ErrorListener()
-        {
-            @Override
-            public void onErrorResponse(VolleyError error)
-            {
-                Log.d(TAG, "That didn't work!");
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
 
     private void showMessage(String msg)
     {
@@ -686,42 +444,35 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
     @Override
     public void onBackPressed()
     {
-        //        Intent startMain = new Intent(Intent.ACTION_MAIN);
-        //        startMain.addCategory(Intent.CATEGORY_HOME);
-        //        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //        startActivity(startMain);
-        //        showMessage("Blue Maestro Utility App is running in background. Disconnect to exit");
 
-        //        Intent startMain = new Intent(Intent.ACTION_MAIN, CoRegulationMainActivity.class);
-        //        startActivity(startMain);
-
-        //        if(false)
-        //        {
-
-        if(mState == UART_PROFILE_CONNECTED)
+        finish();
+        if(false)
         {
-            Intent startMain = new Intent(Intent.ACTION_MAIN);
-            startMain.addCategory(Intent.CATEGORY_HOME);
-            startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(startMain);
-            showMessage("Blue Maestro Utility App is running in background. Disconnect to exit");
-        } else
-        {
-            BMAlertDialog dialog = new BMAlertDialog(this,
-                    "",
-                    "Do you want to quit this Application?");
-            dialog.setPositiveButton("YES", new DialogInterface.OnClickListener()
+            if(mState == UART_PROFILE_CONNECTED)
             {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
+                Intent startMain = new Intent(Intent.ACTION_MAIN);
+                startMain.addCategory(Intent.CATEGORY_HOME);
+                startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(startMain);
+                showMessage("Blue Maestro Utility App is running in background. Disconnect to exit");
+            } else
+            {
+                BMAlertDialog dialog = new BMAlertDialog(this,
+                        "",
+                        "Do you want to quit this Application?");
+                dialog.setPositiveButton("YES", new DialogInterface.OnClickListener()
                 {
-                    finish();
-                }
-            });
-            dialog.setNegativeButton("NO", null);
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        finish();
+                    }
+                });
+                dialog.setNegativeButton("NO", null);
 
-            dialog.show();
-            dialog.applyFont(this, "Montserrat-Regular.ttf");
+                dialog.show();
+                dialog.applyFont(this, "Montserrat-Regular.ttf");
+            }
         }
         //    }
 

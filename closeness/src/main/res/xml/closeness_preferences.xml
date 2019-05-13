@@ -4,12 +4,12 @@
         android:key="sensor_name"
         android:title="@string/sensor_name"
         android:summary="@string/sensor_name_desc"
-        android:defaultValue="DE:CC:5F:8C:51:5F"/>
+        android:defaultValue="CA:02:D1:2C:07:21"/>
     <EditTextPreference
         android:key="partner_sensor_name"
         android:title="@string/partner_sensor_name"
         android:summary="@string/partner_sensor_name_desc"
-        android:defaultValue="DE:CC:5F:8C:51:5G"/>
+        android:defaultValue="GA:02:D1:2C:07:21"/>
     <EditTextPreference
         android:key="participant_number"
         android:title="@string/participant_number"

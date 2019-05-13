@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/participant_number_key"
+        android:title="@string/participant_number"
+        android:summary="@string/participant_number_desc"
+        android:inputType="number"/>
+    <EditTextPreference
+        android:key="@string/study_number_key"
+        android:title="@string/study_number"
+        android:summary="@string/study_number_desc"
+        android:inputType="number"/>
+</PreferenceScreen>

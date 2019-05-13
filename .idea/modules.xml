@@ -2,15 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CoRegulation.iml" filepath="$PROJECT_DIR$/CoRegulation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CordovaLib/CordovaLib.iml" filepath="$PROJECT_DIR$/CordovaLib/CordovaLib.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/closeness/closeness.iml" filepath="$PROJECT_DIR$/closeness/closeness.iml" />
       <module fileurl="file://$PROJECT_DIR$/crydetector/crydetector.iml" filepath="$PROJECT_DIR$/crydetector/crydetector.iml" />
       <module fileurl="file://$PROJECT_DIR$/dima_ruinskiy-coregulation-831646c47d82.iml" filepath="$PROJECT_DIR$/dima_ruinskiy-coregulation-831646c47d82.iml" />
+      <module fileurl="file://$PROJECT_DIR$/embrwave/embrwave.iml" filepath="$PROJECT_DIR$/embrwave/embrwave.iml" />
+      <module fileurl="file://$PROJECT_DIR$/experienceSampler/experienceSampler.iml" filepath="$PROJECT_DIR$/experienceSampler/experienceSampler.iml" />
       <module fileurl="file://$PROJECT_DIR$/flower/flower.iml" filepath="$PROJECT_DIR$/flower/flower.iml" />
       <module fileurl="file://$PROJECT_DIR$/mediarec/mediarec.iml" filepath="$PROJECT_DIR$/mediarec/mediarec.iml" />
       <module fileurl="file://$PROJECT_DIR$/shimmerAndroidInstrumentDriver/shimmerAndroidInstrumentDriver.iml" filepath="$PROJECT_DIR$/shimmerAndroidInstrumentDriver/shimmerAndroidInstrumentDriver.iml" />
       <module fileurl="file://$PROJECT_DIR$/shimmerDriver/shimmerDriver.iml" filepath="$PROJECT_DIR$/shimmerDriver/shimmerDriver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stress/stress.iml" filepath="$PROJECT_DIR$/stress/stress.iml" />
     </modules>
   </component>
 </project>

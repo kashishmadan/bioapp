@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">stress</string>
+    <string name="title_activity_stress_main">Affect</string>
+    <string name="affect_summary">Veuillez indiquer s\'il vous plaît comment vous vous sentez, mal (-100 à 0) ou bien (0 à 100) en ce moment. Vous pouvez venir ici à tout moment pour indiquer comment vous vous sentez.</string>
+    <string name="settings">Settings</string>
+    <string name="participant_number">Participant number</string>
+    <string name="participant_number_desc">The participant number within the study</string>
+    <string name="participant_number_key">participant_number</string>
+    <string name="study_number">Study number</string>
+    <string name="study_number_desc">Number of the study</string>
+    <string name="study_number_key">study_number</string>
+
+</resources>

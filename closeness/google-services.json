@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1078482458288",
+    "firebase_url": "https://socialthermo-7151f.firebaseio.com",
+    "project_id": "socialthermo-7151f",
+    "storage_bucket": "socialthermo-7151f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078482458288:android:bdd89900eb959df6",
+        "android_client_info": {
+          "package_name": "com.bluemaestro.utility.sdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078482458288-2kab4a306ju0om2ft17k73fhg4u62gja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCd4UcO29oOAnVJJGAWMY0kTfwLTislYoU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

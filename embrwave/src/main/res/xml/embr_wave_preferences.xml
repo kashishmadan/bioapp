@@ -9,6 +9,5 @@
         android:key="@string/embr_wave_temperature_key"
         android:title="@string/embr_wave_temperature"
         android:summary="@string/embr_wave_temperature_desc"
-        android:inputType="number"
         android:defaultValue="0"/>
 </PreferenceScreen>

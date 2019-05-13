@@ -34,6 +34,9 @@ public class EmbrWaveService extends Service
     private BluetoothDevice mDevice = null;
     public static String connectedDevice;
 
+    public static final String ACTION_CONNECTED = "connected";
+    public static final String ACTION_DISCONNECTED = "disconnected";
+
     public static final String SERVICE_ACTION_KEY = "action_key";
     public static final String SERVICE_VALUE_KEY = "value_key";
     public static final String SERVICE_ACTION_LED_BLINK = "led_blink";
@@ -111,6 +114,7 @@ public class EmbrWaveService extends Service
             Log.d(TAG, "UART_CONNECT_MSG");
             EmbrWaveService.connectedDevice = mDevice.getName();
             mState = UART_PROFILE_CONNECTED;
+            broadcastUpdate(EmbrWaveService.ACTION_CONNECTED);
         }
     }
 
@@ -134,6 +138,7 @@ public class EmbrWaveService extends Service
             }
             //                messageListView.setSelection(listAdapter.getCount() - 1);
             mService.close();
+            broadcastUpdate(EmbrWaveService.ACTION_DISCONNECTED);
         }
     }
 
@@ -149,10 +154,9 @@ public class EmbrWaveService extends Service
     }
 
 
-    private void broadcastUpdate(final String action, String key, String value)
+    private void broadcastUpdate(final String action)
     {
         final Intent intent = new Intent(action);
-        intent.putExtra(key, value);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
@@ -178,7 +182,19 @@ public class EmbrWaveService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
-        if(EmbrWaveService.isRunning) {
+        if(!EmbrWaveService.isRunning)
+        {
+
+            deviceAddress = intent.getExtras().getString(getString(R.string.embr_wave_address_key));
+            //        this.connect();
+
+            Intent bindIntent = new Intent(this, BluetoothService.class);
+            bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+
+            LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
+            EmbrWaveService.isRunning = true;
+            return Service.START_STICKY;
+        } else if(connectedDevice != null) {
             // value to activate
 //            deviceAddress = intent.getExtras().getString(getString(R.string.embr_wave_address_key));
             String action = intent.getExtras().getString(EmbrWaveService.SERVICE_ACTION_KEY);
@@ -197,15 +213,7 @@ public class EmbrWaveService extends Service
             }
             return Service.START_STICKY;
         } else {
-
-            deviceAddress = intent.getExtras().getString(getString(R.string.embr_wave_address_key));
-            //        this.connect();
-
-            Intent bindIntent = new Intent(this, BluetoothService.class);
-            bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
-
-            LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
-            EmbrWaveService.isRunning = true;
+            Toast.makeText(this, "The device is not connected", Toast.LENGTH_SHORT).show();
             return Service.START_STICKY;
         }
     }
@@ -238,11 +246,12 @@ public class EmbrWaveService extends Service
         }
 
         deviceAddress = null;
-        if(this.mDevice != null)
+        if(mDevice != null)
         {
-            this.mService.disconnect();
+            mService.disconnect();
+            broadcastUpdate(EmbrWaveService.ACTION_DISCONNECTED);
         }
-        unbindService(this.mServiceConnection);
+        unbindService(mServiceConnection);
         EmbrWaveService.isRunning = false;
     }
 }

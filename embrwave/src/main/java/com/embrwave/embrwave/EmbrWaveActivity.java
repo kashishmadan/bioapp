@@ -1,10 +1,16 @@
 package com.embrwave.embrwave;
 
+import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,7 +26,38 @@ public class EmbrWaveActivity extends AppCompatActivity
     private static final String TAG = "EmbrWaveActivity";
     private boolean isConnected = false;
     private boolean isChangingTemperature = false;
-    private int sliderValue = 0;
+    private BluetoothAdapter mBtAdapter = null;
+    private static final int REQUEST_ENABLE_BT = 2;
+
+
+    private final BroadcastReceiver EmbrWaveBroadcastReceiver = new BroadcastReceiver()
+    {
+        public void onReceive(Context context, Intent intent)
+        {
+            String action = intent.getAction();
+            switch(action)
+            {
+                case EmbrWaveService.ACTION_CONNECTED:
+                    isConnected = true;
+                    binding.embrWaveConnect.setText(R.string.button_disconnect);
+                    break;
+                case EmbrWaveService.ACTION_DISCONNECTED:
+                    isConnected = false;
+                    binding.embrWaveConnect.setText(R.string.button_connect);
+                    break;
+                default:
+                    Log.d(TAG, "embrwave service, case not handled: " + intent.getAction());
+            }
+        }
+    };
+
+    private static IntentFilter EmbrWaveServiceIntentFilter()
+    {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(EmbrWaveService.ACTION_CONNECTED);
+        intentFilter.addAction(EmbrWaveService.ACTION_DISCONNECTED);
+        return intentFilter;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,6 +65,17 @@ public class EmbrWaveActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         //        setContentView(R.layout.activity_embr_wave);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_embr_wave);
+
+        this.mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        if(mBtAdapter == null)
+        {
+            Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        // initialize the broadcast receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(this.EmbrWaveBroadcastReceiver, EmbrWaveServiceIntentFilter());
 
         if(EmbrWaveService.isRunning)
         {
@@ -43,7 +91,7 @@ public class EmbrWaveActivity extends AppCompatActivity
                 if(isConnected)
                 {
                     // disconnect
-                    binding.embrWaveConnect.setText(R.string.button_connect);
+                    //                    binding.embrWaveConnect.setText(R.string.button_connect);
                     Intent intent = new Intent(EmbrWaveActivity.this, EmbrWaveService.class);
                     stopService(intent);
                 } else
@@ -58,61 +106,16 @@ public class EmbrWaveActivity extends AppCompatActivity
                                 .getDefaultSharedPreferences(EmbrWaveActivity.this)
                                 .getString(getString(R.string.embr_wave_address_key), "ED:A9:79:FD:7D:1B"));
                         startService(bindIntent);
-                        //                        bindIntent.putExtra("partner_sensor_address", this.getPartnerSensorName());
-
-                        //                        this.startService(bindIntent);
-                        //                                    this.temperatureService.onConnect(deviceAddress, this.getPartnerSensorName());
-
-                        //                    final Handler handler = new Handler();
-                        //                    handler.postDelayed(new Runnable() {
-                        //                        @Override
-                        //                        public void run() {
-                        //                            startLogging();
-                        //                        }
-                        //                    }, 1000);
                     } catch(IllegalArgumentException e)
                     {
                         e.printStackTrace();
                         Toast.makeText(EmbrWaveActivity.this, "Error connecting", Toast.LENGTH_SHORT).show();
                     }
-                    binding.embrWaveConnect.setText(R.string.button_disconnect);
+                    //                    binding.embrWaveConnect.setText(R.string.button_disconnect);
                 }
-                isConnected = !isConnected;
+//                isConnected = !isConnected;
             }
         });
-
-        //        binding.embrWaveSlider.setValue(sliderValue);
-        //        binding.embrWaveSlider.setIndicatorTextDecimalFormat("0");
-        //        binding.embrWaveSlider.setOnRangeChangedListener(new OnRangeChangedListener()
-        //        {
-        //            @Override
-        //            public void onRangeChanged(RangeSeekBar view, float leftValue, float rightValue, boolean isFromUser)
-        //            {
-        //                Log.d(TAG, leftValue + " " + rightValue);
-        //                if(leftValue < 0) {
-        //                    binding.embrWaveActivate.setText(R.string.button_cool);
-        //                    binding.embrWaveActivate.setBackgroundColor(getResources().getColor(R.color
-        //                    .color_button_cool));
-        //                } else if (leftValue > 0) {
-        //                    binding.embrWaveActivate.setText(R.string.button_warm);
-        //                    binding.embrWaveActivate.setBackgroundColor(getResources().getColor(R.color
-        //                    .color_button_warm));
-        //                }
-        //                sliderValue = (int) leftValue;
-        //            }
-        //
-        //            @Override
-        //            public void onStartTrackingTouch(RangeSeekBar view, boolean isLeft)
-        //            {
-        //
-        //            }
-        //
-        //            @Override
-        //            public void onStopTrackingTouch(RangeSeekBar view, boolean isLeft)
-        //            {
-        //
-        //            }
-        //        });
         binding.embrWaveActivate.setText(R.string.button_start);
         //        binding.embrWaveActivate.setBackgroundColor(getResources().getColor(R.color.color_button_warm));
         binding.embrWaveActivate.setOnClickListener(new View.OnClickListener()
@@ -145,17 +148,6 @@ public class EmbrWaveActivity extends AppCompatActivity
                     Intent bindIntent = new Intent(EmbrWaveActivity.this, EmbrWaveService.class);
                     if(isChangingTemperature)
                     {
-                        //                    if(sliderValue < 0) {
-                        //                        binding.embrWaveActivate.setText(R.string.button_cool);
-                        //                        binding.embrWaveActivate.setBackgroundColor(getResources().getColor(R
-                        //                        .color
-                        //                        .color_button_cool));
-                        //                    } else {
-                        //                        binding.embrWaveActivate.setText(R.string.button_warm);
-                        //                        binding.embrWaveActivate.setBackgroundColor(getResources().getColor(R
-                        //                        .color
-                        //                        .color_button_warm));
-                        //                    }
                         binding.embrWaveActivate.setText(R.string.button_start);
                         bindIntent.putExtra(EmbrWaveService.SERVICE_ACTION_KEY, EmbrWaveService.SERVICE_ACTION_STOP_COOL_WARM);
                     } else
@@ -202,5 +194,18 @@ public class EmbrWaveActivity extends AppCompatActivity
         super.onStart();
         binding.embrWaveValue.setText(PreferenceManager.getDefaultSharedPreferences(EmbrWaveActivity.this)
                 .getString(getString(R.string.embr_wave_temperature_key), "Select value"));
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if(!mBtAdapter.isEnabled())
+        {
+            Log.i(TAG, "onResume - BT not enabled yet");
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
     }
 }

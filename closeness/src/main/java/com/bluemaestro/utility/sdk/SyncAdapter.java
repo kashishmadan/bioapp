@@ -133,27 +133,35 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
     private void sendDataToServer(final String studyNumber, final String participantNumber, final List<Sensor> sensors, final String dropIdClause2)
     {
-        ApiUtils.create(mContext)
-                .addSensor(studyNumber, participantNumber, (new Gson()).toJsonTree(sensors.subList(0, Math.min(sensors.size(), MAXIMUM_SENSOR_VALUES))))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(mContext)
-                {
-                    @Override
-                    protected void onSuccess(retrofit2.Response<Void> voidResponse)
+        try
+        {
+            ApiUtils.create(mContext)
+                    .addSensor(studyNumber, participantNumber, (new Gson())
+                            .toJsonTree(sensors.subList(0, Math.min(sensors.size(), MAXIMUM_SENSOR_VALUES))))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(mContext)
                     {
-                        Log.d(TAG, "successfully updated");
+                        @Override
+                        protected void onSuccess(retrofit2.Response<Void> voidResponse)
+                        {
+                            Log.d(TAG, "successfully updated");
 
-                        if(sensors.size() > MAXIMUM_SENSOR_VALUES) {
-                            List<Sensor> sensorsTemp = sensors.subList(MAXIMUM_SENSOR_VALUES, sensors.size());
-                            sendDataToServer(studyNumber, participantNumber, sensorsTemp, dropIdClause2);
-                        } else {
-                            int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause2, null);
-                            Log.d(TAG, String.valueOf(rowsDeleted));
+                            if(sensors.size() > MAXIMUM_SENSOR_VALUES)
+                            {
+                                List<Sensor> sensorsTemp = sensors.subList(MAXIMUM_SENSOR_VALUES, sensors.size());
+                                sendDataToServer(studyNumber, participantNumber, sensorsTemp, dropIdClause2);
+                            } else
+                            {
+                                int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause2, null);
+                                Log.d(TAG, String.valueOf(rowsDeleted));
+                            }
                         }
-                    }
-                })
-                .onComplete();
+                    })
+                    .onComplete();
+        } catch(Exception e) {
+            Log.e(TAG, e.toString());
+        }
     }
 
     //        @Override

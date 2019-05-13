@@ -35,7 +35,6 @@ public class StressMainActivity extends AppCompatActivity
         @Override
         public void run()
         {
-            Log.d(TAG, "tic");
             String studyNumber = PreferenceManager
                     .getDefaultSharedPreferences(StressMainActivity.this)
                     .getString(getString(R.string.study_number_key), "");
@@ -47,21 +46,27 @@ public class StressMainActivity extends AppCompatActivity
                 Toast.makeText(StressMainActivity.this, "You must a valid id participant and id study", Toast.LENGTH_SHORT).show();
             } else
             {
-                ApiUtils.create(StressMainActivity.this)
-                        .addAffect(studyNumber, participantNumber, Integer.parseInt(binding.content.seekArcProgress.getText().toString()))
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(StressMainActivity.this)
-                        {
-
-                            @Override
-                            protected void onSuccess(Response<Void> voidResponse)
+                try
+                {
+                    ApiUtils.create(StressMainActivity.this)
+                            .addAffect(studyNumber, participantNumber, Integer
+                                    .parseInt(binding.content.seekArcProgress.getText().toString()))
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(StressMainActivity.this)
                             {
-//                                Toast.makeText(StressMainActivity.this, "Value saved", Toast.LENGTH_LONG).show();
-                                Log.d(TAG, "Value saved");
-                            }
-                        })
-                        .onComplete();
+
+                                @Override
+                                protected void onSuccess(Response<Void> voidResponse)
+                                {
+                                    //                                Toast.makeText(StressMainActivity.this, "Value saved", Toast.LENGTH_LONG).show();
+                                    Log.d(TAG, "Value saved");
+                                }
+                            })
+                            .onComplete();
+                } catch(Exception e) {
+                    Log.e(TAG, e.toString());
+                }
             }
             handler.postDelayed(senDataRunnable, RUNNABLE_DELAY);
         }
@@ -143,7 +148,6 @@ public class StressMainActivity extends AppCompatActivity
     @Override
     protected void onStop()
     {
-        Log.d(TAG, "stop tic");
         super.onStop();
         handler.removeCallbacks(senDataRunnable);
         StressMainActivity.IsRunnableRUnning = false;

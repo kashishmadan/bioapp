@@ -214,20 +214,20 @@ var surveyQuestions = [
                             "type": "slider",
                             "variableName": "temperature",
                             "questionPrompt": "À l'heure actuelle, à quel point il fait chaud ou froid là où vous êtes, selon vous ?",
-                            "minResponse": 0,
-                            "maxResponse": 40,
+//                            "minResponse": 0,
+//                            "maxResponse": 40,
                         },
                         /*13*/
                         {
                             "type": "instructions",
                             "variableName": "generalInstructions2",
-                            "questionPrompt": "Veuillez répondre aux questions suivantes au sujet de votre partenaire romantique actuel.",
+                            "questionPrompt": "Pour les questions suivantes, nous vous poserons des questions sur vos expériences depuis la dernière fois que vous avez répondu à ce questionnaire. Veuillez répondre aux questions suivantes au sujet de votre partenaire romantique actuel.",
                         },
                         /*14*/
                         {
                             "type": "mult1",
                             "variableName": "partnerListened",
-                            "questionPrompt": "Aujourd'hui mon partenaire m'a vraiment écouté",
+                            "questionPrompt": "Depuis la dernière fois, mon partenaire m'a vraiment écouté",
                             "minResponse": 1,
                             "maxResponse": 9,
                             "labels": [
@@ -246,7 +246,7 @@ var surveyQuestions = [
                         {
                             "type": "mult1",
                             "variableName": "partnerJudged",
-                            "questionPrompt": "Aujourd'hui mon partenaire a très bien jugé mon caractère",
+                            "questionPrompt": "Depuis la dernière fois, mon partenaire a très bien jugé mon caractère",
                             "minResponse": 1,
                             "maxResponse": 9,
                             "labels": [
@@ -265,7 +265,7 @@ var surveyQuestions = [
                         {
                             "type": "mult1",
                             "variableName": "partnerResponsive",
-                            "questionPrompt": "Aujourd'hui mon partenaire était réactif à mes besoins",
+                            "questionPrompt": "Depuis la dernière fois, mon partenaire était réactif à mes besoins",
                             "minResponse": 1,
                             "maxResponse": 9,
                             "labels": [
@@ -290,7 +290,7 @@ var surveyQuestions = [
                         {
                             "type": "mult1",
                             "variableName": "meListened",
-                            "questionPrompt": "Aujourd'hui j'ai vraiment écouté mon partenaire",
+                            "questionPrompt": "Depuis la dernière fois, j'ai vraiment écouté mon partenaire",
                             "minResponse": 1,
                             "maxResponse": 9,
                             "labels": [
@@ -309,7 +309,7 @@ var surveyQuestions = [
                         {
                             "type": "mult1",
                             "variableName": "meJudged",
-                            "questionPrompt": "Aujourd'hui j'étais un excellent juge du caractère de mon partenaire.",
+                            "questionPrompt": "Depuis la dernière fois, j'étais un excellent juge du caractère de mon partenaire.",
                             "minResponse": 1,
                             "maxResponse": 9,
                             "labels": [
@@ -328,7 +328,7 @@ var surveyQuestions = [
                         {
                             "type": "mult1",
                             "variableName": "meResponsive",
-                            "questionPrompt": "Aujourd'hui j'étais réactif aux besoins de mon partenaire.",
+                            "questionPrompt": "Depuis la dernière fois, j'étais réactif aux besoins de mon partenaire.",
                             "minResponse": 1,
                             "maxResponse": 9,
                             "labels": [
@@ -347,7 +347,7 @@ var surveyQuestions = [
                         {
                             "type": "text",
                             "variableName": "day",
-                            "questionPrompt": "Parlez-nous très brièvement de votre journée en général et de vos interactions avec votre partenaire.",
+                            "questionPrompt": "Parlez-nous très brièvement de votre journée en général et de vos interactions avec votre partenaire depuis la dernière fois que nous vous avons demandé.",
                         },
 						/*0*/
 //                       {
@@ -975,9 +975,15 @@ scheduleNotifs:function() {
         b = 102+(parseInt(i)*100);
         c = 103+(parseInt(i)*100);
 
-        cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, at: date1, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
-        cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, at: date3, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+        if(now < date1) {
+            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, at: date1, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+        }
+        if(now < date2) {
+            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+        }
+        if(now < date3) {
+            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, at: date3, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+        }
 
 //        console.log('date2');
         console.log(date1);
@@ -985,15 +991,9 @@ scheduleNotifs:function() {
         console.log(date3);
 
         // the timer starts from today at midnight so we need to be sure we won't set a timer before now, a solution would be start only the day after
-        if(now < date1) {
-            localStore['notification_' + i + '_1'] = localStore.participant_id + "_" + a + "_" + date1;
-        }
-        if(now < date1) {
-            localStore['notification_' + i + '_2'] = localStore.participant_id + "_" + b + "_" + date2;
-        }
-        if(now < date1) {
-            localStore['notification_' + i + '_3'] = localStore.participant_id + "_" + c + "_" + date3;
-        }
+        localStore['notification_' + i + '_1'] = localStore.participant_id + "_" + a + "_" + date1;
+        localStore['notification_' + i + '_2'] = localStore.participant_id + "_" + b + "_" + date2;
+        localStore['notification_' + i + '_3'] = localStore.participant_id + "_" + c + "_" + date3;
     }
 },
 snoozeNotif:function() {

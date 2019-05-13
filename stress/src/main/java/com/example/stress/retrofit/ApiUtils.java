@@ -2,6 +2,7 @@ package com.example.stress.retrofit;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 public class ApiUtils
 {
@@ -12,7 +13,11 @@ public class ApiUtils
     public static Webservices create(Context context)
     {
         //        ((BaseActivity) context).showProgressDialog();
-        String url = PreferenceManager.getDefaultSharedPreferences(context).getString("server_url_main", "");
+        String url = PreferenceManager.getDefaultSharedPreferences(context).getString("server_url_main", "https://ws.socialthermo.ovh");
+        if(url.equals("")) {
+            Toast.makeText(context, "Enter a valid url", Toast.LENGTH_LONG).show();
+            return null;
+        }
         return RetrofitClient.getClient(context, url).create(Webservices.class);
     }
 

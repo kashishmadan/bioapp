@@ -272,7 +272,7 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
 
         // create dummy data
-//        for(int i = 0; i < 30; i++)
+//        for(int i = 0; i < 300; i++)
 //        {
 //            try
 //            {

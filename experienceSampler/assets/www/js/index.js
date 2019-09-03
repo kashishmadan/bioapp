@@ -954,8 +954,6 @@ scheduleNotifs:function() {
    	// added
    	var nightlyLag;
    	var day = 86400000; // 1 day
-   	var minDiaryLag = 5400000; // 1h30
-   	var randomDiaryLag = 1800000; // 30min
 	var today = new Date();
 	today.setHours(0,0,0,0);
 	var now = new Date();
@@ -963,9 +961,9 @@ scheduleNotifs:function() {
 //    var dayOfWeek = dateObject.getDay(), currentHour = dateObject.getHours(), currentMinute = dateObject.getMinutes();
    	for (i = 0; i < 14; i ++) {
 
-   		interval1 = (i * day + 9 * 3600 + parseInt(Math.round(Math.random() * 2 * 3600)))*1000;
-        interval2 = (i * day + 12 * 3600 + parseInt(Math.round(Math.random() * 4 * 3600)))*1000;
-        interval3 = (i * day + 19 * 3600 + parseInt(Math.round(Math.random() * 2 * 3600)))*1000;
+   		interval1 = i * day + (9 * 3600 + parseInt(Math.round(Math.random() * 2 * 3600)))*1000;
+        interval2 = i * day + (12 * 3600 + parseInt(Math.round(Math.random() * 4 * 3600)))*1000;
+        interval3 = i * day + (19 * 3600 + parseInt(Math.round(Math.random() * 2 * 3600)))*1000;
 
         date1 = new Date(today.getTime() + interval1);
         date2 = new Date(today.getTime() + interval2);
@@ -976,13 +974,13 @@ scheduleNotifs:function() {
         c = 103+(parseInt(i)*100);
 
         if(now < date1) {
-            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, at: date1, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: a, trigger: {at: date1}, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
         }
         if(now < date2) {
-            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, at: date2, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: b, trigger: {at: date2}, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
         }
         if(now < date3) {
-            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, at: date3, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
+            cordova.plugins.notification.local.schedule({icon: 'ic_launcher', id: c, trigger: {at: date3}, text: 'Time for your next Diary Survey!', title: 'Diary Survey'});
         }
 
 //        console.log('date2');

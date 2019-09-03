@@ -87,5 +87,7 @@
     <string name="closeness_user_disconnect">user stopped the connection</string>
     <string name="time_auto_reconnect">start auto reconnect</string>
     <string name="partner_sensor_left_range">partner sensor is not in range anymore</string>
+    <string name="title_location_permission">Request for location</string>
+    <string name="text_location_permission">We need to access your location in order to run the study</string>
 
 </resources>

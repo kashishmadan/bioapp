@@ -54,7 +54,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
         Log.d(TAG, "syncing!");
         String[] projection = {TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_TIMESTAMP, TemperatureTable.COLUMN_TEMP,
-                TemperatureTable.COLUMN_PARTNER};
+                TemperatureTable.COLUMN_LATITUDE, TemperatureTable.COLUMN_LONGITUDE};
         String selection = TemperatureTable.COLUMN_ID + ">?";
         String[] selectionArgs = {"0"};
         String sortOrder = "";
@@ -77,8 +77,10 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
                 sensors.add(new Sensor(
                         mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TEMP)),
-                        (mCursor.getInt(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_PARTNER)) > 0),
-                        mCursor.getString(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TIMESTAMP)))
+                        mCursor.getString(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TIMESTAMP)),
+                        mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_LATITUDE)),
+                        mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_LONGITUDE))
+                    )
                 );
             }
 

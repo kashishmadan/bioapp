@@ -237,7 +237,8 @@ public class TemperatureService extends Service
             ContentValues values = new ContentValues();
             values.put(TemperatureTable.COLUMN_TEMP, temperature);
             values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
-            values.put(TemperatureTable.COLUMN_PARTNER, isPartnerClose);
+            values.put(TemperatureTable.COLUMN_LATITUDE, Utils.latitude);
+            values.put(TemperatureTable.COLUMN_LONGITUDE, Utils.longitude);
             getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
             //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
         } catch(Exception e)

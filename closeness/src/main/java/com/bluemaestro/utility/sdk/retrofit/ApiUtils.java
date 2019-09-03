@@ -13,6 +13,7 @@ public class ApiUtils
     {
         //        ((BaseActivity) context).showProgressDialog();
         String url = PreferenceManager.getDefaultSharedPreferences(context).getString("server_url_main", "");
+//        url = "http://192.168.1.50:3000";
         return RetrofitClient.getClient(context, url).create(Webservices.class);
     }
 

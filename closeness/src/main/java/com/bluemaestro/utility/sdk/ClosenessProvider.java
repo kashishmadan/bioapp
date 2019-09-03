@@ -150,7 +150,7 @@ public class ClosenessProvider extends ContentProvider {
     }
     private void checkColumns(String[] projection) {
         String[] available = { TemperatureTable.COLUMN_TIMESTAMP,
-                TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_PARTNER };
+                TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_LATITUDE, TemperatureTable.COLUMN_LONGITUDE };
         if (projection != null) {
             HashSet<String> requestedColumns = new HashSet<>(
                     Arrays.asList(projection));

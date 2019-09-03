@@ -65,6 +65,8 @@ dependencies {
     // firebase
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+    // location
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
     // logs for http requests, based on OkHTTP
     dependencies {
         debugImplementation 'com.readystatesoftware.chuck:library:1.1.0'

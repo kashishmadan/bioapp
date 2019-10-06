@@ -77,7 +77,7 @@ public class BluetoothService extends Service
     //    public final UUID SESSION_START_TIME_SESSION_UUID = convertFromInteger(0x2AAA);
     // Embr Wave
 //    public final UUID EMBR_WAVE_SERVICE_UUID = convertFromInteger(0x8001);
-    public final UUID EMBR_WAVE_SERVICE_UUID = UUID.fromString("00008001-1112-efde-1523-725a2aab0123");
+    public final UUID EMBR_WAVE_SERVICE_UUID = UUID.fromString("00009004-1112-efde-1523-725a2aab0123");
 //    public final UUID EMBR_WAVE_LED_BLINK_UUID = convertFromInteger(0x4003);
     public final UUID EMBR_WAVE_LED_BLINK_UUID = UUID.fromString("00004003-1112-efde-1523-725a2aab0123");
     public final UUID EMBR_WAVE_LED_START_STOP_UUID = UUID.fromString("00004009-1112-efde-1523-725a2aab0123");

@@ -11,15 +11,6 @@ public class Utils
 {
     private static final int COLON_INDEX = 22;
     public static final String ISO_8601_PATTERN_1 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
-    //    public static final String ISO_8601_PATTERN_1 = "yyyy-MM-dd'T'HH:mm:ssZ";
-    public static final TimeZone currentTimeZone = TimeZone.getDefault();
-
-//    public static String DATA_BASE_URL;
-
-//    public static void initialize(Context context)
-//    {
-//        DATA_BASE_URL =  PreferenceManager.getDefaultSharedPreferences(this).getString("server_url_main", "");
-//    }
 
     public static String dateToIsoString(Date date)
     {

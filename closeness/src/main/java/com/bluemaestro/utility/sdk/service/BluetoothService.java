@@ -65,14 +65,6 @@ public class BluetoothService extends Service
             "com.bluemaestro.utility.sdk.EXTRA_DATA";
     public static final String DEVICE_DOES_NOT_SUPPORT_BLUETOOTH =
             "com.bluemaestro.utility.sdk.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH";
-    //    public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID FIRMWARE_REVISON_UUID = UUID.fromString("00002a26-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID DIS_UUID = UUID.fromString("0000180a-0000-1000-8000-00805f9b34fb");
-    //    public static final UUID RX_SERVICE_UUID = UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e");
-    //    public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
-    //    public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
     private static final String TAG = BluetoothService.class.getSimpleName();
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -83,11 +75,6 @@ public class BluetoothService extends Service
     public final UUID CLIENT_CHARACTERISTIC_CONFIG = convertFromInteger(0x2902);
     public final UUID SESSION_START_TIME_SERVICE_UUID = convertFromInteger(0x1888);
     public final UUID SESSION_START_TIME_SESSION_UUID = convertFromInteger(0x2AAA);
-    // myTemp
-    //    public final UUID TEMPERATURE_SERVICE_UUID = convertFromInteger(0x1809);
-    //    public final UUID TEMPERATURE_MEASURMENT_UUID = convertFromInteger(0x2A1C);
-    //    //    public final UUID TEMPERATURE_TYPE_UUID = convertFromInteger(0x2A1D);
-    //    public final UUID CLIENT_CHARACTERISTIC_CONFIG = convertFromInteger(0x2902);
 
     private final IBinder mBinder = new LocalBinder();
     private BluetoothManager mBluetoothManager;
@@ -145,27 +132,11 @@ public class BluetoothService extends Service
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status)
         {
-
-//            BluetoothGattCharacteristic characteristic =
-//                    gatt.getService(TEMPERATURE_SERVICE_UUID)
-//                            .getCharacteristic(TEMPERATURE_MEASURMENT_UUID);
-
-
-//            BluetoothGattCharacteristic characteristic =
-//                    gatt.getService(SESSION_START_TIME_SERVICE_UUID)
-//                            .getCharacteristic(SESSION_START_TIME_SESSION_UUID);
-//
-//            gatt.writeCharacteristic(descriptor.getCharacteristic());
-
             // the temperature is finished, we launch the session
             if(!isSessionNotificationEnabled) {
                 isSessionNotificationEnabled = true;
                 enableNotificationSession();
             }
-
-            //            characteristic.setValue(new byte[]{1, 1});
-//            gatt.writeCharacteristic(characteristic);
-
         }
 
         @Override
@@ -210,8 +181,6 @@ public class BluetoothService extends Service
         // This is handling for the notification on TX Character of NUS service
         if(TEMPERATURE_MEASURMENT_UUID.equals(characteristic.getUuid()))
         {
-
-            // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
             intent.putExtra(EXTRA_DATA, characteristic.getValue());
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
@@ -396,10 +365,6 @@ public class BluetoothService extends Service
         BluetoothGattCharacteristic characteristic;
         boolean worked;
         BluetoothGattDescriptor descriptor;
-//        BluetoothGattCharacteristic characteristic =
-//                this.mBluetoothGatt.getService(TEMPERATURE_SERVICE_UUID)
-//                        .getCharacteristic(TEMPERATURE_MEASURMENT_UUID);
-
 
         characteristic =
                 this.mBluetoothGatt.getService(TEMPERATURE_SERVICE_UUID)
@@ -447,11 +412,6 @@ public class BluetoothService extends Service
         }
 
     }
-
-    //    private void showMessage(String msg)
-    //    {
-    //        Log.e(TAG, msg);
-    //    }
 
     /**
      * Retrieves a list of supported GATT services on the connected device. This should be

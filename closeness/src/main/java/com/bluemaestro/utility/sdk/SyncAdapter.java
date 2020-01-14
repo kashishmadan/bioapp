@@ -99,18 +99,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
                     (mCursor.getInt(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_PARTNER)) > 0),
                     mCursor.getString(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TIMESTAMP)))
             );
-
-            //                JSONObject item = new JSONObject();
-            //                //                item.put("client_hash", client_hash);
-            //                //                item.put(ID_PARTICIPANT_FIELD, Integer.valueOf(participantNumber));
-            //                //                item.put(ID_STUDY_FIELD, Integer.valueOf(studyNumber));
-            //                String timestamp = mCursor.getString(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TIMESTAMP));
-            //                item.put(TIMESTAMP_DEVICE_FIELD, timestamp);
-            //                float temp = mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TEMP));
-            //                item.put(TEMPERATURE_FIELD, temp);
-            //                boolean isPartnerClose = (mCursor.getInt(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_PARTNER)) > 0);
-            //                item.put(IS_PARTNER_CLOSE_FIELD, isPartnerClose);
-            //                jsonArray.put(item);
         }
         mCursor.close();
 
@@ -121,14 +109,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
         {
             sendDataToServer(studyNumber, participantNumber, sensors, dropIdClause2);
         }
-        //        } catch(JSONException e)
-        //        {
-        //            e.printStackTrace();
-        //        } finally
-        //        {
-        //            mCursor.close();
-        //        }
-        //        }
     }
 
     private void sendDataToServer(final String studyNumber, final String participantNumber, final List<Sensor> sensors, final String dropIdClause2)

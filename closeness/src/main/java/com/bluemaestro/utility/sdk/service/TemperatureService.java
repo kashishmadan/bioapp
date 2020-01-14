@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -34,24 +33,18 @@ public class TemperatureService extends Service
     public static final long RETRY_CONNECTING_TIME = 60 * 1000;
     public static boolean isRunning = false;
     public static String connectedDevice;
-    private static final int REQUEST_SELECT_DEVICE = 1;
-    private static final int REQUEST_ENABLE_BT = 2;
-    private static final int REQUEST_HISTORY_DEVICE = 3;
-    private static final int UART_PROFILE_READY = 10;
     private static final int UART_PROFILE_CONNECTED = 20;
     private static final int UART_PROFILE_DISCONNECTED = 21;
     private final IBinder mBinder = new LocalBinder();
     private int mState = UART_PROFILE_DISCONNECTED;
-    private ContentResolver mResolver;
     private BluetoothService mService = null;
     private BluetoothDevice mDevice = null;
-    private BluetoothAdapter mBtAdapter = null;
     private boolean partnerSensorConnected = false;
     private boolean manualConnect = false;
     private Handler handler = new Handler();
     private String deviceAddress;
     private String partnerDeviceAddress;
-    private int nbTemperatures = 0;
+
     // UART service connected/disconnected
     private ServiceConnection mServiceConnection = new ServiceConnection()
     {
@@ -81,10 +74,9 @@ public class TemperatureService extends Service
         {
             broadcastMessage(getString(R.string.time_auto_reconnect));
             TemperatureService.this.connect();
-            //            logMessage(getString(R.string.time_auto_reconnect));
-            //            ClosenessMainActivity.this.connectDevices();
         }
     };
+
     // Main UART broadcast receiver
     private final BroadcastReceiver bluetoothBroadcastReceiver = new BroadcastReceiver()
     {
@@ -134,12 +126,9 @@ public class TemperatureService extends Service
         } else
         {
             Log.d(TAG, "UART_CONNECT_MSG");
-            //                    activityMainBinding.buttonConnectDisconnect.setText("Disconnect");
-            //            activityMainBinding.deviceName.setText(mDevice.getName() + " - ready");
             TemperatureService.connectedDevice = this.mDevice.getName();
             this.broadcastUpdate(TemperatureService.ACTION_DEVICE_READY, "value", this.mDevice.getName() + " - ready");
             this.broadcastMessage("Connected to: " + this.mDevice.getName());
-            //            logMessage("Connected to: " + mDevice.getName());
             this.mState = UART_PROFILE_CONNECTED;
         }
     }
@@ -161,20 +150,16 @@ public class TemperatureService extends Service
         } else
         {
             Log.d(TAG, "UART_DISCONNECT_MSG");
-            //                    activityMainBinding.buttonConnectDisconnect.setText("Connect");
             this.broadcastUpdate(TemperatureService.ACTION_DEVICE_READY, "value", "Not Connected");
-            //            activityMainBinding.deviceName.setText("Not Connected");
             if(this.mState != UART_PROFILE_DISCONNECTED)
             {
                 this.broadcastMessage("Disconnected from: " + mDevice.getAddress());
                 TemperatureService.connectedDevice = null;
-                //                logMessage("Disconnected from: " + mDevice.getAddress());
                 this.mState = UART_PROFILE_DISCONNECTED;
             } else
             {
                 this.broadcastMessage("Couldn't connect to device");
             }
-            //                messageListView.setSelection(listAdapter.getCount() - 1);
             this.mService.close();
         }
         if(this.manualConnect)
@@ -193,35 +178,17 @@ public class TemperatureService extends Service
     {
         try
         {
-//            if(nbTemperatures == 10) {
+            int tempOut = ((value[0] & 0xFF) + ((value[1] & 0xFF) << 8));
+            if(tempOut > 0x8000)
+            {
+                // 2's complement
+                tempOut = -(0x10000 - tempOut);
+            }
+            double temperature = 42.5 + ((double) tempOut / 480);
+            saveDataToDB(temperature, this.partnerSensorConnected);
 
-                int tempOut = ((value[0] & 0xFF) + ((value[1] & 0xFF) << 8));
-                if(tempOut > 0x8000)
-                {
-                    // 2's complement
-                    tempOut = -(0x10000 - tempOut);
-                }
-                double temperature = 42.5 + ((double) tempOut / 480);
-                // myTemp
-                //            int mantissa = (value[1] & 0xFF) + ((value[2] & 0xFF) << 8) + ((value[3] & 0xFF) << 16);
-                //            int exponent = (value[4] & 0xFF) > 128 ? (value[4] & 0xFF) - 256 : (value[4] & 0xFF);
-                //            double temperature = mantissa * Math.pow(10, exponent);
-
-                //                    sendDataToServer(temperature);
-                saveDataToDB(temperature, this.partnerSensorConnected);
-
-                Log.d(TAG, "new temperature: " + String.format("%.2f", temperature) + "°C");
-                broadcastMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
-
-//                nbTemperatures = 0;
-//            }
-//            nbTemperatures++;
-
-            //            if(nbTemperatures > 20)
-//            {
-//                //                ContentResolver.
-//                broadcastUpdate(ACTION_NOTIFY_SYNC_ADAPTER);
-//            }
+            Log.d(TAG, "new temperature: " + String.format("%.2f", temperature) + "°C");
+            broadcastMessage("Temperature: " + String.format("%.2f", temperature) + "°C");
         } catch(Exception e)
         {
             Log.e(TAG, e.toString());
@@ -239,7 +206,6 @@ public class TemperatureService extends Service
             values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
             values.put(TemperatureTable.COLUMN_PARTNER, isPartnerClose);
             getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-            //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
         } catch(Exception e)
         {
             Log.e(TAG, e.toString());
@@ -298,10 +264,7 @@ public class TemperatureService extends Service
                 } catch(IllegalArgumentException e)
                 {
                     e.printStackTrace();
-                    //                    logMessage("partner address incorrect");
                     this.broadcastMessage("partner address incorrect");
-                    //                    Toast.makeText(ClosenessMainActivity.this, "Error connecting to the partner", Toast
-                    // .LENGTH_SHORT).show();
                 }
             }
         } else
@@ -353,7 +316,8 @@ public class TemperatureService extends Service
         Intent bindIntent = new Intent(this, BluetoothService.class);
         bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
+        LocalBroadcastManager.getInstance(this)
+          .registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
         TemperatureService.isRunning = true;
         return Service.START_STICKY;
     }
@@ -380,7 +344,8 @@ public class TemperatureService extends Service
         Intent bindIntent = new Intent(this, BluetoothService.class);
         bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
+        LocalBroadcastManager.getInstance(this)
+          .registerReceiver(bluetoothBroadcastReceiver, makeGattUpdateIntentFilter());
     }
 
     @Override

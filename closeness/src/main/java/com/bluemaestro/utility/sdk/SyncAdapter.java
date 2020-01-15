@@ -57,8 +57,9 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
                 TemperatureTable.COLUMN_LATITUDE, TemperatureTable.COLUMN_LONGITUDE};
         String selection = TemperatureTable.COLUMN_ID + ">?";
         String[] selectionArgs = {"0"};
-        String sortOrder = "";
-        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
+        String sortOrder = TemperatureTable.COLUMN_ID;
+        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, null, null, sortOrder);
+//        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         //        String client_hash = sharedPref.getString(mContext.getString(R.string.private_hash), "");
         String studyNumber = sharedPref.getString("study_number", "0");

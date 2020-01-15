@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:contentAuthority="com.bluemaestro.utility.sdk.contentprovider"
     android:accountType="nl.closeness"
-    android:userVisible="true"
-    android:supportsUploading="true"
+    android:userVisible="false"
+    android:supportsUploading="false"
     android:allowParallelSyncs="false"
     android:isAlwaysSyncable="true" />

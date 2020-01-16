@@ -11,6 +11,12 @@ public class Utils
 {
     private static final int COLON_INDEX = 22;
     public static final String ISO_8601_PATTERN_1 = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+    //    public static final String ISO_8601_PATTERN_1 = "yyyy-MM-dd'T'HH:mm:ssZ";
+    public static final TimeZone currentTimeZone = TimeZone.getDefault();
+
+    public static Double latitude;
+    public static Double longitude;
+
 
     public static String dateToIsoString(Date date)
     {

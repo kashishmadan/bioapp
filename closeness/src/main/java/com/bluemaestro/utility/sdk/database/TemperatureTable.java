@@ -13,7 +13,8 @@ public class TemperatureTable {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TIMESTAMP = "time_stamp_device";
     public static final String COLUMN_TEMP = "temperature";
-    public static final String COLUMN_PARTNER = "is_partner_close";
+    public static final String COLUMN_LATITUDE = "latitude";
+    public static final String COLUMN_LONGITUDE = "longitude";
 
     // Database creation SQL statement
     private static final String DATABASE_CREATE = "create table "
@@ -22,7 +23,8 @@ public class TemperatureTable {
             + COLUMN_ID + " integer primary key autoincrement, "
             + COLUMN_TIMESTAMP + " text not null, "
             + COLUMN_TEMP + " real not null, "
-            + COLUMN_PARTNER + " boolean not null"
+            + COLUMN_LATITUDE + " real, "
+            + COLUMN_LONGITUDE + " real "
             + ");";
 
     public static void onCreate(SQLiteDatabase database) {

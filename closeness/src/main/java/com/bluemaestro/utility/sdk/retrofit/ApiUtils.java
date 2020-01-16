@@ -12,7 +12,8 @@ public class ApiUtils
     public static Webservices create(Context context)
     {
         //        ((BaseActivity) context).showProgressDialog();
-        String url = PreferenceManager.getDefaultSharedPreferences(context).getString("server_url_main", "");
+        String url = PreferenceManager.getDefaultSharedPreferences(context).getString("server_url_main", "https://ws.socialthermo.ovh");
+//        url = "http://192.168.1.50:3000";
         return RetrofitClient.getClient(context, url).create(Webservices.class);
     }
 

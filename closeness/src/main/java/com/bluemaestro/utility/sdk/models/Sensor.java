@@ -6,18 +6,24 @@ import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 import org.parceler.ParcelConstructor;
 
-import static com.bluemaestro.utility.sdk.database.Database.IS_PARTNER_CLOSE_FIELD;
 import static com.bluemaestro.utility.sdk.database.Database.TIMESTAMP_DEVICE_FIELD;
 
 @Parcel
 public class Sensor
 {
+    @Expose(serialize = false)
+    private long id;
+
     @Expose
     private Float temperature;
 
-    @SerializedName(IS_PARTNER_CLOSE_FIELD)
+//    @SerializedName(LATITUDE_FIELD)
     @Expose
-    private boolean isPartnerClose;
+    private double latitude;
+
+//    @SerializedName(LATITUDE_FIELD)
+    @Expose
+    private double longitude;
 
     @SerializedName(TIMESTAMP_DEVICE_FIELD)
     @Expose
@@ -28,11 +34,18 @@ public class Sensor
     {
     }
 
-    public Sensor(Float temperature, boolean isPartnerClose, String timestamp)
+    public Sensor(Float temperature, String timestamp, double latitude, double longitude)
     {
         this.temperature = temperature;
-        this.isPartnerClose = isPartnerClose;
         this.timestamp = timestamp;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
+    public Sensor(long id, Float temperature, String timestamp, double latitude, double longitude)
+    {
+        this(temperature, timestamp, latitude, longitude);
+        this.id = id;
     }
 
     public Float getTemperature()
@@ -45,16 +58,6 @@ public class Sensor
         this.temperature = temperature;
     }
 
-    public boolean isPartnerClose()
-    {
-        return isPartnerClose;
-    }
-
-    public void setPartnerClose(boolean partnerClose)
-    {
-        isPartnerClose = partnerClose;
-    }
-
     public String getTimestamp()
     {
         return timestamp;
@@ -65,13 +68,35 @@ public class Sensor
         this.timestamp = timestamp;
     }
 
+    public double getLatitude()
+    {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude)
+    {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude()
+    {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude)
+    {
+        this.longitude = longitude;
+    }
+
     @Override
     public String toString()
     {
         return "Sensor{" +
-                "temperature=" + temperature +
-                ", isPartnerClose=" + isPartnerClose +
-                ", timestamp='" + timestamp + '\'' +
-                '}';
+          "id=" + id +
+          ", temperature=" + temperature +
+          ", latitude=" + latitude +
+          ", longitude=" + longitude +
+          ", timestamp='" + timestamp + '\'' +
+          '}';
     }
 }

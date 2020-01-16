@@ -34,32 +34,40 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     ContentResolver mContentResolver;
     Context mContext;
     private static final int MAXIMUM_SENSOR_VALUES = 100;
+    private static final int TIME_BETWEEN_REQUESTS = 100;
 
     public SyncAdapter(
-            Context context,
-            boolean autoInitialize,
-            boolean allowParallelSyncs)
+      Context context,
+      boolean autoInitialize,
+      boolean allowParallelSyncs)
     {
         super(context, autoInitialize, allowParallelSyncs);
         mContentResolver = context.getContentResolver();
         mContext = context;
-//        ApiUtils.create(context);
+        //        ApiUtils.create(context);
     }
 
     @Override
-    public void onPerformSync(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient, SyncResult syncResult)
+    public void onPerformSync(Account account, Bundle bundle, String s, ContentProviderClient contentProviderClient,
+                              SyncResult syncResult)
     {
-        //        if(false)
-        //        {
 
         Log.d(TAG, "syncing!");
-        String[] projection = {TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_TIMESTAMP, TemperatureTable.COLUMN_TEMP,
-                TemperatureTable.COLUMN_LATITUDE, TemperatureTable.COLUMN_LONGITUDE};
-        String selection = TemperatureTable.COLUMN_ID + ">?";
-        String[] selectionArgs = {"0"};
+        String[] projection =
+          {
+            TemperatureTable.COLUMN_ID,
+            TemperatureTable.COLUMN_TIMESTAMP,
+            TemperatureTable.COLUMN_TEMP,
+            TemperatureTable.COLUMN_LATITUDE,
+            TemperatureTable.COLUMN_LONGITUDE
+          };
+//        String selection = TemperatureTable.COLUMN_ID + ">?";
+//        String[] selectionArgs = {"0"};
         String sortOrder = TemperatureTable.COLUMN_ID;
+        //        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, null, null, null);
         Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, null, null, sortOrder);
-//        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, selection, selectionArgs, sortOrder);
+        //        Cursor mCursor = mContentResolver.query(ClosenessProvider.CONTENT_URI, projection, selection,
+        //        selectionArgs, sortOrder);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         //        String client_hash = sharedPref.getString(mContext.getString(R.string.private_hash), "");
         String studyNumber = sharedPref.getString("study_number", "0");
@@ -69,65 +77,78 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
         //        {
         assert mCursor != null;
         String dropIdClause;
-        while(mCursor.moveToNext()) {
-            dropIdClause = "_ID IN (";
-            List<Sensor> sensors = new ArrayList<>();
-            while(mCursor.moveToNext() && sensors.size() < MAXIMUM_SENSOR_VALUES )
+        if(mCursor.moveToFirst())
+        {
+            do
             {
-                dropIdClause = dropIdClause + mCursor.getInt(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_ID)) + ", ";
+                dropIdClause = "_ID IN (";
+                List<Sensor> sensors = new ArrayList<>();
+                do
+                {
+                    dropIdClause = dropIdClause + mCursor.getInt(mCursor.getColumnIndexOrThrow(TemperatureTable
+                      .COLUMN_ID)) + ", ";
 
-                sensors.add(new Sensor(
+                    sensors.add(new Sensor(
                         mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TEMP)),
                         mCursor.getString(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_TIMESTAMP)),
                         mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_LATITUDE)),
                         mCursor.getFloat(mCursor.getColumnIndexOrThrow(TemperatureTable.COLUMN_LONGITUDE))
-                    )
-                );
-            }
+                      )
+                    );
+                    // mCursor must be at the end otherwise it moves twice when reaching MAXIMUM_SENSOR_VALUES
+                } while(sensors.size() < MAXIMUM_SENSOR_VALUES && mCursor.moveToNext());
 
-            dropIdClause = dropIdClause.replaceAll(", $", "");
-            dropIdClause = dropIdClause + ")";
-            Log.d(TAG, dropIdClause);
-//            final String dropIdClause2 = dropIdClause;
-            if(!sensors.isEmpty())
-            {
-                sendDataToServer(studyNumber, participantNumber, sensors, dropIdClause);
-            }
+                dropIdClause = dropIdClause.replaceAll(", $", "");
+                dropIdClause = dropIdClause + ")";
+                Log.d(TAG, dropIdClause);
+                //            final String dropIdClause2 = dropIdClause;
+                if(!sensors.isEmpty())
+                {
+                    try {
+                        sendDataToServer(studyNumber, participantNumber, sensors, dropIdClause);
+                        Thread.sleep(TIME_BETWEEN_REQUESTS);
+                    } catch(InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            } while(mCursor.moveToNext());
         }
         mCursor.close();
+        ClosenessProvider.releaseLock();
     }
 
-    private void sendDataToServer(final String studyNumber, final String participantNumber, final List<Sensor> sensors, final String dropIdClause2)
+    private void sendDataToServer(final String studyNumber, final String participantNumber,
+                                  final List<Sensor> sensors, final String dropIdClause)
     {
         try
         {
             ApiUtils.create(mContext)
-                    .addSensor(studyNumber, participantNumber, (new Gson())
-                            .toJsonTree(sensors.subList(0, Math.min(sensors.size(), MAXIMUM_SENSOR_VALUES))))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(mContext)
-                    {
-                        @Override
-                        protected void onSuccess(retrofit2.Response<Void> voidResponse)
-                        {
-                            Log.d(TAG, "successfully updated");
+              .addSensor(studyNumber, participantNumber, (new Gson())
+                .toJsonTree(sensors.subList(0, Math.min(sensors.size(), MAXIMUM_SENSOR_VALUES))))
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribeWith(new CallbackWrapper<retrofit2.Response<Void>>(mContext)
+              {
+                  @Override
+                  protected void onSuccess(retrofit2.Response<Void> voidResponse)
+                  {
+                      Log.d(TAG, "successfully updated");
 
-//                            if(sensors.size() > MAXIMUM_SENSOR_VALUES)
-//                            {
-//                                List<Sensor> sensorsTemp = sensors.subList(MAXIMUM_SENSOR_VALUES, sensors.size());
-//                                sendDataToServer(studyNumber, participantNumber, sensorsTemp, dropIdClause2);
-//                            } else
-//                            {
-//                                int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause2, null);
-//                                Log.d(TAG, String.valueOf(rowsDeleted));
-//                            }
-                            int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause2, null);
-                            Log.d(TAG, String.valueOf(rowsDeleted));
-                        }
-                    })
-                    .onComplete();
-        } catch(Exception e) {
+                      int rowsDeleted = mContentResolver.delete(ClosenessProvider.CONTENT_URI, dropIdClause, null);
+                      Log.d(TAG, "rows deleted: " + rowsDeleted);
+                  }
+
+                  @Override
+                  public void onError(Throwable e)
+                  {
+                      super.onError(e);
+                      Log.e(TAG, e.toString());
+                  }
+              })
+              .onComplete();
+        } catch(Exception e)
+        {
             Log.e(TAG, e.toString());
         }
     }

@@ -50,7 +50,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
@@ -166,34 +165,9 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                     activityMainBinding.deviceName.setText(intent.getExtras().getString("value"));
                     break;
                 case TemperatureService.ACTION_NOTIFY_SYNC_ADAPTER:
-                    //                    ContentResolver.
-                    //                                        Bundle bundle = new Bundle();
-                    //                                        bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL,
-                    //                                        true);
-                    //                                        bundle.putBoolean(ContentResolver
-                    //                                        .SYNC_EXTRAS_EXPEDITED, true);
-                    //                                        ContentResolver.requestSync(mAccount, "com.bluemaestro
-                    //                                        .utility.sdk.contentprovider", bundle);
                     break;
                 default:
                     Log.d(TAG, "temperature service, case not handled: " + intent.getAction());
-                    //                case BluetoothService.ACTION_GATT_CONNECTED:
-                    //                    onGattConnected(intent.getExtras().getString("device_address"));
-                    //                    break;
-                    //                case BluetoothService.ACTION_GATT_DISCONNECTED:
-                    //                    onGattDisconnected(intent.getExtras().getString("device_address"));
-                    //                    break;
-                    //                case BluetoothService.ACTION_GATT_SERVICES_DISCOVERED:
-                    //                    onGattServicesDiscovered();
-                    //                    break;
-                    //                case BluetoothService.ACTION_DATA_AVAILABLE:
-                    //                    onDataAvailable(intent.getByteArrayExtra(BluetoothService.EXTRA_DATA));
-                    //                    break;
-                    //                case BluetoothService.DEVICE_DOES_NOT_SUPPORT_BLUETOOTH:
-                    //                    onDeviceDoesNotSupportBluetooth();
-                    //                    break;
-                    //                default:
-                    //                    Log.d(TAG, "broadcast received not handled");
             }
         }
     };
@@ -228,22 +202,12 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         return (newAccount);
     }
 
-    private String getPartnerSensorName()
-    {
-        SharedPreferences sharedPref =
-          PreferenceManager.getDefaultSharedPreferences(ClosenessMainActivity.this.getApplicationContext());
-        return sharedPref.getString("partner_sensor_name", null);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
-        //        String temp = null;
-        //        temp.length();
-        this.activityMainBinding = DataBindingUtil.setContentView(this, R.layout.main);
-        //        setContentView(R.layout.main);
+        activityMainBinding = DataBindingUtil.setContentView(this, R.layout.main);
 
         String serverUrl = PreferenceManager.getDefaultSharedPreferences(this).getString("server_url_main", "");
         Log.i(TAG, "Server URL: " + serverUrl);
@@ -251,8 +215,8 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         //        ApiUtils.create(this);
 
 
-        this.mResolver = getContentResolver();
-        this.mAccount = CreateSyncAccount(this);
+        mResolver = getContentResolver();
+        mAccount = CreateSyncAccount(this);
         //        mResolver.acquireContentProviderClient(ClosenessProvider.CONTENT_URI).insert()
 
         //        getContentResolver().insert(ClosenessProvider.CONTENT_URI, null);
@@ -303,18 +267,18 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
         StyleOverride.setDefaultTextColor(rootView, Color.BLACK);
         StyleOverride.setDefaultFont(rootView, this, "Montserrat-Regular.ttf");
 
-        this.mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBtAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBtAdapter == null)
         {
             Toast.makeText(this, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
-        this.activityMainBinding.messageContainer.setLayoutManager(new LinearLayoutManager(this));
-        this.activityMainBinding.messageContainer
-          .setAdapter(new MessageAdapter(this, new ArrayList<String>()));
-        this.activityMainBinding.messageContainer.setHasFixedSize(true);
-        this.activityMainBinding.messageContainer.getAdapter().notifyDataSetChanged();
+        activityMainBinding.messageContainer.setLayoutManager(new LinearLayoutManager(this));
+        activityMainBinding.messageContainer
+                .setAdapter(new MessageAdapter(this, new ArrayList<String>()));
+        activityMainBinding.messageContainer.setHasFixedSize(true);
+        activityMainBinding.messageContainer.getAdapter().notifyDataSetChanged();
 
         // Initialise Bluetooth service
         service_init();
@@ -350,16 +314,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
         if(TemperatureService.isRunning)
         {
-            this.activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_disconnect);
+            activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_disconnect);
             if(TemperatureService.connectedDevice != null)
             {
-                this.activityMainBinding.deviceName.setText(TemperatureService.connectedDevice + " - ready");
+                activityMainBinding.deviceName.setText(TemperatureService.connectedDevice + " - ready");
             }
-            //            this.getSystemService(TemperatureService.class);
         }
 
         // Handle Disconnect & Connect button
-        this.activityMainBinding.buttonConnectDisconnect.setOnClickListener(new View.OnClickListener()
+        activityMainBinding.buttonConnectDisconnect.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
@@ -368,25 +331,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
             }
         });
 
-
-        // create dummy data
-        //        for(int i = 0; i < 10; i++)
-        //        {
-        //            try
-        //            {
-        //                String timestamp = Utils.dateToIsoString(new Date());
-        //                ContentValues values = new ContentValues();
-        //                values.put(TemperatureTable.COLUMN_TEMP, i);
-        //                values.put(TemperatureTable.COLUMN_TIMESTAMP, timestamp);
-        //                values.put(TemperatureTable.COLUMN_PARTNER, false);
-        //                getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-        //                //            Uri uri = getContentResolver().insert(ClosenessProvider.CONTENT_URI, values);
-        //            } catch(Exception e)
-        //            {
-        //                Log.e(TAG, e.toString());
-        //                e.printStackTrace();
-        //            }
-        //        }
     }
 
     @Override
@@ -591,18 +535,15 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
     private void service_init()
     {
-        //        Intent bindIntent = new Intent(this, TemperatureService.class);
-
-        LocalBroadcastManager.getInstance(this)
-          .registerReceiver(this.temperatureBroadcastReceiver, temperatureServiceIntentFilter());
+        LocalBroadcastManager.getInstance(this).registerReceiver(temperatureBroadcastReceiver, temperatureServiceIntentFilter());
     }
 
 
     private void logMessage(String message)
     {
-        ((MessageAdapter) this.activityMainBinding.messageContainer.getAdapter()).addMessage(message);
-        this.activityMainBinding.messageContainer
-          .scrollToPosition(this.activityMainBinding.messageContainer.getAdapter().getItemCount() - 1);
+        ((MessageAdapter) activityMainBinding.messageContainer.getAdapter()).addMessage(message);
+        activityMainBinding.messageContainer
+                .scrollToPosition(activityMainBinding.messageContainer.getAdapter().getItemCount() - 1);
         Log.d(TAG, "logMessage: " + message);
     }
 
@@ -622,7 +563,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
               .equals(getString(R.string.closeness_button_connect)))
             {
                 // user clicked on connect
-                //                this.manualConnect = true;
                 logMessage(getString(R.string.closeness_user_connect));
                 activityMainBinding.buttonConnectDisconnect.setText(R.string.closeness_button_disconnect);
                 connectDevices();
@@ -633,7 +573,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
                 Intent intent = new Intent(this, TemperatureService.class);
                 stopService(intent);
-                //                this.temperatureService.onDisconnect();
                 logMessage(getString(R.string.closeness_user_disconnect));
             }
         }
@@ -641,18 +580,14 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
 
     private void connectDevices()
     {
-        Log.d(TAG, "start connection to device and partner");
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d(TAG, "start connection to device");
         //        String deviceAddress = sharedPref.getString("sensor_name", "");
         //        this.mPrivateHash = sharedPref.getString(getString(R.string.private_hash), "");
         try
         {
             Intent bindIntent = new Intent(this, TemperatureService.class);
-            //        bindService(bindIntent, this.temperatureServiceConnection, Context.BIND_AUTO_CREATE);
 
-            bindIntent.putExtra("sensor_address", PreferenceManager.getDefaultSharedPreferences(this)
-              .getString("sensor_name", ""));
-            bindIntent.putExtra("partner_sensor_address", this.getPartnerSensorName());
+            bindIntent.putExtra("sensor_address", PreferenceManager.getDefaultSharedPreferences(this).getString("sensor_name", ""));
 
             startService(bindIntent);
         } catch(IllegalArgumentException e)
@@ -701,8 +636,6 @@ public class ClosenessMainActivity extends AppCompatActivity implements RadioGro
                 dialog.applyFont(this, "Montserrat-Regular.ttf");
             }
         }
-        //    }
-
     }
 
     @Override

@@ -17,12 +17,6 @@ public class Utils
     public static Double latitude;
     public static Double longitude;
 
-//    public static String DATA_BASE_URL;
-
-//    public static void initialize(Context context)
-//    {
-//        DATA_BASE_URL =  PreferenceManager.getDefaultSharedPreferences(this).getString("server_url_main", "");
-//    }
 
     public static String dateToIsoString(Date date)
     {

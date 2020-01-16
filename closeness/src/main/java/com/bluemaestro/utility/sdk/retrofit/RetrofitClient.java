@@ -20,49 +20,9 @@ public class RetrofitClient
     private static Retrofit retrofit = null;
     private static Retrofit retrofitWithToken = null;
 
-    public static GsonBuilder createBasicGsonBuilder()
-    {
-        final GsonBuilder builder = new GsonBuilder();
-        builder.excludeFieldsWithoutExposeAnnotation();
-
-        return builder;
-    }
-
-    public static Gson createBasicGson()
-    {
-        final GsonBuilder builder = new GsonBuilder();
-
-        builder.excludeFieldsWithoutExposeAnnotation();
-        builder.serializeNulls();
-
-        return builder.create();
-    }
-
-//    public static Gson createGson()
-//    {
-//        final GsonBuilder builder = new GsonBuilder();
-////        builder.registerTypeAdapter(AppointmentAddress.class, new AppointmentAddressTypeAdapter());
-////        builder.registerTypeAdapter(MyAddress.class, new MyAddressTypeAdapter());
-//        builder.registerTypeAdapter(MyDate.class, new MyDateTypeAdapter());
-//
-//        builder.excludeFieldsWithoutExposeAnnotation();
-//        builder.serializeNulls();
-//        return builder.create();
-//    }
-
     public static Gson createFullGson()
     {
         final GsonBuilder builder = new GsonBuilder();
-
-//        builder.registerTypeAdapter(User.class, new UserTypeAdapter());
-//        builder.registerTypeAdapter(AppointmentAddress.class, new AppointmentAddressTypeAdapter());
-//        builder.registerTypeAdapter(MyAddress.class, new MyAddressTypeAdapter());
-//        builder.registerTypeAdapter(MyDate.class, new MyDateTypeAdapter());
-//        builder.registerTypeAdapter(LocalDate.class, new LocalDateTypeAdapter());
-//        builder.registerTypeAdapter(MyLocalDate.class, new MyLocalDateTypeAdapter());
-//        builder.registerTypeAdapter(Appointment.class, new AppointmentTypeAdapter());
-
-//        builder.serializeNulls();
         builder.excludeFieldsWithoutExposeAnnotation();
 
         return builder.create();

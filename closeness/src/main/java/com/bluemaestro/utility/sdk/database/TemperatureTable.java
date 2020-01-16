@@ -13,7 +13,6 @@ public class TemperatureTable {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_TIMESTAMP = "time_stamp_device";
     public static final String COLUMN_TEMP = "temperature";
-//    public static final String COLUMN_PARTNER = "is_partner_close";
     public static final String COLUMN_LATITUDE = "latitude";
     public static final String COLUMN_LONGITUDE = "longitude";
 

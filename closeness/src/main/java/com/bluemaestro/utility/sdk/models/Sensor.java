@@ -11,6 +11,9 @@ import static com.bluemaestro.utility.sdk.database.Database.TIMESTAMP_DEVICE_FIE
 @Parcel
 public class Sensor
 {
+    @Expose(serialize = false)
+    private long id;
+
     @Expose
     private Float temperature;
 
@@ -37,6 +40,12 @@ public class Sensor
         this.timestamp = timestamp;
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Sensor(long id, Float temperature, String timestamp, double latitude, double longitude)
+    {
+        this(temperature, timestamp, latitude, longitude);
+        this.id = id;
     }
 
     public Float getTemperature()
@@ -83,10 +92,11 @@ public class Sensor
     public String toString()
     {
         return "Sensor{" +
-                "temperature=" + temperature +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", timestamp='" + timestamp + '\'' +
-                '}';
+          "id=" + id +
+          ", temperature=" + temperature +
+          ", latitude=" + latitude +
+          ", longitude=" + longitude +
+          ", timestamp='" + timestamp + '\'' +
+          '}';
     }
 }

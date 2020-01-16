@@ -20,7 +20,8 @@ import java.util.HashSet;
  * Created by willem on 12-3-17.
  */
 
-public class ClosenessProvider extends ContentProvider {
+public class ClosenessProvider extends ContentProvider
+{
     public static final String TAG = "BlueMaestro";
 
     private TemperatureDatabaseHelper mOpenHelper;
@@ -33,21 +34,27 @@ public class ClosenessProvider extends ContentProvider {
 
     private static final String BASE_PATH = "temperature";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY
-            + "/" + BASE_PATH);
+      + "/" + BASE_PATH);
 
     public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE
-            + "/temperatures";
+      + "/temperatures";
     public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE
-            + "/temperature";
+      + "/temperature";
 
     private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-    static {
+
+    static
+    {
         sURIMatcher.addURI(AUTHORITY, BASE_PATH, TEMPS);
         sURIMatcher.addURI(AUTHORITY, BASE_PATH + "/#", TEMP_ID);
     }
 
+    private static boolean isLocked = false;
+    private static SQLiteDatabase db;
+
     @Override
-    public boolean onCreate() {
+    public boolean onCreate()
+    {
         /*
          * Creates a new helper object. This method always returns quickly.
          * Notice that the database itself isn't created or opened
@@ -59,7 +66,8 @@ public class ClosenessProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
-                        String[] selectionArgs, String sortOrder) {
+                        String[] selectionArgs, String sortOrder)
+    {
         // Uisng SQLiteQueryBuilder instead of query() method
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
 
@@ -70,38 +78,65 @@ public class ClosenessProvider extends ContentProvider {
         queryBuilder.setTables(TemperatureTable.TABLE_TEMPERATURE);
 
         int uriType = sURIMatcher.match(uri);
-        switch (uriType) {
+        switch(uriType)
+        {
             case TEMPS:
                 break;
             case TEMP_ID:
                 // adding the ID to the original query
                 queryBuilder.appendWhere(TemperatureTable.COLUMN_ID + "="
-                        + uri.getLastPathSegment());
+                  + uri.getLastPathSegment());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown URI: " + uri);
         }
 
-        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        while(isLocked)
+        {
+            try
+            {
+                Thread.sleep(100);
+            } catch(InterruptedException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        isLocked = true;
+
+//        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        db = mOpenHelper.getReadableDatabase();
+//        db.
         Cursor cursor = queryBuilder.query(db, projection, selection,
-                selectionArgs, null, null, sortOrder);
+          selectionArgs, null, null, sortOrder);
         // make sure that potential listeners are getting notified
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
 
         return cursor;
     }
 
+    public static void releaseLock()
+    {
+        isLocked = false;
+        if(db != null) {
+            db.close();
+            db = null;
+        }
+    }
+
     @Override
-    public String getType(Uri uri) {
+    public String getType(Uri uri)
+    {
         return null;
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues contentValues) {
+    public Uri insert(Uri uri, ContentValues contentValues)
+    {
         int uriType = sURIMatcher.match(uri);
         SQLiteDatabase sqlDB = mOpenHelper.getWritableDatabase();
         long id = 0;
-        switch (uriType) {
+        switch(uriType)
+        {
             case TEMPS:
                 id = sqlDB.insert(TemperatureTable.TABLE_TEMPERATURE, null, contentValues);
                 break;
@@ -113,28 +148,32 @@ public class ClosenessProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(Uri uri, String selection, String[] selectionArgs)
+    {
         int uriType = sURIMatcher.match(uri);
         SQLiteDatabase sqlDB = mOpenHelper.getWritableDatabase();
         int rowsDeleted = 0;
-        switch (uriType) {
+        switch(uriType)
+        {
             case TEMPS:
                 rowsDeleted = sqlDB.delete(TemperatureTable.TABLE_TEMPERATURE, selection,
-                        selectionArgs);
+                  selectionArgs);
                 break;
             case TEMP_ID:
                 String id = uri.getLastPathSegment();
-                if (TextUtils.isEmpty(selection)) {
+                if(TextUtils.isEmpty(selection))
+                {
                     rowsDeleted = sqlDB.delete(
-                            TemperatureTable.TABLE_TEMPERATURE,
-                            TemperatureTable.COLUMN_ID + "=" + id,
-                            null);
-                } else {
+                      TemperatureTable.TABLE_TEMPERATURE,
+                      TemperatureTable.COLUMN_ID + "=" + id,
+                      null);
+                } else
+                {
                     rowsDeleted = sqlDB.delete(
-                            TemperatureTable.TABLE_TEMPERATURE,
-                            TemperatureTable.COLUMN_ID + "=" + id
-                                    + " and " + selection,
-                            selectionArgs);
+                      TemperatureTable.TABLE_TEMPERATURE,
+                      TemperatureTable.COLUMN_ID + "=" + id
+                        + " and " + selection,
+                      selectionArgs);
                 }
                 break;
             default:
@@ -145,21 +184,27 @@ public class ClosenessProvider extends ContentProvider {
     }
 
     @Override
-    public int update(Uri uri, ContentValues contentValues, String s, String[] strings) {
+    public int update(Uri uri, ContentValues contentValues, String s, String[] strings)
+    {
         return 0;
     }
-    private void checkColumns(String[] projection) {
-        String[] available = { TemperatureTable.COLUMN_TIMESTAMP,
-                TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_LATITUDE, TemperatureTable.COLUMN_LONGITUDE };
-        if (projection != null) {
+
+    private void checkColumns(String[] projection)
+    {
+        String[] available = {TemperatureTable.COLUMN_TIMESTAMP,
+          TemperatureTable.COLUMN_TEMP, TemperatureTable.COLUMN_ID, TemperatureTable.COLUMN_LATITUDE,
+          TemperatureTable.COLUMN_LONGITUDE};
+        if(projection != null)
+        {
             HashSet<String> requestedColumns = new HashSet<>(
-                    Arrays.asList(projection));
+              Arrays.asList(projection));
             HashSet<String> availableColumns = new HashSet<>(
-                    Arrays.asList(available));
+              Arrays.asList(available));
             // check if all columns which are requested are available
-            if (!availableColumns.containsAll(requestedColumns)) {
+            if(!availableColumns.containsAll(requestedColumns))
+            {
                 throw new IllegalArgumentException(
-                        "Unknown columns in projection");
+                  "Unknown columns in projection");
             }
         }
     }
